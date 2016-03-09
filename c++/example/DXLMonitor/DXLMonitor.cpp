@@ -27,24 +27,6 @@
 #include <vector>
 #include "DynamixelSDK.h"
 
-// DXL Error bit for Protocol 1.0
-#define ERRBIT_PROTOCOL1_VOLTAGE        1
-#define ERRBIT_PROTOCOL1_ANGLE          2
-#define ERRBIT_PROTOCOL1_OVERHEAT       4
-#define ERRBIT_PROTOCOL1_RANGE          8
-#define ERRBIT_PROTOCOL1_CHECKSUM       16
-#define ERRBIT_PROTOCOL1_OVERLOAD       32
-#define ERRBIT_PROTOCOL1_INSTRUCTION    64
-
-// DXL Error bit for Protocol 2.0
-#define ERRBIT_PROTOCOL2_RESULTFAIL     1
-#define ERRBIT_PROTOCOL2_INSTRUCTION    2
-#define ERRBIT_PROTOCOL2_CRC            3
-#define ERRBIT_PROTOCOL2_DATARANGE      4
-#define ERRBIT_PROTOCOL2_DATALENGTH     5
-#define ERRBIT_PROTOCOL2_DATALIMIT      6
-#define ERRBIT_PROTOCOL2_ADDRESS        7
-
 // Protocol version
 #define PROTOCOL_VERSION1               1.0
 #define PROTOCOL_VERSION2               2.0
@@ -97,118 +79,6 @@ int _kbhit(void)
     return 0;
 }
 #endif
-
-// Print communication result
-void PrintCommStatus(int CommStatus)
-{
-    switch(CommStatus)
-    {
-    case COMM_PORT_BUSY:
-        printf("COMM_PORT_BUSY: Port is in use!\n");
-        break;
-
-    case COMM_TX_FAIL:
-        printf("COMM_TXFAIL: Failed transmit instruction packet!\n");
-        break;
-
-    case COMM_RX_FAIL:
-        printf("COMM_RXFAIL: Failed get status packet from device!\n");
-        break;
-
-    case COMM_TX_ERROR:
-        printf("COMM_TXERROR: Incorrect instruction packet!\n");
-        break;
-
-    case COMM_RX_WAITING:
-        printf("COMM_RXWAITING: Now recieving status packet!\n");
-        break;
-
-    case COMM_RX_TIMEOUT:
-        printf("COMM_RXTIMEOUT: There is no status packet!\n");
-        break;
-
-    case COMM_RX_CORRUPT:
-        printf("COMM_RXCORRUPT: Incorrect status packet!\n");
-        break;
-
-    case COMM_NOT_AVAILABLE:
-        printf("COMM_NOT_AVAILABLE: Protocol does not support This function!\n");
-        break;
-
-    default:
-        printf("This is unknown error code!\n");
-        break;
-    }
-}
-
-// Print error bit of status packet for Protocol 1.0
-void PrintErrorCode_Protocol1(int ErrorCode)
-{
-    if(ErrorCode & ERRBIT_PROTOCOL1_VOLTAGE)
-        printf("Input voltage error!\n");
-
-    if(ErrorCode & ERRBIT_PROTOCOL1_ANGLE)
-        printf("Angle limit error!\n");
-
-    if(ErrorCode & ERRBIT_PROTOCOL1_OVERHEAT)
-        printf("Overheat error!\n");
-
-    if(ErrorCode & ERRBIT_PROTOCOL1_RANGE)
-        printf("Out of range error!\n");
-
-    if(ErrorCode & ERRBIT_PROTOCOL1_CHECKSUM)
-        printf("Checksum error!\n");
-
-    if(ErrorCode & ERRBIT_PROTOCOL1_OVERLOAD)
-        printf("Overload error!\n");
-
-    if(ErrorCode & ERRBIT_PROTOCOL1_INSTRUCTION)
-        printf("Instruction code error!\n");
-}
-
-// Print error bit of status packet for Protocol 2.0
-void PrintErrorCode_Protocol2(int ErrorCode)
-{
-    if(ErrorCode & 0x80)
-        printf("Hardware error occurred. Check the error at Control Table (Hardware Error Status)!\n");
-
-    int err = ErrorCode & 0x7F;
-
-    switch(err)
-    {
-    case ERRBIT_PROTOCOL2_RESULTFAIL:
-        printf("Failed to deal with instruction packet!\n");
-        break;
-
-    case ERRBIT_PROTOCOL2_INSTRUCTION:
-        printf("Undefined instruction!\n");
-        break;
-
-    case ERRBIT_PROTOCOL2_CRC:
-        printf("CRC doesn't match!\n");
-        break;
-
-    case ERRBIT_PROTOCOL2_DATARANGE:
-        printf("Data is out of range!\n");
-        break;
-
-    case ERRBIT_PROTOCOL2_DATALENGTH:
-        printf("Data is shorter than expected!\n");
-        break;
-
-    case ERRBIT_PROTOCOL2_DATALIMIT:
-        printf("Data is too long!\n");
-        break;
-
-    case ERRBIT_PROTOCOL2_ADDRESS:
-        printf("Writing or Reading is not available to target address!\n");
-        break;
-
-    default:
-        printf("Unknown error code!\n");
-        break;
-    }
-}
 
 void Help()
 {
@@ -319,17 +189,12 @@ void Write(PortHandler *portHandler, PacketHandler *packetHandler, UINT8_T id, U
     if(dxl_comm_result == COMM_SUCCESS)
     {
         if(dxl_error != 0)
-        {
-            if(packetHandler->GetProtocolVersion() == 1.0)
-                PrintErrorCode_Protocol1(dxl_error);
-            else
-                PrintErrorCode_Protocol2(dxl_error);
-        }
+            packetHandler->PrintRxPacketError(dxl_error);
         fprintf(stderr, "\n Success to write\n\n");
     }
     else
     {
-        PrintCommStatus(dxl_comm_result);
+        packetHandler->PrintTxRxResult(dxl_comm_result);
         fprintf(stderr, "\n Fail to write! \n\n");
     }
 }
@@ -354,12 +219,7 @@ void Read(PortHandler *portHandler, PacketHandler *packetHandler, UINT8_T id, UI
     if(dxl_comm_result == COMM_SUCCESS)
     {
         if(dxl_error != 0)
-        {
-            if(packetHandler->GetProtocolVersion() == 1.0)
-                PrintErrorCode_Protocol1(dxl_error);
-            else
-                PrintErrorCode_Protocol2(dxl_error);
-        }
+            packetHandler->PrintRxPacketError(dxl_error);
 
         if(length == 1)
             fprintf(stderr, "\n READ VALUE : (UNSIGNED) %u , (SIGNED) %d \n\n", (UINT8_T)value8, value8);
@@ -367,11 +227,10 @@ void Read(PortHandler *portHandler, PacketHandler *packetHandler, UINT8_T id, UI
             fprintf(stderr, "\n READ VALUE : (UNSIGNED) %u , (SIGNED) %d \n\n", (UINT16_T)value16, value16);
         else if(length == 4)
             fprintf(stderr, "\n READ VALUE : (UNSIGNED) %u , (SIGNED) %d \n\n", (UINT32_T)value32, value32);
-
     }
     else
     {
-        PrintCommStatus(dxl_comm_result);
+        packetHandler->PrintTxRxResult(dxl_comm_result);
         fprintf(stderr, "\n Fail to read! \n\n");
     }
 }
@@ -386,12 +245,7 @@ void Dump(PortHandler *portHandler, PacketHandler *packetHandler, UINT8_T id, UI
     if(dxl_comm_result == COMM_SUCCESS)
     {
         if(dxl_error != 0)
-        {
-            if(packetHandler->GetProtocolVersion() == 1.0)
-                PrintErrorCode_Protocol1(dxl_error);
-            else
-                PrintErrorCode_Protocol2(dxl_error);
-        }
+            packetHandler->PrintRxPacketError(dxl_error);
 
         if(id != BROADCAST_ID)
         {
@@ -403,7 +257,7 @@ void Dump(PortHandler *portHandler, PacketHandler *packetHandler, UINT8_T id, UI
     }
     else
     {
-        PrintCommStatus(dxl_comm_result);
+        packetHandler->PrintTxRxResult(dxl_comm_result);
         fprintf(stderr, "\n Fail to read! \n\n");
     }
 
@@ -552,17 +406,8 @@ int main(int argc, char *argv[])
                 std::vector<unsigned char> vec;
 
                 int dxl_comm_result = packetHandler2->BroadcastPing(portHandler, vec);
-                if(dxl_comm_result == COMM_SUCCESS)
-                {
-                    if(dxl_error != 0)
-                    {
-                        PrintErrorCode_Protocol1(dxl_error);
-                    }
-                }
-                else
-                {
-                    PrintCommStatus(dxl_comm_result);
-                }
+                if(dxl_comm_result != COMM_SUCCESS)
+                    packetHandler2->PrintTxRxResult(dxl_comm_result);
 
                 for(unsigned int i = 0; i < vec.size(); i++)
                 {
@@ -666,17 +511,15 @@ int main(int argc, char *argv[])
             if(num_param == 1)
             {
                 int dxl_comm_result = packetHandler2->Reboot(portHandler, atoi(param[0]), &dxl_error);
-                if( dxl_comm_result == COMM_SUCCESS )
+                if(dxl_comm_result == COMM_SUCCESS)
                 {
                     if(dxl_error != 0)
-                    {
-                        PrintErrorCode_Protocol2(dxl_error);
-                    }
+                        packetHandler2->PrintRxPacketError(dxl_error);
                     fprintf(stderr, "\n Success to reboot! \n\n");
                 }
                 else
                 {
-                    PrintCommStatus(dxl_comm_result);
+                    packetHandler2->PrintTxRxResult(dxl_comm_result);
                     fprintf(stderr, "\n Fail to reboot! \n\n");
                 }
             }
@@ -690,17 +533,15 @@ int main(int argc, char *argv[])
             if(num_param == 1)
             {
                 int dxl_comm_result = packetHandler1->FactoryReset(portHandler, atoi(param[0]), 0x00, &dxl_error);
-                if( dxl_comm_result == COMM_SUCCESS )
+                if(dxl_comm_result == COMM_SUCCESS)
                 {
                     if(dxl_error != 0)
-                    {
-                        PrintErrorCode_Protocol1(dxl_error);
-                    }
+                        packetHandler1->PrintRxPacketError(dxl_error);
                     fprintf(stderr, "\n Success to reset! \n\n");
                 }
                 else
                 {
-                    PrintCommStatus(dxl_comm_result);
+                    packetHandler1->PrintTxRxResult(dxl_comm_result);
                     fprintf(stderr, "\n Fail to reset! \n\n");
                 }
             }
@@ -714,17 +555,15 @@ int main(int argc, char *argv[])
             if(num_param == 2)
             {
                 int dxl_comm_result = packetHandler2->FactoryReset(portHandler, atoi(param[0]), atoi(param[1]), &dxl_error);
-                if( dxl_comm_result == COMM_SUCCESS )
+                if(dxl_comm_result == COMM_SUCCESS)
                 {
                     if(dxl_error != 0)
-                    {
-                        PrintErrorCode_Protocol2(dxl_error);
-                    }
+                        packetHandler2->PrintRxPacketError(dxl_error);
                     fprintf(stderr, "\n Success to reset! \n\n");
                 }
                 else
                 {
-                    PrintCommStatus(dxl_comm_result);
+                    packetHandler2->PrintTxRxResult(dxl_comm_result);
                     fprintf(stderr, "\n Fail to reset! \n\n");
                 }
             }

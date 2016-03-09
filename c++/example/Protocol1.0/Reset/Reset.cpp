@@ -31,15 +31,6 @@
 
 #include "DynamixelSDK.h"
 
-// DXL Error bit for Protocol 1.0
-#define ERRBIT_PROTOCOL1_VOLTAGE        1
-#define ERRBIT_PROTOCOL1_ANGLE          2
-#define ERRBIT_PROTOCOL1_OVERHEAT       4
-#define ERRBIT_PROTOCOL1_RANGE          8
-#define ERRBIT_PROTOCOL1_CHECKSUM       16
-#define ERRBIT_PROTOCOL1_OVERLOAD       32
-#define ERRBIT_PROTOCOL1_INSTRUCTION    64
-
 // Control table address
 #define ADDR_MX_BAUDRATE                4
 
@@ -99,74 +90,6 @@ int _kbhit(void)
 }
 #endif
 
-// Print communication result
-void PrintCommStatus(int CommStatus)
-{
-    switch(CommStatus)
-    {
-    case COMM_PORT_BUSY:
-        printf("COMM_PORT_BUSY: Port is in use!\n");
-        break;
-
-    case COMM_TX_FAIL:
-        printf("COMM_TXFAIL: Failed transmit instruction packet!\n");
-        break;
-
-    case COMM_RX_FAIL:
-        printf("COMM_RXFAIL: Failed get status packet from device!\n");
-        break;
-
-    case COMM_TX_ERROR:
-        printf("COMM_TXERROR: Incorrect instruction packet!\n");
-        break;
-
-    case COMM_RX_WAITING:
-        printf("COMM_RXWAITING: Now recieving status packet!\n");
-        break;
-
-    case COMM_RX_TIMEOUT:
-        printf("COMM_RXTIMEOUT: There is no status packet!\n");
-        break;
-
-    case COMM_RX_CORRUPT:
-        printf("COMM_RXCORRUPT: Incorrect status packet!\n");
-        break;
-
-    case COMM_NOT_AVAILABLE:
-        printf("COMM_NOT_AVAILABLE: Protocol does not support This function!\n");
-        break;
-
-    default:
-        printf("This is unknown error code!\n");
-        break;
-    }
-}
-
-// Print error bit of status packet for Protocol 1.0
-void PrintErrorCode_Protocol1(int ErrorCode)
-{
-    if(ErrorCode & ERRBIT_PROTOCOL1_VOLTAGE)
-        printf("Input voltage error!\n");
-
-    if(ErrorCode & ERRBIT_PROTOCOL1_ANGLE)
-        printf("Angle limit error!\n");
-
-    if(ErrorCode & ERRBIT_PROTOCOL1_OVERHEAT)
-        printf("Overheat error!\n");
-
-    if(ErrorCode & ERRBIT_PROTOCOL1_RANGE)
-        printf("Out of range error!\n");
-
-    if(ErrorCode & ERRBIT_PROTOCOL1_CHECKSUM)
-        printf("Checksum error!\n");
-
-    if(ErrorCode & ERRBIT_PROTOCOL1_OVERLOAD)
-        printf("Overload error!\n");
-
-    if(ErrorCode & ERRBIT_PROTOCOL1_INSTRUCTION)
-        printf("Instruction code error!\n");
-}
-
 int main()
 {
     // Initialize PortHandler instance
@@ -214,20 +137,14 @@ int main()
     // Try factoryreset
     printf("[ID:%03d] Try factoryreset : ", DXL_ID);
     dxl_comm_result = packetHandler->FactoryReset(portHandler, DXL_ID, OPERATION_MODE, &dxl_error);
-    if(dxl_comm_result == COMM_SUCCESS)
-    {
-        if(dxl_error != 0)
-        {
-            PrintErrorCode_Protocol1(dxl_error);
-            return 0;
-        }
-    }
-    else
+    if(dxl_comm_result != COMM_SUCCESS)
     {
         printf("Aborted\n");
-        PrintCommStatus(dxl_comm_result);
+        packetHandler->PrintTxRxResult(dxl_comm_result);
         return 0;
     }
+    else if(dxl_error != 0)
+        packetHandler->PrintRxPacketError(dxl_error);
 
     // Wait for reset
     printf("Wait for reset...\n");
@@ -250,37 +167,25 @@ int main()
 
     // Read DXL baudnum
     dxl_comm_result = packetHandler->Read1ByteTxRx(portHandler, DXL_ID, ADDR_MX_BAUDRATE, &dxl_baudnum_read, &dxl_error);
-    if(dxl_comm_result == COMM_SUCCESS)
+    if(dxl_comm_result != COMM_SUCCESS)
     {
-        if(dxl_error != 0)
-        {
-            PrintErrorCode_Protocol1(dxl_error);	// Hardware error will be occurred if using 12V power supplement
-            return 0;
-        }
-        printf("[ID:%03d] DXL baudnum is now : %d\n", DXL_ID, dxl_baudnum_read);
-    }
-    else
-    {
-        PrintCommStatus(dxl_comm_result);
+        packetHandler->PrintTxRxResult(dxl_comm_result);
         return 0;
     }
+    else if(dxl_error != 0)
+        packetHandler->PrintRxPacketError(dxl_error);
+    printf("[ID:%03d] DXL baudnum is now : %d\n", DXL_ID, dxl_baudnum_read);
 
     // Write new baudnum
     dxl_comm_result = packetHandler->Write1ByteTxRx(portHandler, DXL_ID, ADDR_MX_BAUDRATE, NEW_BAUDNUM, &dxl_error);
-    if(dxl_comm_result == COMM_SUCCESS)
+    if(dxl_comm_result != COMM_SUCCESS)
     {
-        if(dxl_error != 0)
-        {
-            PrintErrorCode_Protocol1(dxl_error);	// Hardware error will be occurred if using 12V power supplement
-            return 0;
-        }
-        printf("[ID:%03d] Set DXL baudnum to : %d\n", DXL_ID, NEW_BAUDNUM);
-    }
-    else
-    {
-        PrintCommStatus(dxl_comm_result);
+        packetHandler->PrintTxRxResult(dxl_comm_result);
         return 0;
     }
+    else if(dxl_error != 0)
+        packetHandler->PrintRxPacketError(dxl_error);
+    printf("[ID:%03d] Set DXL baudnum to : %d\n", DXL_ID, NEW_BAUDNUM);
 
     // Set port baudrate to BAUDRATE
     if(portHandler->SetBaudRate(BAUDRATE))
@@ -299,20 +204,14 @@ int main()
 
 	// Read DXL baudnum
     dxl_comm_result = packetHandler->Read1ByteTxRx(portHandler, DXL_ID, ADDR_MX_BAUDRATE, &dxl_baudnum_read, &dxl_error);
-    if(dxl_comm_result == COMM_SUCCESS)
+    if(dxl_comm_result != COMM_SUCCESS)
     {
-        if(dxl_error != 0)
-        {
-            PrintErrorCode_Protocol1(dxl_error);
-            return 0;
-        }
-        printf("[ID:%03d] DXL Baudnum is now : %d\n", DXL_ID, dxl_baudnum_read);
-    }
-    else
-    {
-        PrintCommStatus(dxl_comm_result);
+        packetHandler->PrintTxRxResult(dxl_comm_result);
         return 0;
     }
+    else if(dxl_error != 0)
+        packetHandler->PrintRxPacketError(dxl_error);
+    printf("[ID:%03d] DXL Baudnum is now : %d\n", DXL_ID, dxl_baudnum_read);
 
     // Close port
     portHandler->ClosePort();

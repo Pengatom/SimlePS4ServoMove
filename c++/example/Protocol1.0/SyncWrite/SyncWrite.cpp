@@ -26,15 +26,6 @@
 #include <string.h>
 #include "DynamixelSDK.h"
 
-// DXL Error bit for Protocol 1.0
-#define ERRBIT_PROTOCOL1_VOLTAGE        1
-#define ERRBIT_PROTOCOL1_ANGLE          2
-#define ERRBIT_PROTOCOL1_OVERHEAT       4
-#define ERRBIT_PROTOCOL1_RANGE          8
-#define ERRBIT_PROTOCOL1_CHECKSUM       16
-#define ERRBIT_PROTOCOL1_OVERLOAD       32
-#define ERRBIT_PROTOCOL1_INSTRUCTION    64
-
 // Control table address
 #define ADDR_MX_TORQUE_ENABLE           24
 #define ADDR_MX_GOAL_POSITION           30
@@ -100,74 +91,6 @@ int _kbhit(void)
 }
 #endif
 
-// Print communication result
-void PrintCommStatus(int CommStatus)
-{
-    switch(CommStatus)
-    {
-    case COMM_PORT_BUSY:
-        printf("COMM_PORT_BUSY: Port is in use!\n");
-        break;
-
-    case COMM_TX_FAIL:
-        printf("COMM_TXFAIL: Failed transmit instruction packet!\n");
-        break;
-
-    case COMM_RX_FAIL:
-        printf("COMM_RXFAIL: Failed get status packet from device!\n");
-        break;
-
-    case COMM_TX_ERROR:
-        printf("COMM_TXERROR: Incorrect instruction packet!\n");
-        break;
-
-    case COMM_RX_WAITING:
-        printf("COMM_RXWAITING: Now recieving status packet!\n");
-        break;
-
-    case COMM_RX_TIMEOUT:
-        printf("COMM_RXTIMEOUT: There is no status packet!\n");
-        break;
-
-    case COMM_RX_CORRUPT:
-        printf("COMM_RXCORRUPT: Incorrect status packet!\n");
-        break;
-
-    case COMM_NOT_AVAILABLE:
-        printf("COMM_NOT_AVAILABLE: Protocol does not support This function!\n");
-        break;
-
-    default:
-        printf("This is unknown error code!\n");
-        break;
-    }
-}
-
-// Print error bit of status packet for Protocol 1.0
-void PrintErrorCode_Protocol1(int ErrorCode)
-{
-    if(ErrorCode & ERRBIT_PROTOCOL1_VOLTAGE)
-        printf("Input voltage error!\n");
-
-    if(ErrorCode & ERRBIT_PROTOCOL1_ANGLE)
-        printf("Angle limit error!\n");
-
-    if(ErrorCode & ERRBIT_PROTOCOL1_OVERHEAT)
-        printf("Overheat error!\n");
-
-    if(ErrorCode & ERRBIT_PROTOCOL1_RANGE)
-        printf("Out of range error!\n");
-
-    if(ErrorCode & ERRBIT_PROTOCOL1_CHECKSUM)
-        printf("Checksum error!\n");
-
-    if(ErrorCode & ERRBIT_PROTOCOL1_OVERLOAD)
-        printf("Overload error!\n");
-
-    if(ErrorCode & ERRBIT_PROTOCOL1_INSTRUCTION)
-        printf("Instruction code error!\n");
-}
-
 int main()
 {
     // Initialize PortHandler instance
@@ -220,36 +143,24 @@ int main()
 
     // Enable DXL#1 Torque
     dxl_comm_result = packetHandler->Write1ByteTxRx(portHandler, DXL1_ID, ADDR_MX_TORQUE_ENABLE, dxl_torque_enable, &dxl_error);
-    if( dxl_comm_result == COMM_SUCCESS )
-	{
-        if(dxl_error != 0)
-        {
-            PrintErrorCode_Protocol1(dxl_error);
-            return 0;
-        }
-    }
-    else
+    if(dxl_comm_result != COMM_SUCCESS)
     {
-        PrintCommStatus(dxl_comm_result);
+        packetHandler->PrintTxRxResult(dxl_comm_result);
         return 0;
     }
+    else if(dxl_error != 0)
+        packetHandler->PrintRxPacketError(dxl_error);
     printf("DXL#%d successfully connected\n", DXL1_ID);
 
     // Enable DXL#2 Torque
     dxl_comm_result = packetHandler->Write1ByteTxRx(portHandler, DXL2_ID, ADDR_MX_TORQUE_ENABLE, dxl_torque_enable, &dxl_error);
-    if( dxl_comm_result == COMM_SUCCESS )
+    if(dxl_comm_result != COMM_SUCCESS)
     {
-        if(dxl_error != 0)
-        {
-            PrintErrorCode_Protocol1(dxl_error);
-            return 0;
-        }
-    }
-    else
-    {
-        PrintCommStatus(dxl_comm_result);
+        packetHandler->PrintTxRxResult(dxl_comm_result);
         return 0;
     }
+    else if(dxl_error != 0)
+        packetHandler->PrintRxPacketError(dxl_error);
     printf("DXL#%d successfully connected\n", DXL2_ID);
 
     while(1)
@@ -280,19 +191,10 @@ int main()
 
         // Syncwrite goal position
         dxl_comm_result = groupSyncWrite_GoalPos.TxPacket();
-        if(dxl_comm_result == COMM_SUCCESS)
-        {
-            if(dxl_error != 0)
-            {
-                PrintErrorCode_Protocol1(dxl_error);
-                return 0;
-            }
-        }
-        else
-        {
-            PrintCommStatus(dxl_comm_result);
-            return 0;
-        }
+        if(dxl_comm_result != COMM_SUCCESS)
+            packetHandler->PrintTxRxResult(dxl_comm_result);
+        else if(dxl_error != 0)
+            packetHandler->PrintRxPacketError(dxl_error);
 
         // Clear syncwrite parameter storage
         groupSyncWrite_GoalPos.ClearParam();
@@ -300,35 +202,17 @@ int main()
         do{
             // Read DXL#1 present position
             dxl_comm_result = packetHandler->Read2ByteTxRx(portHandler, DXL1_ID, ADDR_MX_PRESENT_POSITION, &dxl_present_position1, &dxl_error);
-            if(dxl_comm_result == COMM_SUCCESS)
-            {
-                if(dxl_error != 0)
-                {
-                    PrintErrorCode_Protocol1(dxl_error);
-                    return 0;
-                }
-            }
-            else
-            {
-                PrintCommStatus(dxl_comm_result);
-                return 0;
-            }
+            if(dxl_comm_result != COMM_SUCCESS)
+                packetHandler->PrintTxRxResult(dxl_comm_result);
+            else if(dxl_error != 0)
+                packetHandler->PrintRxPacketError(dxl_error);
 
             // Read DXL#2 present position
             dxl_comm_result = packetHandler->Read2ByteTxRx(portHandler, DXL2_ID, ADDR_MX_PRESENT_POSITION, &dxl_present_position2, &dxl_error);
-            if(dxl_comm_result == COMM_SUCCESS)
-            {
-                if(dxl_error != 0)
-                {
-                    PrintErrorCode_Protocol1(dxl_error);
-                    return 0;
-                }
-            }
-            else
-            {
-                PrintCommStatus(dxl_comm_result);
-                return 0;
-            }
+            if(dxl_comm_result != COMM_SUCCESS)
+                packetHandler->PrintTxRxResult(dxl_comm_result);
+            else if(dxl_error != 0)
+                packetHandler->PrintRxPacketError(dxl_error);
 
             printf("[ID:%03d] GoalPos:%03d  PresPos:%03d\t[ID:%03d] GoalPos:%03d  PresPos:%03d\n", DXL1_ID, dxl_goal_position[index], dxl_present_position1, DXL2_ID, dxl_goal_position[index], dxl_present_position2);
         }while((abs(dxl_goal_position[index] - dxl_present_position1) > STOP_MOVING_MARGIN) || (abs(dxl_goal_position[index] - dxl_present_position2) > STOP_MOVING_MARGIN));
@@ -342,35 +226,17 @@ int main()
 
     // Disable DXL#1 Torque
     dxl_comm_result = packetHandler->Write1ByteTxRx(portHandler, DXL1_ID, ADDR_MX_TORQUE_ENABLE, dxl_torque_disable, &dxl_error);
-    if( dxl_comm_result == COMM_SUCCESS )
-    {
-        if(dxl_error != 0)
-        {
-            PrintErrorCode_Protocol1(dxl_error);
-            return 0;
-        }
-    }
-    else
-    {
-        PrintCommStatus(dxl_comm_result);
-        return 0;
-    }
+    if(dxl_comm_result != COMM_SUCCESS)
+        packetHandler->PrintTxRxResult(dxl_comm_result);
+    else if(dxl_error != 0)
+        packetHandler->PrintRxPacketError(dxl_error);
 
     // Disable DXL#2 Torque
     dxl_comm_result = packetHandler->Write1ByteTxRx(portHandler, DXL2_ID, ADDR_MX_TORQUE_ENABLE, dxl_torque_disable, &dxl_error);
-    if( dxl_comm_result == COMM_SUCCESS )
-    {
-        if(dxl_error != 0)
-        {
-            PrintErrorCode_Protocol1(dxl_error);
-            return 0;
-        }
-    }
-    else
-    {
-        PrintCommStatus(dxl_comm_result);
-        return 0;
-    }
+    if(dxl_comm_result != COMM_SUCCESS)
+        packetHandler->PrintTxRxResult(dxl_comm_result);
+    else if(dxl_error != 0)
+        packetHandler->PrintRxPacketError(dxl_error);
 
     // Close port
     portHandler->ClosePort();

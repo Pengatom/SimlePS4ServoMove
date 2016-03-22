@@ -32,9 +32,7 @@
 #define PROTOCOL_VERSION2               2.0
 
 // Default setting
-#define DXL_ID                          1
-#define BAUDRATE                        1000000
-#define DEVICENAME                      "/dev/ttyUSB0"
+#define DEFAULT_DEV_NAME                "/dev/ttyUSB0"
 
 using namespace ROBOTIS;
 
@@ -80,6 +78,16 @@ int _kbhit(void)
 }
 #endif
 
+void Usage(char *progname)
+{
+    printf("-----------------------------------------------------------------------\n");
+    printf("Usage: %s\n" \
+           " [-h | --help]........: display this help\n" \
+           " [-d | --device]......: port to open                     (/dev/ttyUSB0)\n" \
+           , progname);
+    printf("-----------------------------------------------------------------------\n");
+}
+
 void Help()
 {
     printf("\n");
@@ -88,7 +96,7 @@ void Help()
     printf("                    '----------------------------'\n");
     printf(" =========================== Common Commands ===========================\n");
     printf(" \n");
-    printf(" help |h |?                  :Displays help information\n");
+    printf(" help|h|?                    :Displays help information\n");
     printf(" baud [BAUD_RATE]            :Changes baudrate to [BAUD_RATE] \n" );
     printf("                               ex) baud 2400 (2400 bps) \n");
     printf("                               ex) baud 1000000 (1 Mbps)  \n");
@@ -266,11 +274,6 @@ void Dump(PortHandler *portHandler, PacketHandler *packetHandler, UINT8_T id, UI
 
 int main(int argc, char *argv[])
 {
-	// Initialize PortHandler instance
-	// Set the port path
-	// Get methods and members of PortHandlerLinux or PortHandlerWindows
-	PortHandler *portHandler = PortHandler::GetPortHandler(DEVICENAME);
-
     // Initialize Packethandler1 instance
     PacketHandler *packetHandler1 = PacketHandler::GetPacketHandler(PROTOCOL_VERSION1);
 
@@ -281,14 +284,75 @@ int main(int argc, char *argv[])
     fprintf(stderr,   "*                            DXL Monitor                              *\n");
     fprintf(stderr,   "***********************************************************************\n\n");
 
+    char *dev_name = (char*)DEFAULT_DEV_NAME;
+
+    /* parameter parsing */
+    while(1)
+    {
+    	int option_index = 0, c = 0;
+    	static struct option long_options[] = {
+                {"h", no_argument, 0, 0},
+                {"help", no_argument, 0, 0},
+                {"d", required_argument, 0, 0},
+                {"device", required_argument, 0, 0},
+                {0, 0, 0, 0}
+    	};
+
+        /* parsing all parameters according to the list above is sufficent */
+        c = getopt_long_only(argc, argv, "", long_options, &option_index);
+
+        /* no more options to parse */
+        if(c == -1) break;
+
+        /* unrecognized option */
+        if(c == '?') {
+        	Usage(argv[0]);
+            return 0;
+        }
+
+        /* dispatch the given options */
+        switch(option_index) {
+        /* h, help */
+        case 0:
+        case 1:
+        	Usage(argv[0]);
+            return 0;
+            break;
+
+        /* d, device */
+        case 2:
+        case 3:
+            if(strlen(optarg) == 1)
+            {
+                char tmp[20];
+                sprintf(tmp, "/dev/ttyUSB%s", optarg);
+                dev_name = strdup(tmp);
+            }
+            else
+                dev_name = strdup(optarg);
+            break;
+
+        default:
+        	Usage(argv[0]);
+            return 0;
+        }
+    }
+
+	// Initialize PortHandler instance
+	// Set the port path
+	// Get methods and members of PortHandlerLinux or PortHandlerWindows
+	PortHandler *portHandler = PortHandler::GetPortHandler(dev_name);
+
     // Open port
     if(portHandler->OpenPort())
     {
-        printf("Succeeded to open the port!\n");
+        printf("Succeeded to open the port!\n\n");
+        printf(" - Device Name : %s\n", dev_name);
+        printf(" - Baudrate    : %d\n\n", portHandler->GetBaudRate());
     }
     else
     {
-        printf("Failed to open the port!\n" );
+        printf("Failed to open the port! [%s]\n", dev_name);
         printf("Press any key to terminate...\n");
         _getch();
         return 0;

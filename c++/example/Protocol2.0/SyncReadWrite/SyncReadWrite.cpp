@@ -230,7 +230,7 @@ int main()
             dxl_getdata_result = groupSyncRead.GetData(DXL1_ID, ADDR_PRO_PRESENT_POSITION, (UINT32_T*)&dxl_present_position1);
             if( dxl_getdata_result != true )
             {
-                fprintf(stderr, "[ID:%03d] groupBulkRead getdata failed", DXL2_ID);
+                fprintf(stderr, "[ID:%03d] groupSyncRead getdata failed", DXL2_ID);
                 return 0;
             }
 
@@ -238,7 +238,7 @@ int main()
             dxl_getdata_result = groupSyncRead.GetData(DXL2_ID, ADDR_PRO_PRESENT_POSITION, (UINT32_T*)&dxl_present_position2);
             if( dxl_getdata_result != true )
             {
-                fprintf(stderr, "[ID:%03d] groupBulkRead getdata failed", DXL2_ID);
+                fprintf(stderr, "[ID:%03d] groupSyncRead getdata failed", DXL2_ID);
                 return 0;
             }
 

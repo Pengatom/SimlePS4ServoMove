@@ -167,6 +167,18 @@ int Protocol1PacketHandler::RxPacket(PortHandler *port, UINT8_T *rxpacket)
 
             if(_idx == 0)   // found at the beginning of the packet
             {
+                if(rxpacket[PKT_ID] > 0xFD ||                   // unavailable ID
+                   rxpacket[PKT_LENGTH] > RXPACKET_MAX_LEN ||   // unavailable Length
+                   rxpacket[PKT_ERROR] >= 0x64)                 // unavailable Error
+                {
+                    // remove the first byte in the packet
+                    for(UINT8_T _s = 0; _s < _rx_length - 1; _s++)
+                        rxpacket[_s] = rxpacket[1 + _s];
+                    //memcpy(&rxpacket[0], &rxpacket[_idx], _rx_length - _idx);
+                    _rx_length -= 1;
+                    continue;
+                }
+
                 // re-calculate the exact length of the rx packet
                 _wait_length = rxpacket[PKT_LENGTH] + PKT_LENGTH + 1;
                 if(_rx_length < _wait_length)
@@ -250,7 +262,9 @@ int Protocol1PacketHandler::TxRxPacket(PortHandler *port, UINT8_T *txpacket, UIN
 
     // rx packet
     _result = RxPacket(port, rxpacket);
-    // TODO: check txpacket ID == rxpacket ID
+    // check txpacket ID == rxpacket ID
+    if(txpacket[PKT_ID] != rxpacket[PKT_ID])
+        _result = RxPacket(port, rxpacket);
 
     if(_result == COMM_SUCCESS && txpacket[PKT_ID] != BROADCAST_ID)
     {

@@ -312,14 +312,21 @@ int Protocol2PacketHandler::RxPacket(PortHandler *port, UINT8_T *rxpacket)
 
             if(_idx == 0)   // found at the beginning of the packet
             {
+                if(rxpacket[PKT_RESERVED] != 0x00 ||
+                   rxpacket[PKT_ID] > 0xFC ||
+                   DXL_MAKEWORD(rxpacket[PKT_LENGTH_L], rxpacket[PKT_LENGTH_H]) > RXPACKET_MAX_LEN ||
+                   rxpacket[PKT_INSTRUCTION] != 0x55)
+                {
+                    // remove the first byte in the packet
+                    for(UINT8_T _s = 0; _s < _rx_length - 1; _s++)
+                        rxpacket[_s] = rxpacket[1 + _s];
+                    //memcpy(&rxpacket[0], &rxpacket[_idx], _rx_length - _idx);
+                    _rx_length -= 1;
+                    continue;
+                }
+
                 // re-calculate the exact length of the rx packet
                 _wait_length = DXL_MAKEWORD(rxpacket[PKT_LENGTH_L], rxpacket[PKT_LENGTH_H]) + PKT_LENGTH_H + 1;
-				if(_wait_length > RXPACKET_MAX_LEN - 10)
-				{
-					_result = COMM_RX_CORRUPT;
-				    break;
-				}
-
                 if(_rx_length < _wait_length)
                 {
                     // check timeout
@@ -401,7 +408,9 @@ int Protocol2PacketHandler::TxRxPacket(PortHandler *port, UINT8_T *txpacket, UIN
 
     // rx packet
     _result = RxPacket(port, rxpacket);
-    // TODO: check txpacket ID == rxpacket ID
+    // check txpacket ID == rxpacket ID
+    if(txpacket[PKT_ID] != rxpacket[PKT_ID])
+        _result = RxPacket(port, rxpacket);
 
     if(_result == COMM_SUCCESS && txpacket[PKT_ID] != BROADCAST_ID)
     {

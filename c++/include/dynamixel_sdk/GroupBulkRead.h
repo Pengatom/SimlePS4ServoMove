@@ -51,9 +51,7 @@ public:
     int     RxPacket();
     int     TxRxPacket();
 
-    bool    GetData(UINT8_T id, UINT16_T address, UINT8_T *data);
-    bool    GetData(UINT8_T id, UINT16_T address, UINT16_T *data);
-    bool    GetData(UINT8_T id, UINT16_T address, UINT32_T *data);
+    bool    GetData(UINT8_T id, UINT16_T address, UINT32_T *data, UINT16_T data_length);
 };
 
 }

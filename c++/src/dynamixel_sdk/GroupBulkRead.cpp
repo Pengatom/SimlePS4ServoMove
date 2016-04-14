@@ -173,10 +173,10 @@ bool GroupBulkRead::IsAvailable(UINT8_T id, UINT16_T address, UINT16_T data_leng
 
 UINT32_T GroupBulkRead::GetData(UINT8_T id, UINT16_T address, UINT16_T data_length)
 {
-    UINT16_T _start_addr, _data_length;
-
     if(IsAvailable(id, address, data_length) == false)
         return 0;
+
+    UINT16_T _start_addr = address_list_[id];
 
     switch(data_length)
     {

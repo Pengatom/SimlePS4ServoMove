@@ -155,7 +155,7 @@ int GroupBulkRead::TxRxPacket()
     return RxPacket();
 }
 
-bool GroupBulkRead::GetData(UINT8_T id, UINT16_T address, UINT32_T *data, UINT16_T data_length)
+bool GroupBulkRead::IsAvailable(UINT8_T id, UINT16_T address, UINT16_T data_length)
 {
     UINT16_T _start_addr, _data_length;
 
@@ -168,22 +168,30 @@ bool GroupBulkRead::GetData(UINT8_T id, UINT16_T address, UINT32_T *data, UINT16
     if(address < _start_addr || _start_addr + _data_length - data_length < address)
         return false;
 
+    return true;
+}
+
+UINT32_T GroupBulkRead::GetData(UINT8_T id, UINT16_T address, UINT16_T data_length)
+{
+    UINT16_T _start_addr, _data_length;
+
+    if(IsAvailable(id, address, data_length) == false)
+        return 0;
+
     switch(data_length)
     {
     case 1:
-        *data = data_list_[id][address - _start_addr];
-        break;
-    case 2:
-        *data = DXL_MAKEWORD(data_list_[id][address - _start_addr], data_list_[id][address - _start_addr + 1]);
-        break;
-    case 4:
-        *data = DXL_MAKEDWORD(DXL_MAKEWORD(data_list_[id][address - _start_addr + 0], data_list_[id][address - _start_addr + 1]),
-                              DXL_MAKEWORD(data_list_[id][address - _start_addr + 2], data_list_[id][address - _start_addr + 3]));
-        break;
-    default:
-        return false;
-    }
+        return data_list_[id][address - _start_addr];
 
-    return true;
+    case 2:
+        return DXL_MAKEWORD(data_list_[id][address - _start_addr], data_list_[id][address - _start_addr + 1]);
+
+    case 4:
+        return DXL_MAKEDWORD(DXL_MAKEWORD(data_list_[id][address - _start_addr + 0], data_list_[id][address - _start_addr + 1]),
+                             DXL_MAKEWORD(data_list_[id][address - _start_addr + 2], data_list_[id][address - _start_addr + 3]));
+
+    default:
+        return 0;
+    }
 }
 

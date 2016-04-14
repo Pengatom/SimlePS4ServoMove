@@ -29,7 +29,6 @@ PortHandlerLinux::PortHandlerLinux(const char *port_name)
       tx_time_per_byte(0.0)
 {
     is_using = false;
-    default_protocol = 2.0;
     SetPortName(port_name);
 }
 

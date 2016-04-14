@@ -138,33 +138,36 @@ int GroupSyncRead::TxRxPacket()
     return RxPacket();
 }
 
-bool GroupSyncRead::GetData(UINT8_T id, UINT16_T address, UINT32_T *data, UINT16_T data_length)
+bool GroupSyncRead::IsAvailable(UINT8_T id, UINT16_T address, UINT16_T data_length)
 {
-    if(last_result_ == false || ph_->GetProtocolVersion() == 1.0)
-        return false;
-
-    if(data_list_.find(id) == data_list_.end())
+    if(ph_->GetProtocolVersion() == 1.0 || last_result_ == false || data_list_.find(id) == data_list_.end())
         return false;
 
     if(address < start_address_ || start_address_ + data_length_ - data_length < address)
         return false;
 
+    return true;
+}
+
+UINT32_T GroupSyncRead::GetData(UINT8_T id, UINT16_T address, UINT16_T data_length)
+{
+    if(IsAvailable(id, address, data_length) == false)
+        return 0;
+
     switch(data_length)
     {
     case 1:
-        *data = data_list_[id][address - start_address_];
-        break;
-    case 2:
-        *data = DXL_MAKEWORD(data_list_[id][address - start_address_], data_list_[id][address - start_address_ + 1]);
-        break;
-    case 4:
-        *data = DXL_MAKEDWORD(DXL_MAKEWORD(data_list_[id][address - start_address_ + 0], data_list_[id][address - start_address_ + 1]),
-                              DXL_MAKEWORD(data_list_[id][address - start_address_ + 2], data_list_[id][address - start_address_ + 3]));
-        break;
-    default:
-        return false;
-    }
+        return data_list_[id][address - start_address_];
 
-    return true;
+    case 2:
+        return DXL_MAKEWORD(data_list_[id][address - start_address_], data_list_[id][address - start_address_ + 1]);
+
+    case 4:
+        return DXL_MAKEDWORD(DXL_MAKEWORD(data_list_[id][address - start_address_ + 0], data_list_[id][address - start_address_ + 1]),
+                             DXL_MAKEWORD(data_list_[id][address - start_address_ + 2], data_list_[id][address - start_address_ + 3]));
+
+    default:
+        return 0;
+    }
 }
 

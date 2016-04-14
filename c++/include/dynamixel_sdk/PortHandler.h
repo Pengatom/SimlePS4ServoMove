@@ -22,7 +22,6 @@ public:
     static PortHandler *GetPortHandler(const char *port_name);
 
     bool    is_using;
-    float   default_protocol;
 
     virtual ~PortHandler() { }
 

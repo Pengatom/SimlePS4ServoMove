@@ -51,7 +51,8 @@ public:
     int     RxPacket();
     int     TxRxPacket();
 
-    bool    GetData(UINT8_T id, UINT16_T address, UINT32_T *data, UINT16_T data_length);
+    bool        IsAvailable (UINT8_T id, UINT16_T address, UINT16_T data_length);
+    UINT32_T    GetData     (UINT8_T id, UINT16_T address, UINT16_T data_length);
 };
 
 }

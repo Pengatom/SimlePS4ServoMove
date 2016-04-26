@@ -2,7 +2,7 @@
  * GroupBulkRead.h
  *
  *  Created on: 2016. 1. 28.
- *      Author: zerom
+ *      Author: zerom, leon
  */
 
 #ifndef DYNAMIXEL_SDK_INCLUDE_DYNAMIXEL_SDK_GROUPBULKREAD_H_
@@ -18,7 +18,7 @@
 namespace ROBOTIS
 {
 
-class GroupBulkRead
+class WINDECLSPEC GroupBulkRead
 {
 private:
     PortHandler    *port_;

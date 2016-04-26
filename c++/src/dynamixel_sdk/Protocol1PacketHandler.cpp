@@ -2,8 +2,11 @@
  * Protocol1PacketHandler.cpp
  *
  *  Created on: 2016. 1. 26.
- *      Author: zerom
+ *      Author: zerom, leon
  */
+#if defined(_WIN32) || defined(_WIN64)
+#define WINDLLEXPORT
+#endif
 
 #include <string.h>
 #include <stdlib.h>
@@ -660,4 +663,3 @@ int Protocol1PacketHandler::BulkWriteTxOnly(PortHandler *port, UINT8_T *param, U
 {
     return COMM_NOT_AVAILABLE;
 }
-

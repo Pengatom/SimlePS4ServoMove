@@ -1,1 +1,0 @@
-#ROBOTIS Dynamixel SDK

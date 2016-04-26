@@ -2,8 +2,11 @@
  * GroupBulkRead.cpp
  *
  *  Created on: 2016. 1. 28.
- *      Author: zerom
+ *      Author: zerom, leon
  */
+#if defined(_WIN32) || defined(_WIN64)
+#define WINDLLEXPORT
+#endif
 
 #include <stdio.h>
 #include <algorithm>
@@ -194,4 +197,3 @@ UINT32_T GroupBulkRead::GetData(UINT8_T id, UINT16_T address, UINT16_T data_leng
         return 0;
     }
 }
-

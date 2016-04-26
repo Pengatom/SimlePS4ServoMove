@@ -9,33 +9,32 @@
 // *********     Ping Example      *********
 //
 //
-// Available DXL model on this example : All models using Protocol 1.0
-// This example is tested with a DXL MX-28, and an USB2DYNAMIXEL
-// Be sure that DXL MX properties are already set as %% ID : 1 / Baudnum : 1 (Baudrate : 1000000)
+// Available Dynamixel model on this example : All models using Protocol 1.0
+// This example is tested with a Dynamixel MX-28, and an USB2DYNAMIXEL
+// Be sure that Dynamixel MX properties are already set as %% ID : 1 / Baudnum : 1 (Baudrate : 1000000)
 //
 
 #ifdef __linux__
 #include <unistd.h>
 #include <fcntl.h>
-#include <getopt.h>
 #include <termios.h>
+#elif defined(_WIN32) || defined(_WIN64)
+#include <conio.h>
 #endif
 
 #include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
-#include "DynamixelSDK.h"
+#include "DynamixelSDK.h"                                   // Uses Dynamixel SDK library
 
 // Protocol version
-#define PROTOCOL_VERSION                1.0
+#define PROTOCOL_VERSION                1.0                 // See which protocol version is used in the Dynamixel
 
 // Default setting
-#define DXL_ID                          1
+#define DXL_ID                          1                   // Dynamixel ID: 1
 #define BAUDRATE                        1000000
-#define DEVICENAME                      "/dev/ttyUSB0"
+#define DEVICENAME                      "/dev/ttyUSB0"      // Check which port is being used on your controller
+                                                            // ex) Windows: "COM1"   Linux: "/dev/ttyUSB0"
 
-using namespace ROBOTIS;
+using namespace ROBOTIS;                                    // Uses functions defined in ROBOTIS namespace
 
 #ifdef __linux__
 int _getch()
@@ -87,12 +86,14 @@ int main()
     PortHandler *portHandler = PortHandler::GetPortHandler(DEVICENAME);
 
     // Initialize Packethandler instance
+    // Set the protocol version
+    // Get methods and members of Protocol1PacketHandler or Protocol2PacketHandler
     PacketHandler *packetHandler = PacketHandler::GetPacketHandler(PROTOCOL_VERSION);
 
-    int dxl_comm_result = COMM_TX_FAIL;                     // Communication result
+    int dxl_comm_result = COMM_TX_FAIL;             // Communication result
 
-    UINT8_T dxl_error = 0;                                  // DXL error
-    UINT16_T dxl_model_number;                              // DXL model number
+    UINT8_T dxl_error = 0;                          // Dynamixel error
+    UINT16_T dxl_model_number;                      // Dynamixel model number
 
     // Open port
     if( portHandler->OpenPort() )
@@ -120,20 +121,18 @@ int main()
         return 0;
     }
 
-    // Try to ping the DXL
-    // Get DXL model number from the DXL
+    // Try to ping the Dynamixel
+    // Get Dynamixel model number
     dxl_comm_result = packetHandler->Ping(portHandler, DXL_ID, &dxl_model_number, &dxl_error);
     if(dxl_comm_result != COMM_SUCCESS)
         packetHandler->PrintTxRxResult(dxl_comm_result);
     else if(dxl_error != 0)
         packetHandler->PrintRxPacketError(dxl_error);
 
-    printf("[ID:%03d] Ping Succeeded. DXL model number : %d\n", DXL_ID, dxl_model_number);
+    printf("[ID:%03d] Ping Succeeded. Dynamixel model number : %d\n", DXL_ID, dxl_model_number);
 
     // Close port
     portHandler->ClosePort();
 
-    printf( "Press Enter key to terminate...\n" );
-    _getch();
     return 0;
 }

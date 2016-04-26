@@ -2,8 +2,12 @@
  * Protocol2PacketHandler.cpp
  *
  *  Created on: 2016. 1. 26.
- *      Author: zerom
+ *      Author: zerom, leon
  */
+
+#if defined(_WIN32) || defined(_WIN64)
+#define WINDLLEXPORT
+#endif
 
 #include <stdio.h>
 #include <string.h>

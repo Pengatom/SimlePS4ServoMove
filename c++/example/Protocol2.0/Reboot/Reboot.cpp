@@ -9,33 +9,32 @@
 // *********     Reboot Example      *********
 //
 //
-// Available DXL model on this example : All models using Protocol 2.0
-// This example is tested with a DXL PRO 54-200, and USB2DYNAMIXEL
-// Be sure that DXL PRO properties are already set as %% ID : 1 / Baudnum : 3 (Baudrate : 1000000) / Min voltage limit : under 110 (when using 12V power supplement)
+// Available Dynamixel model on this example : All models using Protocol 2.0
+// This example is tested with a Dynamixel PRO 54-200, and USB2DYNAMIXEL
+// Be sure that Dynamixel PRO properties are already set as %% ID : 1 / Baudnum : 3 (Baudrate : 1000000)
 //
 
 #ifdef __linux__
 #include <unistd.h>
 #include <fcntl.h>
-#include <getopt.h>
 #include <termios.h>
+#elif defined(_WIN32) || defined(_WIN64)
+#include <conio.h>
 #endif
 
 #include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
-#include "DynamixelSDK.h"
+#include "DynamixelSDK.h"                                   // Uses Dynamixel SDK library
 
 // Protocol version
-#define PROTOCOL_VERSION                2.0
+#define PROTOCOL_VERSION                2.0                 // See which protocol version is used in the Dynamixel
 
 // Default setting
-#define DXL_ID                          1
+#define DXL_ID                          1                   // Dynamixel ID: 1
 #define BAUDRATE                        1000000
-#define DEVICENAME                      "/dev/ttyUSB0"
+#define DEVICENAME                      "/dev/ttyUSB0"      // Check which port is being used on your controller
+                                                            // ex) Windows: "COM1"   Linux: "/dev/ttyUSB0"
 
-using namespace ROBOTIS;
+using namespace ROBOTIS;                                    // Uses functions defined in ROBOTIS namespace
 
 #ifdef __linux__
 int _getch()
@@ -87,11 +86,13 @@ int main()
     PortHandler *portHandler = PortHandler::GetPortHandler(DEVICENAME);
 
     // Initialize Packethandler instance
+    // Set the protocol version
+    // Get methods and members of Protocol1PacketHandler or Protocol2PacketHandler
     PacketHandler *packetHandler = PacketHandler::GetPacketHandler(PROTOCOL_VERSION);
 
     int dxl_comm_result = COMM_TX_FAIL;             // Communication result
 
-    UINT8_T dxl_error = 0;
+    UINT8_T dxl_error = 0;                          // Dynamixel error
 
     // Open port
     if( portHandler->OpenPort() )
@@ -120,23 +121,22 @@ int main()
     }
 
     // Trigger
-    printf( "Press Enter key to reboot\n" );
+    printf( "Press any key to reboot\n" );
     _getch();
 
+    printf("See the Dynamixel LED flickering\n");
     // Try reboot
-    // DXL Green LED will flicker while it reboots
+    // Dynamixel LED will flicker while it reboots
     dxl_comm_result = packetHandler->Reboot(portHandler, DXL_ID, &dxl_error);
     if(dxl_comm_result != COMM_SUCCESS)
         packetHandler->PrintTxRxResult(dxl_comm_result);
     else if(dxl_error != 0)
         packetHandler->PrintRxPacketError(dxl_error);
 
-	printf("[ID:%03d] Reboot Succeeded\n", DXL_ID);
+    printf("[ID:%03d] Reboot Succeeded\n", DXL_ID);
 
-	// Close port
+    // Close port
     portHandler->ClosePort();
 
-    printf( "Press Enter key to terminate...\n" );
-    _getch();
     return 0;
 }

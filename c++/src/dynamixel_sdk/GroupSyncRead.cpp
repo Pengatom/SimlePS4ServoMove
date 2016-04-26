@@ -2,8 +2,11 @@
  * GroupSyncRead.cpp
  *
  *  Created on: 2016. 2. 2.
- *      Author: zerom
+ *      Author: zerom, leon
  */
+#if defined(_WIN32) || defined(_WIN64)
+#define WINDLLEXPORT
+#endif
 
 #include <algorithm>
 #include "dynamixel_sdk/GroupSyncRead.h"
@@ -170,4 +173,3 @@ UINT32_T GroupSyncRead::GetData(UINT8_T id, UINT16_T address, UINT16_T data_leng
         return 0;
     }
 }
-

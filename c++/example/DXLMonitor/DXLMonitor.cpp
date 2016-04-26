@@ -9,9 +9,9 @@
 // *********     DXL Monitor Example      *********
 //
 //
-// Available DXL model on this example : All models using Protocol 1.0 and 2.0
-// This example is tested with a DXL MX-28, a DXL PRO 54-200 and an USB2DYNAMIXEL
-// Be sure that properties of DXL MX and PRO are already set as %% MX - ID : 1 / Baudnum : 1 (Baudrate : 1000000) , PRO - ID : 1 / Baudnum : 3 (Baudrate : 1000000)
+// Available Dynamixel model on this example : All models using Protocol 1.0 and 2.0
+// This example is tested with a Dynamixel MX-28, a Dynamixel PRO 54-200 and an USB2DYNAMIXEL
+// Be sure that properties of Dynamixel MX and PRO are already set as %% MX - ID : 1 / Baudnum : 1 (Baudrate : 1000000) , PRO - ID : 1 / Baudnum : 3 (Baudrate : 1000000)
 //
 
 #ifdef __linux__
@@ -19,22 +19,25 @@
 #include <fcntl.h>
 #include <getopt.h>
 #include <termios.h>
+#elif defined(_WIN32) || defined(_WIN64)
+#include <conio.h>
 #endif
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <vector>
-#include "DynamixelSDK.h"
+#include "DynamixelSDK.h"                                   // Uses Dynamixel SDK library
 
 // Protocol version
-#define PROTOCOL_VERSION1               1.0
+#define PROTOCOL_VERSION1               1.0                 // See which protocol version is used in the Dynamixel
 #define PROTOCOL_VERSION2               2.0
 
 // Default setting
-#define DEFAULT_DEV_NAME                "/dev/ttyUSB0"
+#define DEVICENAME                      "/dev/ttyUSB0"      // Check which port is being used on your controller
+                                                            // ex) Windows: "COM1"   Linux: "/dev/ttyUSB0"
 
-using namespace ROBOTIS;
+using namespace ROBOTIS;                                    // Uses functions defined in ROBOTIS namespace
 
 #ifdef __linux__
 int _getch()
@@ -83,7 +86,7 @@ void Usage(char *progname)
     printf("-----------------------------------------------------------------------\n");
     printf("Usage: %s\n" \
            " [-h | --help]........: display this help\n" \
-           " [-d | --device]......: port to open                     (/dev/ttyUSB0)\n" \
+           " [-d | --device]......: port to open                                   \n" \
            , progname);
     printf("-----------------------------------------------------------------------\n");
 }
@@ -101,11 +104,11 @@ void Help()
     printf("                               ex) baud 2400 (2400 bps) \n");
     printf("                               ex) baud 1000000 (1 Mbps)  \n");
     printf(" exit                        :Exit this program\n");
-    printf(" scan                        :Outputs the current status of all DXLs\n");
+    printf(" scan                        :Outputs the current status of all Dynamixels\n");
     printf(" ping [ID] [ID] ...          :Outputs the current status of [ID]s \n");
-    printf(" bp                          :Broadcast ping (DXL Protocol 2.0 only)\n");
+    printf(" bp                          :Broadcast ping (Dynamixel Protocol 2.0 only)\n");
     printf(" \n");
-    printf(" ==================== Commands for DXL Protocol 1.0 ====================\n");
+    printf(" ==================== Commands for Dynamixel Protocol 1.0 ====================\n");
     printf(" \n");
     printf(" wrb1|w1 [ID] [ADDR] [VALUE] :Write byte [VALUE] to [ADDR] of [ID]\n");
     printf(" wrw1 [ID] [ADDR] [VALUE]    :Write word [VALUE] to [ADDR] of [ID]\n");
@@ -115,7 +118,7 @@ void Help()
     printf("                               ([LENGTH] bytes from [ADDR])\n");
     printf(" reset1|rst1 [ID]            :Factory reset the Dynamixel of [ID]\n");
     printf(" \n");
-    printf(" ==================== Commands for DXL Protocol 2.0 ====================\n");
+    printf(" ==================== Commands for Dynamixel Protocol 2.0 ====================\n");
     printf(" \n");
     printf(" wrb2|w2 [ID] [ADDR] [VALUE] :Write byte [VALUE] to [ADDR] of [ID]\n");
     printf(" wrw2 [ID] [ADDR] [VALUE]    :Write word [VALUE] to [ADDR] of [ID]\n");
@@ -138,7 +141,7 @@ void Scan(PortHandler *portHandler, PacketHandler* packetHandler1, PacketHandler
     UINT16_T dxl_model_num;
 
     fprintf(stderr, "\n");
-    fprintf(stderr, "Scan DXL Using Protocol 1.0\n");
+    fprintf(stderr, "Scan Dynamixel Using Protocol 1.0\n");
     for(int id = 1; id < 253; id++)
     {
         if( packetHandler1-> Ping(portHandler, id, &dxl_model_num, &dxl_error)== COMM_SUCCESS)
@@ -159,7 +162,7 @@ void Scan(PortHandler *portHandler, PacketHandler* packetHandler1, PacketHandler
     }
     fprintf(stderr, "\n\n");
 
-    fprintf(stderr, "Scan DXL Using Protocol 2.0\n");
+    fprintf(stderr, "Scan Dynamixel Using Protocol 2.0\n");
     for(int id = 1; id < 253; id++)
     {
         if(packetHandler2-> Ping(portHandler, id, &dxl_model_num, &dxl_error)== COMM_SUCCESS)
@@ -210,11 +213,11 @@ void Write(PortHandler *portHandler, PacketHandler *packetHandler, UINT8_T id, U
 void Read(PortHandler *portHandler, PacketHandler *packetHandler, UINT8_T id, UINT16_T addr, UINT16_T length)
 {
     UINT8_T dxl_error = 0;
-    int dxl_comm_result = COMM_TX_FAIL;
+    int     dxl_comm_result = COMM_TX_FAIL;
 
-    INT8_T    value8    = 0;
-    INT16_T    value16    = 0;
-    INT32_T value32    = 0;
+    INT8_T  value8    = 0;
+    INT16_T value16   = 0;
+    INT32_T value32   = 0;
 
 
     if(length == 1)
@@ -245,9 +248,9 @@ void Read(PortHandler *portHandler, PacketHandler *packetHandler, UINT8_T id, UI
 
 void Dump(PortHandler *portHandler, PacketHandler *packetHandler, UINT8_T id, UINT16_T addr, UINT16_T len)
 {
-    UINT8_T dxl_error = 0;
-    int dxl_comm_result = COMM_TX_FAIL;
-    UINT8_T* data = (UINT8_T*)calloc(len, sizeof(UINT8_T));
+    UINT8_T  dxl_error       = 0;
+    int      dxl_comm_result = COMM_TX_FAIL;
+    UINT8_T* data            = (UINT8_T*)calloc(len, sizeof(UINT8_T));
 
     dxl_comm_result = packetHandler->ReadTxRx(portHandler, id, addr, len, data, &dxl_error);
     if(dxl_comm_result == COMM_SUCCESS)
@@ -284,19 +287,20 @@ int main(int argc, char *argv[])
     fprintf(stderr,   "*                            DXL Monitor                              *\n");
     fprintf(stderr,   "***********************************************************************\n\n");
 
-    char *dev_name = (char*)DEFAULT_DEV_NAME;
+    char *dev_name = (char*)DEVICENAME;
 
+#ifdef __linux__
     /* parameter parsing */
     while(1)
     {
-    	int option_index = 0, c = 0;
-    	static struct option long_options[] = {
+        int option_index = 0, c = 0;
+        static struct option long_options[] = {
                 {"h", no_argument, 0, 0},
                 {"help", no_argument, 0, 0},
                 {"d", required_argument, 0, 0},
                 {"device", required_argument, 0, 0},
                 {0, 0, 0, 0}
-    	};
+        };
 
         /* parsing all parameters according to the list above is sufficent */
         c = getopt_long_only(argc, argv, "", long_options, &option_index);
@@ -306,7 +310,7 @@ int main(int argc, char *argv[])
 
         /* unrecognized option */
         if(c == '?') {
-        	Usage(argv[0]);
+            Usage(argv[0]);
             return 0;
         }
 
@@ -315,7 +319,7 @@ int main(int argc, char *argv[])
         /* h, help */
         case 0:
         case 1:
-        	Usage(argv[0]);
+            Usage(argv[0]);
             return 0;
             break;
 
@@ -333,15 +337,16 @@ int main(int argc, char *argv[])
             break;
 
         default:
-        	Usage(argv[0]);
+            Usage(argv[0]);
             return 0;
         }
     }
+#endif
 
-	// Initialize PortHandler instance
-	// Set the port path
-	// Get methods and members of PortHandlerLinux or PortHandlerWindows
-	PortHandler *portHandler = PortHandler::GetPortHandler(dev_name);
+    // Initialize PortHandler instance
+    // Set the port path
+    // Get methods and members of PortHandlerLinux or PortHandlerWindows
+    PortHandler *portHandler = PortHandler::GetPortHandler(dev_name);
 
     // Open port
     if(portHandler->OpenPort())
@@ -358,11 +363,11 @@ int main(int argc, char *argv[])
         return 0;
     }
 
-    char input[128];
-    char cmd[80];
-    char param[20][30];
-    int num_param;
-    char* token;
+    char    input[128];
+    char    cmd[80];
+    char    param[20][30];
+    int     num_param;
+    char*   token;
     UINT8_T dxl_error;
 
     while(1)

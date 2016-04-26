@@ -330,7 +330,12 @@ int Protocol2PacketHandler::RxPacket(PortHandler *port, UINT8_T *rxpacket)
                 }
 
                 // re-calculate the exact length of the rx packet
-                _wait_length = DXL_MAKEWORD(rxpacket[PKT_LENGTH_L], rxpacket[PKT_LENGTH_H]) + PKT_LENGTH_H + 1;
+                if(_wait_length != DXL_MAKEWORD(rxpacket[PKT_LENGTH_L], rxpacket[PKT_LENGTH_H]) + PKT_LENGTH_H + 1)
+                {
+                    _wait_length = DXL_MAKEWORD(rxpacket[PKT_LENGTH_L], rxpacket[PKT_LENGTH_H]) + PKT_LENGTH_H + 1;
+                    continue;
+                }
+
                 if(_rx_length < _wait_length)
                 {
                     // check timeout

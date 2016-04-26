@@ -1,0 +1,93 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="소스 파일">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="헤더 파일">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="리소스 파일">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="소스 파일\dynamixel_sdk">
+      <UniqueIdentifier>{076de381-5add-46ea-b588-871cd563c59e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\dynamixel_sdk_windows">
+      <UniqueIdentifier>{485027ae-62a2-4ad2-b1de-9bd29eccc7bb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\dynamixel_sdk">
+      <UniqueIdentifier>{8faa76fd-7201-42ca-b24e-5760f1207428}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="헤더 파일\dynamixel_sdk_windows">
+      <UniqueIdentifier>{0d62b764-1467-47fb-b3b4-30e390b759a8}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\src\dynamixel_sdk\GroupBulkRead.cpp">
+      <Filter>소스 파일\dynamixel_sdk</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\dynamixel_sdk\GroupBulkWrite.cpp">
+      <Filter>소스 파일\dynamixel_sdk</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\dynamixel_sdk\GroupSyncRead.cpp">
+      <Filter>소스 파일\dynamixel_sdk</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\dynamixel_sdk\GroupSyncWrite.cpp">
+      <Filter>소스 파일\dynamixel_sdk</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\dynamixel_sdk\PacketHandler.cpp">
+      <Filter>소스 파일\dynamixel_sdk</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\dynamixel_sdk\PortHandler.cpp">
+      <Filter>소스 파일\dynamixel_sdk</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\dynamixel_sdk\Protocol1PacketHandler.cpp">
+      <Filter>소스 파일\dynamixel_sdk</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\dynamixel_sdk\Protocol2PacketHandler.cpp">
+      <Filter>소스 파일\dynamixel_sdk</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\src\dynamixel_sdk_windows\PortHandlerWindows.cpp">
+      <Filter>소스 파일\dynamixel_sdk_windows</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\include\dynamixel_sdk\GroupBulkRead.h">
+      <Filter>헤더 파일\dynamixel_sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\dynamixel_sdk\GroupBulkWrite.h">
+      <Filter>헤더 파일\dynamixel_sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\dynamixel_sdk\GroupSyncRead.h">
+      <Filter>헤더 파일\dynamixel_sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\dynamixel_sdk\GroupSyncWrite.h">
+      <Filter>헤더 파일\dynamixel_sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\dynamixel_sdk\PacketHandler.h">
+      <Filter>헤더 파일\dynamixel_sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\dynamixel_sdk\PortHandler.h">
+      <Filter>헤더 파일\dynamixel_sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\dynamixel_sdk\Protocol1PacketHandler.h">
+      <Filter>헤더 파일\dynamixel_sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\dynamixel_sdk\Protocol2PacketHandler.h">
+      <Filter>헤더 파일\dynamixel_sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\dynamixel_sdk\RobotisDef.h">
+      <Filter>헤더 파일\dynamixel_sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\dynamixel_sdk_windows\PortHandlerWindows.h">
+      <Filter>헤더 파일\dynamixel_sdk_windows</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\DynamixelSDK.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

@@ -183,7 +183,12 @@ int Protocol1PacketHandler::RxPacket(PortHandler *port, UINT8_T *rxpacket)
                 }
 
                 // re-calculate the exact length of the rx packet
-                _wait_length = rxpacket[PKT_LENGTH] + PKT_LENGTH + 1;
+                if(_wait_length != rxpacket[PKT_LENGTH] + PKT_LENGTH + 1)
+                {
+                    _wait_length = rxpacket[PKT_LENGTH] + PKT_LENGTH + 1;
+                    continue;
+                }
+                
                 if(_rx_length < _wait_length)
                 {
                     // check timeout

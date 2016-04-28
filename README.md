@@ -3,5 +3,6 @@ All in one SDK for ROBOTIS Dynamixel
 : Protocol 1.0 / Protocol 2.0
 : Windows / Linux
 
-Do you have a question of it? Please let me know through [GITHUB ISSUE](https://github.com/ROBOTIS-GIT/DynamixelSDK/issues)
+Any questions are welcomed, just let us know about it through:
+[GITHUB ISSUE](https://github.com/ROBOTIS-GIT/DynamixelSDK/issues)
 

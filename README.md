@@ -7,5 +7,9 @@ All in one SDK for ROBOTIS Dynamixel
 
 --------------------------------------------------------------------------
 
+###Visit [ROBOTIS E-Manual](http://support.robotis.com/) and have details of ROBOTIS products
+
+###See 'What is Dynamixel SDK' at [Dynamixel SDK Manual](https://github.com/ROBOTIS-GIT/ROBOTIS-Documents/wiki/ROBOTIS-Dynamixel-SDK-Documents
+
 ###Any questions are welcomed. Just let us know through: [ISSUES](https://github.com/ROBOTIS-GIT/DynamixelSDK/issues)
 

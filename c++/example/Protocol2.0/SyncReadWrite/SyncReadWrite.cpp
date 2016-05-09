@@ -227,8 +227,6 @@ int main()
             dxl_comm_result = groupSyncRead.TxRxPacket();
             if(dxl_comm_result != COMM_SUCCESS)
                 packetHandler->PrintTxRxResult(dxl_comm_result);
-            else if(dxl_error != 0)
-                packetHandler->PrintRxPacketError(dxl_error);
 
             // Check if groupsyncread data of Dynamixel#1 is available
             dxl_getdata_result = groupSyncRead.IsAvailable(DXL1_ID, ADDR_PRO_PRESENT_POSITION, LEN_PRO_PRESENT_POSITION);

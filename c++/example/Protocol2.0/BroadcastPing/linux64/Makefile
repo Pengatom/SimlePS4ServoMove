@@ -42,7 +42,7 @@ FORMAT      = -m64
 # Core components (all of these are likely going to be needed)
 #---------------------------------------------------------------------
 INCLUDES   += -I$(DIR_DXL)/include
-LIBRARIES  += -ldxl
+LIBRARIES  += -ldxl_x64_cpp
 LIBRARIES  += -lrt
 
 #---------------------------------------------------------------------

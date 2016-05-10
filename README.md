@@ -4,13 +4,9 @@
 --------------------------------------------------------------------------
 Cross-compilable, all in one SDK for ROBOTIS Dynamixel.
 
-* Windows / Linux
-
-* 32 bit / 64 bit
-
-* C / C++
-
-* Protocol 1.0 / Protocol 2.0
+* Windows & Linux
+* 32 bit & 64 bit
+* Protocol 1.0 & Protocol 2.0
 
 
 #### Dynamixel SDK 2.0
@@ -26,7 +22,7 @@ Cross-compilable, all in one SDK for ROBOTIS Dynamixel.
 * Linux | Depedent | Protocol 1.0 : [DXL_SDK_LINUX_v1_01.zip](http://support.robotis.com/ko/baggage_files/dynamixel_sdk/dxl_sdk_linux_v1_01.zip)
 * Linux | Depedent | Protocol 2.0 : [DXL SDK 2.0 for Linux.zip](http://www.robotis.com/BlueAD/download.php?bbs_id=service_03&bbs_no=618381&bbs_opt1=&file_no=1)
 
-
+---------------------------------------------------------------------------
 ####Visit [ROBOTIS E-Manual](http://support.robotis.com/) and have details of ROBOTIS products
 
 ####See 'How to use' through [Dynamixel SDK Manual](https://github.com/ROBOTIS-GIT/ROBOTIS-Documents/wiki/ROBOTIS-Dynamixel-SDK-Documents)

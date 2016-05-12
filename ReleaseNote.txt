@@ -9,3 +9,11 @@
 - Second release (04.26.2016)
 
 * Windows version C++ begun to be serviced
+
+
+
+Update log:
+
+
+
+Bugfix log:

@@ -10,6 +10,10 @@
 
 * Windows version C++ begun to be serviced
 
+- Third release (05.17.2016)
+
+* Windows version C source codes uploaded
+
 
 
 Update log:

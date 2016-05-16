@@ -2,7 +2,7 @@
 --------------------------------------------------------------------------
 #### Dynamixel SDK 3.0 : Released in 2016.03.08
 Cross-compilable, all in one SDK for ROBOTIS Dynamixel
-: [DynamixelSDK-master.zip](https://github.com/ROBOTIS-GIT/DynamixelSDK/archive/master.zip)
+: [Download now](https://github.com/ROBOTIS-GIT/DynamixelSDK/archive/master.zip)
 
 * Windows & Linux | 32 bit & 64 bit | Protocol 1.0 & Protocol 2.0
 

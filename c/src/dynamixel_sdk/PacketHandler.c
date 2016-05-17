@@ -8,6 +8,7 @@
 #define WINDLLEXPORT
 #endif
 
+#include <stdlib.h>
 #include "dynamixel_sdk/PacketHandler.h"
 #include "dynamixel_sdk/Protocol1PacketHandler.h"
 #include "dynamixel_sdk/Protocol2PacketHandler.h"
@@ -16,7 +17,12 @@ void PacketHandler()
 {
     int _port_num;
 
-    packetData = (PacketData*)realloc(packetData, used_port_num_ * sizeof(PacketData));
+    if(packetData == NULL)
+		packetData = (PacketData*)malloc(1 * sizeof(PacketData));
+
+//    printf("used_port_num_ ::%d", used_port_num_);
+	packetData = (PacketData*)realloc(packetData, used_port_num_ * sizeof(PacketData));
+
 
     for (_port_num = 0; _port_num < used_port_num_; _port_num++)
     {

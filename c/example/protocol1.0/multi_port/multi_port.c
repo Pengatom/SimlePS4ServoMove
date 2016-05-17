@@ -93,6 +93,8 @@ int _kbhit(void)
 
 int main()
 {
+
+	char *aa;
     // Initialize PortHandler Structs
     // Set the port path
     // Get methods and members of PortHandlerLinux or PortHandlerWindows
@@ -160,7 +162,6 @@ int main()
         _getch();
         return 0;
     }
-
 
     // Enable Dynamixel#1 Torque
     Write1ByteTxRx(port_num1, PROTOCOL_VERSION, DXL1_ID, ADDR_MX_TORQUE_ENABLE, TORQUE_ENABLE);

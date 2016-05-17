@@ -119,7 +119,7 @@ int main()
 
     // Try to ping the Dynamixel
     // Get Dynamixel model number
-    dxl_model_number = PingModelNum(port_num, PROTOCOL_VERSION, DXL_ID);
+    dxl_model_number = PingGetModelNum(port_num, PROTOCOL_VERSION, DXL_ID);
     if ((dxl_comm_result = GetLastTxRxResult(port_num, PROTOCOL_VERSION)) != COMM_SUCCESS)
         PrintTxRxResult(PROTOCOL_VERSION, dxl_comm_result);
     else if ((dxl_error = GetLastRxPacketError(port_num, PROTOCOL_VERSION)) != 0)

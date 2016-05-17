@@ -121,8 +121,7 @@ int main()
     int dxl_goal_position[2] = { DXL_MINIMUM_POSITION_VALUE, DXL_MAXIMUM_POSITION_VALUE };         // Goal position
 
     UINT8_T dxl_error = 0;                          // Dynamixel error
-    UINT8_T dxl_led_value[2] = { 0x00, 0xFF };        // Dynamixel LED value for write
-    UINT8_T param_goal_position[4];
+    UINT8_T dxl_led_value[2] = { 0x00, 0xFF };      // Dynamixel LED value for write
     INT32_T dxl1_present_position = 0;              // Present position
     UINT8_T dxl2_led_value_read;                    // Dynamixel LED value for read
 

@@ -208,7 +208,7 @@ void GroupBulkWrite_RemoveParam(int group_num, UINT8_T id)
 
 bool GroupBulkWrite_ChangeParam(int group_num, UINT8_T id, UINT16_T start_address, UINT16_T data_length, UINT32_T data, UINT16_T input_length, UINT16_T data_pos)
 {
-    int _data_num = GroupSyncWrite_Find(group_num, id);
+    int _data_num = GroupBulkWrite_Find(group_num, id);
 
     if (groupDataBulkWrite[group_num].protocol_version == 1)
         return false;

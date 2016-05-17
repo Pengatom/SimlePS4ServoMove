@@ -228,7 +228,7 @@ void RxPacket1(int port_num)
                     // remove the first byte in the packet
                     for (_s = 0; _s < _rx_length - 1; _s++)
                         packetData[port_num].rxpacket_[_s] = packetData[port_num].rxpacket_[1 + _s];
-                    //memcpy(&rxpacket[0], &rxpacket[_idx], _rx_length - _idx);
+
                     _rx_length -= 1;
                     continue;
                 }
@@ -267,7 +267,6 @@ void RxPacket1(int port_num)
                 // remove unnecessary packets
                 for (_s = 0; _s < _rx_length - _idx; _s++)
                     packetData[port_num].rxpacket_[_s] = packetData[port_num].rxpacket_[_idx + _s];
-                //memcpy(&rxpacket[0], &rxpacket[_idx], _rx_length - _idx);
                 _rx_length -= _idx;
             }
         }
@@ -333,6 +332,7 @@ void Ping1(int port_num, UINT8_T id)
 
 UINT16_T PingGetModelNum1(int port_num, UINT8_T id)
 {
+	packetData[port_num].data_read_ = (UINT8_T *)realloc(packetData[port_num].data_read_, 2 * sizeof(UINT8_T));
     packetData[port_num].communication_result_ = COMM_TX_FAIL;
 
     packetData[port_num].txpacket_ = (UINT8_T *)malloc(6);
@@ -436,7 +436,6 @@ void ReadRx1(int port_num, UINT16_T length)
             packetData[port_num].error_ = (UINT8_T)packetData[port_num].rxpacket_[PKT_ERROR];
         for (_s = 0; _s < length; _s++)
             packetData[port_num].data_read_[_s] = packetData[port_num].rxpacket_[PKT_PARAMETER0 + _s];
-        //memcpy(data, &rxpacket[PKT_PARAMETER0], length);
     }
 
     free(packetData[port_num].rxpacket_);
@@ -469,7 +468,6 @@ void ReadTxRx1(int port_num, UINT8_T id, UINT16_T address, UINT16_T length)
             packetData[port_num].error_ = (UINT8_T)packetData[port_num].rxpacket_[PKT_ERROR];
         for (_s = 0; _s < length; _s++)
             packetData[port_num].data_read_[_s] = packetData[port_num].rxpacket_[PKT_PARAMETER0 + _s];
-        //memcpy(data, &rxpacket[PKT_PARAMETER0], length);
     }
 
     free(packetData[port_num].rxpacket_);
@@ -481,6 +479,7 @@ void Read1ByteTx1(int port_num, UINT8_T id, UINT16_T address)
 }
 UINT8_T Read1ByteRx1(int port_num)
 {
+	packetData[port_num].data_read_ = (UINT8_T *)realloc(packetData[port_num].data_read_, 1 * sizeof(UINT8_T));
     packetData[port_num].data_read_[0] = 0;
     ReadRx1(port_num, 1);
     if (packetData[port_num].communication_result_ == COMM_SUCCESS)
@@ -489,6 +488,7 @@ UINT8_T Read1ByteRx1(int port_num)
 }
 UINT8_T Read1ByteTxRx1(int port_num, UINT8_T id, UINT16_T address)
 {
+	packetData[port_num].data_read_ = (UINT8_T *)realloc(packetData[port_num].data_read_, 1 * sizeof(UINT8_T));
     packetData[port_num].data_read_[0] = 0;
     ReadTxRx1(port_num, id, address, 1);
     if (packetData[port_num].communication_result_ == COMM_SUCCESS)
@@ -502,6 +502,7 @@ void Read2ByteTx1(int port_num, UINT8_T id, UINT16_T address)
 }
 UINT16_T Read2ByteRx1(int port_num)
 {
+	packetData[port_num].data_read_ = (UINT8_T *)realloc(packetData[port_num].data_read_, 2 * sizeof(UINT8_T));
     packetData[port_num].data_read_[0] = 0;
     packetData[port_num].data_read_[1] = 0;
     ReadRx1(port_num, 2);
@@ -511,7 +512,8 @@ UINT16_T Read2ByteRx1(int port_num)
 }
 UINT16_T Read2ByteTxRx1(int port_num, UINT8_T id, UINT16_T address)
 {
-    packetData[port_num].data_read_[0] = 0;
+    packetData[port_num].data_read_ = (UINT8_T *)realloc(packetData[port_num].data_read_, 2 * sizeof(UINT8_T));
+	packetData[port_num].data_read_[0] = 0;
     packetData[port_num].data_read_[1] = 0;
     ReadTxRx1(port_num, id, address, 2);
 
@@ -551,7 +553,6 @@ void WriteTxOnly1(int port_num, UINT8_T id, UINT16_T address, UINT16_T length)
 
     for (_s = 0; _s < length; _s++)
         packetData[port_num].txpacket_[PKT_PARAMETER0 + 1 + _s] = packetData[port_num].data_write_[_s];
-    //memcpy(&txpacket[PKT_PARAMETER0+1], data, length);
 
     TxPacket1(port_num);
     is_using_[port_num] = false;
@@ -575,7 +576,6 @@ void WriteTxRx1(int port_num, UINT8_T id, UINT16_T address, UINT16_T length)
 
     for (_s = 0; _s < length; _s++)
         packetData[port_num].txpacket_[PKT_PARAMETER0 + 1 + _s] = packetData[port_num].data_write_[_s];
-    //memcpy(&txpacket[PKT_PARAMETER0+1], data, length);
 
     TxRxPacket1(port_num);
 
@@ -634,7 +634,6 @@ void RegWriteTxOnly1(int port_num, UINT8_T id, UINT16_T address, UINT16_T length
 
     for (_s = 0; _s < length; _s++)
         packetData[port_num].txpacket_[PKT_PARAMETER0 + 1 + _s] = packetData[port_num].data_write_[_s];
-    //memcpy(&txpacket[PKT_PARAMETER0+1], data, length);
 
      TxPacket1(port_num);
     is_using_[port_num] = false;
@@ -660,7 +659,6 @@ void RegWriteTxRx1(int port_num, UINT8_T id, UINT16_T address, UINT16_T length)
 
     for (_s = 0; _s < length; _s++)
         packetData[port_num].txpacket_[PKT_PARAMETER0 + 1 + _s] = packetData[port_num].data_write_[_s];
-    //memcpy(&txpacket[PKT_PARAMETER0+1], data, length);
 
     TxRxPacket1(port_num);
 
@@ -688,7 +686,6 @@ void SyncWriteTxOnly1(int port_num, UINT16_T start_address, UINT16_T data_length
 
     for (_s = 0; _s < param_length; _s++)
         packetData[port_num].txpacket_[PKT_PARAMETER0 + 2 + _s] = packetData[port_num].data_write_[_s];
-    //memcpy(&txpacket[PKT_PARAMETER0+2], param, param_length);
 
     TxRxPacket1(port_num);
 
@@ -711,7 +708,6 @@ void BulkReadTx1(int port_num, UINT16_T param_length)
 
     for (_s = 0; _s < param_length; _s++)
         packetData[port_num].txpacket_[PKT_PARAMETER0 + 1 + _s] = packetData[port_num].data_write_[_s];
-        //memcpy(&txpacket[PKT_PARAMETER0+1], param, param_length);
 
     TxPacket1(port_num);
     if (packetData[port_num].communication_result_ == COMM_SUCCESS)

@@ -129,7 +129,7 @@ void GroupBulkRead_MakeParam(int group_num)
 
 bool GroupBulkRead_AddParam(int group_num, UINT8_T id, UINT16_T start_address, UINT16_T data_length)
 {
-    int _data_num;
+    int _data_num = 0;
 
     if (id == NOT_USED_ID)
         return false;
@@ -140,7 +140,7 @@ bool GroupBulkRead_AddParam(int group_num, UINT8_T id, UINT16_T start_address, U
     if (groupDataBulkRead[group_num].data_list_length_ == _data_num)
     {
         groupDataBulkRead[group_num].data_list_length_++;
-        groupDataBulkRead[group_num].data_list_ = (GroupDataBulkRead *)realloc(groupDataBulkRead[group_num].data_list_, groupDataBulkRead[group_num].data_list_length_ * sizeof(GroupDataBulkRead));
+        groupDataBulkRead[group_num].data_list_ = (DataListBulkRead *)realloc(groupDataBulkRead[group_num].data_list_, groupDataBulkRead[group_num].data_list_length_ * sizeof(DataListBulkRead));
 
         groupDataBulkRead[group_num].data_list_[_data_num].id_ = id;
         groupDataBulkRead[group_num].data_list_[_data_num].data_length_ = data_length;

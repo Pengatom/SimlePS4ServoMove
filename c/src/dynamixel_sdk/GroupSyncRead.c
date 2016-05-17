@@ -117,7 +117,7 @@ void GroupSyncRead_MakeParam(int group_num)
 
 bool GroupSyncRead_AddParam(int group_num, UINT8_T id)
 {
-    int _data_num;
+    int _data_num = 0;
 
     if (groupDataSyncRead[group_num].protocol_version == 1)
         return false;

@@ -18,10 +18,9 @@ void PacketHandler()
     int _port_num;
 
     if(packetData == NULL)
-		packetData = (PacketData*)malloc(1 * sizeof(PacketData));
+        packetData = (PacketData*)malloc(1 * sizeof(PacketData));
 
-//    printf("used_port_num_ ::%d", used_port_num_);
-	packetData = (PacketData*)realloc(packetData, used_port_num_ * sizeof(PacketData));
+     packetData = (PacketData*)realloc(packetData, used_port_num_ * sizeof(PacketData));
 
 
     for (_port_num = 0; _port_num < used_port_num_; _port_num++)

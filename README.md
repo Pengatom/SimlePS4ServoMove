@@ -23,6 +23,6 @@ Cross-compilable, all in one SDK for ROBOTIS Dynamixel
 ---------------------------------------------------------------------------
 ####Any questions are welcomed. Just let me know at: [ISSUES](https://github.com/ROBOTIS-GIT/DynamixelSDK/issues)
 
-####See 'How to use' through [Dynamixel SDK Manual](https://github.com/ROBOTIS-GIT/ROBOTIS-Documents/wiki/ROBOTIS-Dynamixel-SDK-Documents)
+####See 'How to use' in [Dynamixel SDK Manual](https://github.com/ROBOTIS-GIT/ROBOTIS-Documents/wiki/ROBOTIS-Dynamixel-SDK-Documents)
 
 ####Visit [ROBOTIS E-Manual](http://support.robotis.com/) and have details of ROBOTIS products

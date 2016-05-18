@@ -18,7 +18,7 @@ Cross-compilable, all in one SDK for ROBOTIS Dynamixel
 * Linux | Depedent | Protocol 1.0
 * Linux | Depedent | Protocol 2.0
 
-¹ User support discontinued. If necessary, contact us to get the source.
+¹ User support discontinued. If necessary, ask us for the source.
 
 ---------------------------------------------------------------------------
 ####Any questions are welcomed. Just let me know at: [ISSUES](https://github.com/ROBOTIS-GIT/DynamixelSDK/issues)

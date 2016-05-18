@@ -1,5 +1,5 @@
 /*
-* IndirectAddress.c
+* indirect_address.c
 *
 *  Created on: 2016. 5. 16.
 *      Author: leon
@@ -10,8 +10,9 @@
 //
 //
 // Available Dynamixel model on this example : All models using Protocol 2.0
-// This example is tested with a Dynamixel PRO 54-200, and an USB2DYNAMIXEL
-// Be sure that Dynamixel PRO properties are already set as %% ID : 1 / Baudnum : 3 (Baudrate : 1000000)
+// This example is designed for using a Dynamixel PRO 54-200, and an USB2DYNAMIXEL. 
+// To use another Dynamixel model, such as X series, see their details in E-Manual(support.robotis.com) and edit below "#define"d variables yourself.
+// Be sure that Dynamixel PRO properties are already set as %% ID : 1 / Baudnum : 3 (Baudrate : 1000000 [1M])
 //
 
 #ifdef __linux__
@@ -26,8 +27,7 @@
 #include <stdio.h>
 #include "DynamixelSDK.h"                                           // Uses Dynamixel SDK library
 
-// Control table address
-// Control table address is different in Dynamixel model
+// Control table address                                            // Control table address is different in Dynamixel model
 #define ADDR_PRO_INDIRECTADDRESS_FOR_WRITE      49                  // EEPROM region
 #define ADDR_PRO_INDIRECTADDRESS_FOR_READ       59                  // EEPROM region
 #define ADDR_PRO_TORQUE_ENABLE                  562

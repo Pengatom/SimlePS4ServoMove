@@ -1,5 +1,5 @@
 /*
-* BroadcastPing.c
+* broadcast_ping.c
 *
 *  Created on: 2016. 5. 16.
 *      Author: leon
@@ -10,8 +10,9 @@
 //
 //
 // Available Dynamixel model on this example : All models using Protocol 2.0
-// This example is tested with two Dynamixel PRO 54-200, and an USB2DYNAMIXEL
-// Be sure that Dynamixel PRO properties are already set as %% ID : 1 / Baudnum : 3 (Baudrate : 1000000)
+// This example is designed for using a Dynamixel PRO 54-200, and an USB2DYNAMIXEL. 
+// To use another Dynamixel model, such as X series, see their details in E-Manual(support.robotis.com) and edit below "#define"d variables yourself.
+// Be sure that Dynamixel PRO properties are already set as %% ID : 1 / Baudnum : 3 (Baudrate : 1000000 [1M])
 //
 
 #ifdef __linux__
@@ -120,10 +121,8 @@ int main()
 
     printf("Detected Dynamixel : \n");
     for (id = 0; id < MAX_ID; id++)
-    {
         if(GetBroadcastPingResult(port_num, PROTOCOL_VERSION, id))
             printf("[ID:%03d]\n", id);
-    }
 
     // Close port
     ClosePort(port_num);

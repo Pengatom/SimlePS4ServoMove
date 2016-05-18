@@ -1,5 +1,5 @@
 /*
-* BulkReadWrite.c
+* bulk_read_write.c
 *
 *  Created on: 2016. 5. 16.
 *      Author: leon
@@ -10,8 +10,9 @@
 //
 //
 // Available Dynamixel model on this example : All models using Protocol 2.0
-// This example is tested with two Dynamixel PRO 54-200, and an USB2DYNAMIXEL
-// Be sure that Dynamixel PRO properties are already set as %% ID : 1 and 2 / Baudnum : 3 (Baudrate : 1000000)
+// This example is designed for using two Dynamixel PRO 54-200, and an USB2DYNAMIXEL. 
+// To use another Dynamixel model, such as X series, see their details in E-Manual(support.robotis.com) and edit below "#define"d variables yourself.
+// Be sure that Dynamixel PRO properties are already set as %% ID : 1 and 2 / Baudnum : 3 (Baudrate : 1000000 [1M])
 //
 
 #ifdef __linux__
@@ -116,8 +117,8 @@ int main()
 
     int index = 0;
     int dxl_comm_result = COMM_TX_FAIL;             // Communication result
-    bool dxl_addparam_result = false;                // AddParam result
-    bool dxl_getdata_result = false;                 // GetParam result
+    bool dxl_addparam_result = false;               // AddParam result
+    bool dxl_getdata_result = false;                // GetParam result
     int dxl_goal_position[2] = { DXL_MINIMUM_POSITION_VALUE, DXL_MAXIMUM_POSITION_VALUE };         // Goal position
 
     UINT8_T dxl_error = 0;                          // Dynamixel error

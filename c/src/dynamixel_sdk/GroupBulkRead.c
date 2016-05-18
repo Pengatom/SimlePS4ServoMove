@@ -96,13 +96,10 @@ void GroupBulkRead_MakeParam(int group_num)
     if (GroupBulkRead_Size(group_num) == 0)
         return;
 
-    if (packetData[_port_num].data_write_ != 0)
-        free(packetData[_port_num].data_write_);
-
     if (groupDataBulkRead[group_num].protocol_version == 1)
-        packetData[_port_num].data_write_ = (UINT8_T*)malloc(GroupBulkRead_Size(group_num) * sizeof(UINT8_T) * 3); // ID(1) + ADDR(1) + LENGTH(1)
+        packetData[_port_num].data_write_ = (UINT8_T*)realloc(packetData[_port_num].data_write_, GroupBulkRead_Size(group_num) * sizeof(UINT8_T) * 3); // ID(1) + ADDR(1) + LENGTH(1)
     else    // 2.0
-        packetData[_port_num].data_write_ = (UINT8_T*)malloc(GroupBulkRead_Size(group_num) * sizeof(UINT8_T) * 5); // ID(1) + ADDR(2) + LENGTH(2)
+        packetData[_port_num].data_write_ = (UINT8_T*)realloc(packetData[_port_num].data_write_, GroupBulkRead_Size(group_num) * sizeof(UINT8_T) * 5); // ID(1) + ADDR(2) + LENGTH(2)
 
     _idx = 0;
     for (_data_num = 0; _data_num < groupDataBulkRead[group_num].data_list_length_; _data_num++)
@@ -160,7 +157,6 @@ void GroupBulkRead_RemoveParam(int group_num, UINT8_T id)
         return;
 
     groupDataBulkRead[group_num].data_list_[_data_num].data_ = 0;
-    free(groupDataBulkRead[group_num].data_list_[_data_num].data_);
 
     groupDataBulkRead[group_num].data_list_[_data_num].id_ = NOT_USED_ID;
     groupDataBulkRead[group_num].data_list_[_data_num].data_length_ = 0;
@@ -177,10 +173,8 @@ void GroupBulkRead_ClearParam(int group_num)
         return;
 
     groupDataBulkRead[group_num].data_list_ = 0;
-    free(groupDataBulkRead[group_num].data_list_);
 
     packetData[_port_num].data_write_ = 0;
-    free(packetData[_port_num].data_write_);
 
     groupDataBulkRead[group_num].data_list_length_ = 0;
 }

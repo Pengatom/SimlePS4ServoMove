@@ -100,10 +100,6 @@ void GroupBulkWrite_MakeParam(int group_num)
     if (GroupBulkWrite_Size(group_num) == 0)
         return;
 
-    if (packetData[_port_num].data_write_ != 0)
-        free(packetData[_port_num].data_write_);
-    packetData[_port_num].data_write_ = 0;
-
     groupDataBulkWrite[group_num].param_length_ = 0;
 
     _idx = 0;
@@ -197,7 +193,6 @@ void GroupBulkWrite_RemoveParam(int group_num, UINT8_T id)
     groupDataBulkWrite[group_num].data_list_[_data_num].data_end_ = 0;
 
     groupDataBulkWrite[group_num].data_list_[_data_num].data_ = 0;
-    free(groupDataBulkWrite[group_num].data_list_[_data_num].data_);
 
     groupDataBulkWrite[group_num].data_list_[_data_num].data_length_ = 0;
     groupDataBulkWrite[group_num].data_list_[_data_num].start_address_ = 0;
@@ -261,10 +256,8 @@ void GroupBulkWrite_ClearParam(int group_num)
         return;
 
     groupDataBulkWrite[group_num].data_list_ = 0;
-    free(groupDataBulkWrite[group_num].data_list_);
 
     packetData[_port_num].data_write_ = 0;
-    free(packetData[_port_num].data_write_);
 
     groupDataBulkWrite[group_num].data_list_length_ = 0;
 }

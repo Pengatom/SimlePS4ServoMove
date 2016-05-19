@@ -174,15 +174,6 @@ int main()
         return 0;
     }
 
-    GroupSyncRead_RemoveParam(groupread_num, DXL1_ID);
-
-    dxl_addparam_result = GroupSyncRead_AddParam(groupread_num, DXL1_ID);
-    if (dxl_addparam_result != true)
-    {
-        fprintf(stderr, "[ID:%03d] groupSyncRead addparam failed", DXL1_ID);
-        return 0;
-    }
-
     // Add parameter storage for Dynamixel#2 present position value
     dxl_addparam_result = GroupSyncRead_AddParam(groupread_num, DXL2_ID);
     if (dxl_addparam_result != true)

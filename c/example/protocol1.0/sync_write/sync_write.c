@@ -115,7 +115,6 @@ int main()
     int dxl_goal_position[2] = { DXL_MINIMUM_POSITION_VALUE, DXL_MAXIMUM_POSITION_VALUE };         // Goal position
 
     UINT8_T dxl_error = 0;                          // Dynamixel error
-    UINT8_T param_goal_position[2];
     UINT16_T dxl1_present_position = 0, dxl2_present_position = 0;              // Present position
 
     // Open port

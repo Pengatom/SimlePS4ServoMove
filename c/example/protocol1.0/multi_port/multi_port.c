@@ -1,5 +1,5 @@
 /*
-* MultiPort.c
+* multi_port.c
 *
 *  Created on: 2016. 5. 16.
 *      Author: leon
@@ -10,8 +10,9 @@
 //
 //
 // Available Dynamixel model on this example : All models using Protocol 1.0
-// This example is tested with a Dynamixel MX-28, and two USB2DYNAMIXEL
-// Be sure that Dynamixel MX properties are already set as %% ID : 1 / Baudnum : 1 (Baudrate : 1000000)
+// This example is designed for using two Dynamixel MX-28, and two USB2DYNAMIXEL.
+// To use another Dynamixel model, such as X series, see their details in E-Manual(support.robotis.com) and edit below "#define"d variables yourself.
+// Be sure that Dynamixel MX properties are already set as %% ID : 1 / Baudnum : 1 (Baudrate : 1000000 [1M])
 //
 
 #ifdef __linux__
@@ -160,7 +161,6 @@ int main()
         _getch();
         return 0;
     }
-
 
     // Enable Dynamixel#1 Torque
     Write1ByteTxRx(port_num1, PROTOCOL_VERSION, DXL1_ID, ADDR_MX_TORQUE_ENABLE, TORQUE_ENABLE);

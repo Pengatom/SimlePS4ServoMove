@@ -101,9 +101,7 @@ void GroupSyncRead_MakeParam(int group_num)
     if (GroupSyncRead_Size(group_num) == 0)
         return;
 
-    if (packetData[_port_num].data_write_ != 0)
-        free(packetData[_port_num].data_write_);
-    packetData[_port_num].data_write_ = (UINT8_T*)malloc(GroupSyncRead_Size(group_num) * (1) * sizeof(UINT8_T)); // ID(1)
+    packetData[_port_num].data_write_ = (UINT8_T*)realloc(packetData[_port_num].data_write_, GroupSyncRead_Size(group_num) * (1) * sizeof(UINT8_T)); // ID(1)
 
     _idx = 0;
     for (_data_num = 0; _data_num < groupDataSyncRead[group_num].data_list_length_; _data_num++)
@@ -117,7 +115,7 @@ void GroupSyncRead_MakeParam(int group_num)
 
 bool GroupSyncRead_AddParam(int group_num, UINT8_T id)
 {
-    int _data_num;
+    int _data_num = 0;
 
     if (groupDataSyncRead[group_num].protocol_version == 1)
         return false;
@@ -151,7 +149,6 @@ void GroupSyncRead_RemoveParam(int group_num, UINT8_T id)
         return;
 
     groupDataSyncRead[group_num].data_list_[_data_num].data_ = 0;
-    free(groupDataSyncRead[group_num].data_list_[_data_num].data_);
 
     groupDataSyncRead[group_num].data_list_[_data_num].id_ = NOT_USED_ID;
 
@@ -168,10 +165,8 @@ void GroupSyncRead_ClearParam(int group_num)
         return;
 
     groupDataSyncRead[group_num].data_list_ = 0;
-    free(groupDataSyncRead[group_num].data_list_);
 
     packetData[_port_num].data_write_ = 0;
-    free(packetData[_port_num].data_write_);
 
     groupDataSyncRead[group_num].data_list_length_ = 0;
 }

@@ -1,5 +1,5 @@
 /*
-* FactoryReset.c
+* factory_reset.c
 *
 *  Created on: 2016. 5. 16.
 *      Author: leon
@@ -10,8 +10,9 @@
 //
 //
 // Available Dynamixel model on this example : All models using Protocol 2.0
-// This example is tested with a Dynamixel PRO 54-200, and an USB2DYNAMIXEL
-// Be sure that Dynamixel PRO properties are already set as %% ID : 1 / Baudnum : 3 (Baudrate : 1000000)
+// This example is designed for using a Dynamixel PRO 54-200, and an USB2DYNAMIXEL. 
+// To use another Dynamixel model, such as X series, see their details in E-Manual(support.robotis.com) and edit below "#define"d variables yourself.
+// Be sure that Dynamixel PRO properties are already set as %% ID : 1 / Baudnum : 3 (Baudrate : 1000000 [1M])
 //
 
 // Be aware that:
@@ -38,7 +39,7 @@
 #define DXL_ID                          1                   // Dynamixel ID: 1
 #define BAUDRATE                        1000000
 #define DEVICENAME                      "/dev/ttyUSB0"      // Check which port is being used on your controller
-// ex) Windows: "COM1"   Linux: "/dev/ttyUSB0"
+                                                            // ex) Windows: "COM1"   Linux: "/dev/ttyUSB0"
 
 #define FACTORYRST_DEFAULTBAUDRATE      57600               // Dynamixel baudrate set by factoryreset
 #define NEW_BAUDNUM                     3                   // New baudnum to recover Dynamixel baudrate as it was

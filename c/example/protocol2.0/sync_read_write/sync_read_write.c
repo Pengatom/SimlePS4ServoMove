@@ -1,5 +1,5 @@
 /*
-* SyncReadWrite.c
+* sync_read_write.c
 *
 *  Created on: 2016. 5. 16.
 *      Author: leon
@@ -10,8 +10,9 @@
 //
 //
 // Available Dynamixel model on this example : All models using Protocol 2.0
-// This example is tested with two Dynamixel PRO 54-200, and an USB2DYNAMIXEL
-// Be sure that Dynamixel PRO properties are already set as %% ID : 1 / Baudnum : 3 (Baudrate : 1000000)
+// This example is designed for using two Dynamixel PRO 54-200, and an USB2DYNAMIXEL. 
+// To use another Dynamixel model, such as X series, see their details in E-Manual(support.robotis.com) and edit below "#define"d variables yourself.
+// Be sure that Dynamixel PRO properties are already set as %% ID : 1 / Baudnum : 3 (Baudrate : 1000000 [1M])
 //
 
 #ifdef __linux__
@@ -43,7 +44,7 @@
 #define DXL2_ID                         2                   // Dynamixel#2 ID: 2
 #define BAUDRATE                        1000000
 #define DEVICENAME                      "/dev/ttyUSB0"      // Check which port is being used on your controller
-// ex) Windows: "COM1"   Linux: "/dev/ttyUSB0"
+                                                            // ex) Windows: "COM1"   Linux: "/dev/ttyUSB0"
 
 #define TORQUE_ENABLE                   1                   // Value for enabling the torque
 #define TORQUE_DISABLE                  0                   // Value for disabling the torque
@@ -118,7 +119,6 @@ int main()
     int dxl_goal_position[2] = { DXL_MINIMUM_POSITION_VALUE, DXL_MAXIMUM_POSITION_VALUE };         // Goal position
 
     UINT8_T dxl_error = 0;                           // Dynamixel error
-    UINT8_T param_goal_position[4];
     INT32_T dxl1_present_position = 0, dxl2_present_position = 0;              // Present position
 
 

@@ -5,7 +5,7 @@ Cross-compilable, all in one SDK for ROBOTIS Dynamixel
 : [Get this now](https://github.com/ROBOTIS-GIT/DynamixelSDK/archive/master.zip)
 
 * Windows & Linux | 32 bit & 64 bit | Protocol 1.0 & Protocol 2.0
-
+* Supported languages : C / C++
 
 #### Dynamixel SDK 2.0 : Released in 2015.02.10 [Closed ¹ ]
 * Windows | 32bit | Protocol 1.0 
@@ -18,11 +18,11 @@ Cross-compilable, all in one SDK for ROBOTIS Dynamixel
 * Linux | Depedent | Protocol 1.0
 * Linux | Depedent | Protocol 2.0
 
-¹ User support discontinued. If necessary, contact us to get the source.
+¹ User support discontinued. If necessary, ask us for the source.
 
 ---------------------------------------------------------------------------
 ####Any questions are welcomed. Just let me know at: [ISSUES](https://github.com/ROBOTIS-GIT/DynamixelSDK/issues)
 
-####See 'How to use' through [Dynamixel SDK Manual](https://github.com/ROBOTIS-GIT/ROBOTIS-Documents/wiki/ROBOTIS-Dynamixel-SDK-Documents)
+####See 'How to use' in [Dynamixel SDK Manual](https://github.com/ROBOTIS-GIT/ROBOTIS-Documents/wiki/ROBOTIS-Dynamixel-SDK-Documents)
 
 ####Visit [ROBOTIS E-Manual](http://support.robotis.com/) and have details of ROBOTIS products

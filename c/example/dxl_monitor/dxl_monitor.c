@@ -1,5 +1,5 @@
 /*
- * DXLMonitor.c
+ * dxl_monitor.c
  *
  *  Created on: 2016. 5. 16.
  *      Author: leon

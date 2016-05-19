@@ -88,6 +88,7 @@ int main()
 
     int dxl_comm_result = COMM_TX_FAIL;             // Communication result
     int id;
+    
     // Open port
     if (OpenPort(port_num))
     {

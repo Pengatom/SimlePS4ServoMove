@@ -1,25 +1,26 @@
 ### Software Release
 --------------------------------------------------------------------------
-#### Dynamixel SDK 3.0 : Released in 2016.03.08
-Cross-compilable, all in one SDK for ROBOTIS Dynamixel
-: [Get this now](https://github.com/ROBOTIS-GIT/DynamixelSDK/archive/master.zip)
+| Dynamixel SDK Version | 1.0 | 2.0 | 3.0 ([Download](https://github.com/ROBOTIS-GIT/DynamixelSDK/archive/master.zip)) |
+| ------------- | ------------- | ------------- | ------------- |
+| Release date| 2010.05.16 | 2015.02.10 | 2016.03.08 |
+| Service | Closed ¹ | Closed ¹ | Available |
+| OS | Linux | Windows | Linux + Windows |
+|||||
+| SDK Languages :  ||||
+| (Protocol 1.0) | C (builds .a) | C (builds .dll)| C / C++ (builds .so & .dll) |
+| (Protocol 2.0) | C++ (builds .so)| C (builds .dll)| C / C++ (builds .so & .dll) |
+|||||
+| SDK Examples : | | | |
+| (C ver. Library binded)| C | C++| C| 
+| | | C#| C# (coming soon)| 
+| | | MATLAB| MATLAB (coming soon) | 
+| | | LabVIEW| LabVIEW (coming soon)| 
+| | | VB| | 
+| | | | Python (coming soon)| 
+| | | | JAVA (coming soon)| 
+| (C++ ver. Library binded)| C++|  | C++| 
 
-* Windows & Linux | 32 bit & 64 bit | Protocol 1.0 & Protocol 2.0
-* Supported languages : C / C++
-
-#### Dynamixel SDK 2.0 : Released in 2015.02.10 [Closed ¹ ]
-* Windows | 32bit | Protocol 1.0 
-* Windows | 64bit | Protocol 1.0
-* Windows | 32bit | Protocol 2.0
-* Windows | 64bit | Protocol 2.0
-
-
-#### Dynamixel SDK 1.0 : Released in 2010.05.16 [Closed ¹ ] 
-* Linux | Depedent | Protocol 1.0
-* Linux | Depedent | Protocol 2.0
-
-¹ User support discontinued. If necessary, ask us for the source.
-
+#####¹ User support discontinued. If necessary, ask us for the source.
 ---------------------------------------------------------------------------
 ####Any questions are welcomed. Just let me know at: [ISSUES](https://github.com/ROBOTIS-GIT/DynamixelSDK/issues)
 

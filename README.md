@@ -9,7 +9,6 @@
 | SDK Languages :  ||||
 | (Protocol 1.0) | C (builds .a) | C (builds .dll)| C / C++ (builds .so & .dll) |
 | (Protocol 2.0) | C++ (builds .so)| C (builds .dll)| C / C++ (builds .so & .dll) |
-|||||
 | SDK Examples : | | | |
 | (C ver. Library binded)| C | C++| C| 
 | | | C#| C# (coming soon)| 
@@ -18,9 +17,14 @@
 | | | VB| | 
 | | | | Python (coming soon)| 
 | | | | JAVA (coming soon)| 
-| (C++ ver. Library binded)| C++|  | C++| 
+| (C++ ver. Library binded)²| C++|  | C++| 
+|||||
+| Multi Port Control| X | X | O | 
+| Cross-compilability | X | X | O | 
+| Modularized | X | X | O |
 
 #####¹ User support discontinued. If necessary, ask us for the source.
+#####² C++ ver. Library is not optimized in binding other languages. Please use C ver. Library instead.  
 ---------------------------------------------------------------------------
 ####Any questions are welcomed. Just let me know at: [ISSUES](https://github.com/ROBOTIS-GIT/DynamixelSDK/issues)
 

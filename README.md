@@ -10,7 +10,8 @@
 | (Protocol 1.0) | C (builds .a) | C (builds .dll)| C / C++ (builds .so & .dll) |
 | (Protocol 2.0) | C++ (builds .so)| C (builds .dll)| C / C++ (builds .so & .dll) |
 | SDK Examples : | | | |
-| (C ver. Library binded)| C | C++| C| 
+| (C ver. Library binded)| C | | C| 
+| | | C++| | 
 | | | C#| C# (coming soon)| 
 | | | MATLAB| MATLAB (coming soon) | 
 | | | LabVIEW| LabVIEW (coming soon)| 

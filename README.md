@@ -6,23 +6,23 @@
 | OS | Linux | Windows | Linux + Windows |
 | Available Dynamixel models | All models | All models | All models |
 |||||
+| Multi Port Control <br> (Controls Dynamixels through <br> more than two ports)| X | X | O | 
+| Cross-compilability | X | X | O | 
+| Modularized Structure | X | X | O |
+|||||
 | SDK Languages :  ||||
 | (Protocol 1.0) | C (builds .a) | C (builds .dll)| C / C++ (builds .so & .dll) |
 | (Protocol 2.0) | C++ (builds .so)| C (builds .dll)| C / C++ (builds .so & .dll) |
 | SDK Examples : | | | |
 | (C ver. Library binded)| C | | C| 
 | | | C++| | 
-| | | C#| C# (coming soon)| 
-| | | MATLAB| MATLAB (coming soon) | 
-| | | LabVIEW| LabVIEW (coming soon)| 
+| | | C#| | 
+| | | MATLAB| | 
+| | | LabVIEW| | 
 | | | VB| | 
-| | | | Python (coming soon)| 
-| | | | JAVA (coming soon)| 
+| | | | | 
+| | | | | 
 | (C++ ver. Library binded)¹| C++|  | C++| 
-|||||
-| Multi Port Control <br> (Controls Dynamixels through <br> more than two ports)| X | X | O | 
-| Cross-compilability | X | X | O | 
-| Modularized Structure | X | X | O |
 
 #####¹ C++ ver. Library is not optimized in binding other languages. Please use C ver. Library instead.  
 ---------------------------------------------------------------------------

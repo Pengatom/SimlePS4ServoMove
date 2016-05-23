@@ -4,6 +4,7 @@
 | ------------- | ------------- | ------------- | ------------- |
 | Release date| 2010.05.16 | 2015.02.10 | 2016.03.08 |
 | OS | Linux | Windows | Linux + Windows |
+| Available Dynamixel models | All models | All models | All models |
 |||||
 | SDK Languages :  ||||
 | (Protocol 1.0) | C (builds .a) | C (builds .dll)| C / C++ (builds .so & .dll) |
@@ -18,9 +19,6 @@
 | | | | Python (coming soon)| 
 | | | | JAVA (coming soon)| 
 | (C++ ver. Library binded)¹| C++|  | C++| 
-|||||
-| APIs per Protocol| Splited | Semi-unified | Unified |
-| Available Dynamixel models | All models | All models | All models |
 |||||
 | Multi Port Control <br> (Controls Dynamixels through <br> more than two ports)| X | X | O | 
 | Cross-compilability | X | X | O | 

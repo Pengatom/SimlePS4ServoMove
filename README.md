@@ -19,9 +19,12 @@
 | | | | JAVA (coming soon)| 
 | (C++ ver. Library binded)¹| C++|  | C++| 
 |||||
-| Multi Port Control| X | X | O | 
+| APIs per Protocol| Splited | Semi-unified | Unified |
+| Available Dynamixel models | All models | All models | All models |
+|||||
+| Multi Port Control <br> (Controls Dynamixels through <br> more than two ports)| X | X | O | 
 | Cross-compilability | X | X | O | 
-| Modularized | X | X | O |
+| Modularized Structure | X | X | O |
 
 #####¹ C++ ver. Library is not optimized in binding other languages. Please use C ver. Library instead.  
 ---------------------------------------------------------------------------

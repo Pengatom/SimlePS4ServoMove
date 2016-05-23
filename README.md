@@ -3,7 +3,6 @@
 | Dynamixel SDK Version | 1.0 | 2.0 | 3.0 ([Download](https://github.com/ROBOTIS-GIT/DynamixelSDK/archive/master.zip)) |
 | ------------- | ------------- | ------------- | ------------- |
 | Release date| 2010.05.16 | 2015.02.10 | 2016.03.08 |
-| Service | Closed ¹ | Closed ¹ | Available |
 | OS | Linux | Windows | Linux + Windows |
 |||||
 | SDK Languages :  ||||
@@ -18,14 +17,13 @@
 | | | VB| | 
 | | | | Python (coming soon)| 
 | | | | JAVA (coming soon)| 
-| (C++ ver. Library binded)²| C++|  | C++| 
+| (C++ ver. Library binded)¹| C++|  | C++| 
 |||||
 | Multi Port Control| X | X | O | 
 | Cross-compilability | X | X | O | 
 | Modularized | X | X | O |
 
-#####¹ User support discontinued. If necessary, ask us for the source.
-#####² C++ ver. Library is not optimized in binding other languages. Please use C ver. Library instead.  
+#####¹ C++ ver. Library is not optimized in binding other languages. Please use C ver. Library instead.  
 ---------------------------------------------------------------------------
 ####Any questions are welcomed. Just let me know at: [ISSUES](https://github.com/ROBOTIS-GIT/DynamixelSDK/issues)
 

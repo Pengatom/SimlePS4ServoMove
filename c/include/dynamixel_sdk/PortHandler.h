@@ -37,7 +37,7 @@ WINDECLSPEC char   *GetPortName             (int port_num);
 WINDECLSPEC bool    SetBaudRate             (int port_num, const int baudrate);
 WINDECLSPEC int     GetBaudRate             (int port_num);
 
-#if defined(_WIN32) || defined(_WIN64)
+#ifdef __linux__
 WINDECLSPEC int     GetBytesAvailable       (int port_num);
 #endif
 

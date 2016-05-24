@@ -83,7 +83,7 @@ int PortHandlerWindows(const char *port_name)
 
 bool OpenPortWindows(int port_num)
 {
-    return SetBaudRate(port_num, portDataWindows[port_num].baudrate_);
+    return SetBaudRateWindows(port_num, portDataWindows[port_num].baudrate_);
 }
 
 void ClosePortWindows(int port_num)
@@ -189,7 +189,7 @@ bool SetupPortWindows(int port_num, const int baudrate)
     COMMTIMEOUTS timeouts;
     DWORD dwError;
     
-    ClosePort(port_num);
+    ClosePortWindows(port_num);
     
     portDataWindows[port_num].serial_handle_ = CreateFileA(portDataWindows[port_num].port_name_, GENERIC_READ | GENERIC_WRITE, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
     if (portDataWindows[port_num].serial_handle_ == INVALID_HANDLE_VALUE)
@@ -250,7 +250,7 @@ bool SetupPortWindows(int port_num, const int baudrate)
     return true;
     
     DXL_HAL_OPEN_ERROR:
-        ClosePort(port_num);
+        ClosePortWindows(port_num);
 
     return false;
 }

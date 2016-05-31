@@ -1,8 +1,39 @@
+/*******************************************************************************
+* Copyright (c) 2016, ROBOTIS CO., LTD.
+* All rights reserved.
+*
+* Redistribution and use in source and binary forms, with or without
+* modification, are permitted provided that the following conditions are met:
+*
+* * Redistributions of source code must retain the above copyright notice, this
+*   list of conditions and the following disclaimer.
+*
+* * Redistributions in binary form must reproduce the above copyright notice,
+*   this list of conditions and the following disclaimer in the documentation
+*   and/or other materials provided with the distribution.
+*
+* * Neither the name of ROBOTIS nor the names of its
+*   contributors may be used to endorse or promote products derived from
+*   this software without specific prior written permission.
+*
+* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+* AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+* IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+* DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+* FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+* DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+* SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+* CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+* OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+* OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*******************************************************************************/
+
+/* Author: Leon Ryu Woon Jung */
+
 /*
 * PortHandlerWindows.c
 *
 *  Created on: 2016. 5. 4.
-*      Author: leon
 */
 
 #if defined(_WIN32) || defined(_WIN64)
@@ -14,7 +45,7 @@
 #include <time.h>
 #include "dynamixel_sdk_windows/PortHandlerWindows.h"
 
-#define LATENCY_TIMER  16 // msec (USB latency timer) 
+#define LATENCY_TIMER  16 // msec (USB latency timer)
 
 typedef struct
 {
@@ -188,20 +219,20 @@ bool SetupPortWindows(int port_num, const int baudrate)
     DCB dcb;
     COMMTIMEOUTS timeouts;
     DWORD dwError;
-    
+
     ClosePortWindows(port_num);
-    
+
     portDataWindows[port_num].serial_handle_ = CreateFileA(portDataWindows[port_num].port_name_, GENERIC_READ | GENERIC_WRITE, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
     if (portDataWindows[port_num].serial_handle_ == INVALID_HANDLE_VALUE)
     {
         printf("[PortHandlerWindows::SetupPort] Error opening serial port!\n");
         return false;
     }
-    
+
     dcb.DCBlength = sizeof(DCB);
     if (GetCommState(portDataWindows[port_num].serial_handle_, &dcb) == FALSE)
         goto DXL_HAL_OPEN_ERROR;
-    
+
     // Set baudrate
     dcb.BaudRate = (DWORD)baudrate;
     dcb.ByteSize = 8;                    // Data bit = 8bit
@@ -221,10 +252,10 @@ bool SetupPortWindows(int port_num, const int baudrate)
     dcb.fDsrSensitivity = 0;
     dcb.fOutxDsrFlow = 0;
     dcb.fOutxCtsFlow = 0;
-    
+
     if (SetCommState(portDataWindows[port_num].serial_handle_, &dcb) == FALSE)
         goto DXL_HAL_OPEN_ERROR;
-    
+
     if (SetCommMask(portDataWindows[port_num].serial_handle_, 0) == FALSE) // Not using Comm event
         goto DXL_HAL_OPEN_ERROR;
     if (SetupComm(portDataWindows[port_num].serial_handle_, 4096, 4096) == FALSE) // Buffer size (Rx,Tx)
@@ -233,7 +264,7 @@ bool SetupPortWindows(int port_num, const int baudrate)
         goto DXL_HAL_OPEN_ERROR;
     if (ClearCommError(portDataWindows[port_num].serial_handle_, &dwError, NULL) == FALSE)
         goto DXL_HAL_OPEN_ERROR;
-    
+
     if (GetCommTimeouts(portDataWindows[port_num].serial_handle_, &timeouts) == FALSE)
         goto DXL_HAL_OPEN_ERROR;
     // Timeout (Not using timeout)
@@ -245,10 +276,10 @@ bool SetupPortWindows(int port_num, const int baudrate)
     timeouts.WriteTotalTimeoutConstant = 0;
     if (SetCommTimeouts(portDataWindows[port_num].serial_handle_, &timeouts) == FALSE)
         goto DXL_HAL_OPEN_ERROR;
-    
+
     portDataWindows[port_num].tx_time_per_byte_ = (1000.0 / (double)portDataWindows[port_num].baudrate_) * 10.0;
     return true;
-    
+
     DXL_HAL_OPEN_ERROR:
         ClosePortWindows(port_num);
 

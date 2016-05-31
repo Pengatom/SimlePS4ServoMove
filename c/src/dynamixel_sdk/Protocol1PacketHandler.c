@@ -562,7 +562,7 @@ void WriteTxRx1(int port_num, UINT8_T id, UINT16_T address, UINT16_T length)
 
     packetData[port_num].communication_result_ = COMM_TX_FAIL;
 
-    packetData[port_num].txpacket_ = (UINT8_T *)realloc(packetData[port_num].txpacket_, length + 6);
+    packetData[port_num].txpacket_ = (UINT8_T *)realloc(packetData[port_num].txpacket_, length + 7);
     packetData[port_num].rxpacket_ = (UINT8_T *)realloc(packetData[port_num].rxpacket_, 6);
 
     packetData[port_num].txpacket_[PKT_ID] = id;

@@ -48,15 +48,15 @@ LIBRARIES  += -lrt
 #---------------------------------------------------------------------
 # SDK Files
 #---------------------------------------------------------------------
-SOURCES  = src/dynamixel_sdk/GroupBulkRead.cpp \
-           src/dynamixel_sdk/GroupBulkWrite.cpp \
-           src/dynamixel_sdk/GroupSyncRead.cpp \
-           src/dynamixel_sdk/GroupSyncWrite.cpp \
-           src/dynamixel_sdk/PacketHandler.cpp \
-           src/dynamixel_sdk/PortHandler.cpp \
-           src/dynamixel_sdk/Protocol1PacketHandler.cpp \
-           src/dynamixel_sdk/Protocol2PacketHandler.cpp \
-           src/dynamixel_sdk_linux/PortHandlerLinux.cpp \
+SOURCES  = src/dynamixel_sdk/group_bulk_read.cpp \
+           src/dynamixel_sdk/group_bulk_write.cpp \
+           src/dynamixel_sdk/group_sync_read.cpp \
+           src/dynamixel_sdk/group_sync_write.cpp \
+           src/dynamixel_sdk/packet_handler.cpp \
+           src/dynamixel_sdk/port_handler.cpp \
+           src/dynamixel_sdk/protocol1_packet_handler.cpp \
+           src/dynamixel_sdk/protocol2_packet_handler.cpp \
+           src/dynamixel_sdk_linux/port_handler_linux.cpp \
 
 
 OBJECTS=$(addsuffix .o,$(addprefix $(DIR_OBJS)/,$(basename $(notdir $(SOURCES)))))
@@ -94,7 +94,7 @@ uninstall:
 	$(RM) $(INSTALL_ROOT)/lib/$(TARGET2)
 	$(RM) $(INSTALL_ROOT)/lib/$(TARGET3)
 
-	$(RM) $(INSTALL_ROOT)/include/DynamixelSDK.h
+	$(RM) $(INSTALL_ROOT)/include/dynamixel_sdk.h
 	$(RM_ALL) $(INSTALL_ROOT)/include/dynamixel_sdk*
 
 reinstall: uninstall install

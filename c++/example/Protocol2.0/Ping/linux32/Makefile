@@ -1,5 +1,5 @@
 ##################################################
-# PROJECT: DXL Protocol 2.0 Ping Example Makefile
+# PROJECT: DXL Protocol 2.0 ping Example Makefile
 # AUTHOR : ROBOTIS Ltd.
 ##################################################
 
@@ -23,7 +23,7 @@
 #---------------------------------------------------------------------
 
 # *** ENTER THE TARGET NAME HERE ***
-TARGET      = Ping
+TARGET      = ping
 
 # important directories used by assorted rules and other variables
 DIR_DXL    = ../../..
@@ -48,7 +48,7 @@ LIBRARIES  += -lrt
 #---------------------------------------------------------------------
 # Files
 #---------------------------------------------------------------------
-SOURCES = Ping.cpp \
+SOURCES = ping.cpp \
     # *** OTHER SOURCES GO HERE ***
 
 OBJECTS  = $(addsuffix .o,$(addprefix $(DIR_OBJS)/,$(basename $(notdir $(SOURCES)))))

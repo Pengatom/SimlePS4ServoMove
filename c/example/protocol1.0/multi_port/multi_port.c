@@ -25,7 +25,7 @@
 
 #include <stdlib.h>
 #include <stdio.h>
-#include "DynamixelSDK.h"                                   // Uses Dynamixel SDK library
+#include "dynamixel_sdk.h"                                   // Uses Dynamixel SDK library
 
 // Control table address
 #define ADDR_MX_TORQUE_ENABLE           24                  // Control table address is different in Dynamixel model
@@ -50,68 +50,74 @@
 
 #define ESC_ASCII_VALUE                 0x1b
 
+int getch()
+{
 #ifdef __linux__
-int _getch()
-{
-    struct termios oldt, newt;
-    int ch;
-    tcgetattr(STDIN_FILENO, &oldt);
-    newt = oldt;
-    newt.c_lflag &= ~(ICANON | ECHO);
-    tcsetattr(STDIN_FILENO, TCSANOW, &newt);
-    ch = getchar();
-    tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
-    return ch;
-}
-
-int _kbhit(void)
-{
-    struct termios oldt, newt;
-    int ch;
-    int oldf;
-
-    tcgetattr(STDIN_FILENO, &oldt);
-    newt = oldt;
-    newt.c_lflag &= ~(ICANON | ECHO);
-    tcsetattr(STDIN_FILENO, TCSANOW, &newt);
-    oldf = fcntl(STDIN_FILENO, F_GETFL, 0);
-    fcntl(STDIN_FILENO, F_SETFL, oldf | O_NONBLOCK);
-
-    ch = getchar();
-
-    tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
-    fcntl(STDIN_FILENO, F_SETFL, oldf);
-
-    if (ch != EOF)
-    {
-        ungetc(ch, stdin);
-        return 1;
-    }
-
-    return 0;
-}
+  struct termios oldt, newt;
+  int ch;
+  tcgetattr(STDIN_FILENO, &oldt);
+  newt = oldt;
+  newt.c_lflag &= ~(ICANON | ECHO);
+  tcsetattr(STDIN_FILENO, TCSANOW, &newt);
+  ch = getchar();
+  tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
+  return ch;
+#elif defined(_WIN32) || defined(_WIN64)
+  return _getch();
 #endif
+}
+
+int kbhit(void)
+{
+#ifdef __linux__
+  struct termios oldt, newt;
+  int ch;
+  int oldf;
+
+  tcgetattr(STDIN_FILENO, &oldt);
+  newt = oldt;
+  newt.c_lflag &= ~(ICANON | ECHO);
+  tcsetattr(STDIN_FILENO, TCSANOW, &newt);
+  oldf = fcntl(STDIN_FILENO, F_GETFL, 0);
+  fcntl(STDIN_FILENO, F_SETFL, oldf | O_NONBLOCK);
+
+  ch = getchar();
+
+  tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
+  fcntl(STDIN_FILENO, F_SETFL, oldf);
+
+  if (ch != EOF)
+  {
+    ungetc(ch, stdin);
+    return 1;
+  }
+
+  return 0;
+#elif defined(_WIN32) || defined(_WIN64)
+  return _kbhit();
+#endif
+}
 
 int main()
 {
     // Initialize PortHandler Structs
     // Set the port path
     // Get methods and members of PortHandlerLinux or PortHandlerWindows
-    int port_num1 = PortHandler(DEVICENAME1);
-    int port_num2 = PortHandler(DEVICENAME2);
+    int port_num1 = portHandler(DEVICENAME1);
+    int port_num2 = portHandler(DEVICENAME2);
 
     // Initialize PacketHandler Structs 
-    PacketHandler();
+    packetHandler();
 
     int index = 0;
     int dxl_comm_result = COMM_TX_FAIL;             // Communication result
     int dxl_goal_position[2] = { DXL_MINIMUM_POSITION_VALUE, DXL_MAXIMUM_POSITION_VALUE };         // Goal position
 
-    UINT8_T dxl_error = 0;                          // Dynamixel error
-    UINT16_T dxl1_present_position = 0, dxl2_present_position = 0;              // Present position
+    uint8_t dxl_error = 0;                          // Dynamixel error
+    uint16_t dxl1_present_position = 0, dxl2_present_position = 0;              // Present position
 
     // Open port1
-    if (OpenPort(port_num1))
+    if (openPort(port_num1))
     {
         printf("Succeeded to open the port1!\n");
     }
@@ -119,12 +125,12 @@ int main()
     {
         printf("Failed to open the port1!\n");
         printf("Press any key to terminate...\n");
-        _getch();
+        getch();
         return 0;
     }
 
     // Open port2
-    if (OpenPort(port_num2))
+    if (openPort(port_num2))
     {
         printf("Succeeded to open the port2!\n");
     }
@@ -132,12 +138,12 @@ int main()
     {
         printf("Failed to open the port2!\n");
         printf("Press any key to terminate...\n");
-        _getch();
+        getch();
         return 0;
     }
 
     // Set port1 baudrate
-    if (SetBaudRate(port_num1, BAUDRATE))
+    if (setBaudRate(port_num1, BAUDRATE))
     {
         printf("Succeed to change the baudrate port1!\n");
     }
@@ -145,12 +151,12 @@ int main()
     {
         printf("Failed to change the baudrate port1!\n");
         printf("Press any key to terminate...\n");
-        _getch();
+        getch();
         return 0;
     }
 
     // Set port2 baudrate
-    if (SetBaudRate(port_num2, BAUDRATE))
+    if (setBaudRate(port_num2, BAUDRATE))
     {
         printf("Succeed to change the baudrate port2!\n");
     }
@@ -158,63 +164,63 @@ int main()
     {
         printf("Failed to change the baudrate port2!\n");
         printf("Press any key to terminate...\n");
-        _getch();
+        getch();
         return 0;
     }
 
     // Enable Dynamixel#1 Torque
-    Write1ByteTxRx(port_num1, PROTOCOL_VERSION, DXL1_ID, ADDR_MX_TORQUE_ENABLE, TORQUE_ENABLE);
-    if ((dxl_comm_result = GetLastTxRxResult(port_num1, PROTOCOL_VERSION)) != COMM_SUCCESS)
-        PrintTxRxResult(PROTOCOL_VERSION, dxl_comm_result);
-    else if ((dxl_error = GetLastRxPacketError(port_num1, PROTOCOL_VERSION)) != 0)
-        PrintRxPacketError(PROTOCOL_VERSION, dxl_error);
+    write1ByteTxRx(port_num1, PROTOCOL_VERSION, DXL1_ID, ADDR_MX_TORQUE_ENABLE, TORQUE_ENABLE);
+    if ((dxl_comm_result = getLastTxRxResult(port_num1, PROTOCOL_VERSION)) != COMM_SUCCESS)
+        printTxRxResult(PROTOCOL_VERSION, dxl_comm_result);
+    else if ((dxl_error = getLastRxPacketError(port_num1, PROTOCOL_VERSION)) != 0)
+        printRxPacketError(PROTOCOL_VERSION, dxl_error);
     else
         printf("Dynamixel#%d has been successfully connected \n", DXL1_ID);
 
     // Enable Dynamixel#2 Torque
-    Write1ByteTxRx(port_num2, PROTOCOL_VERSION, DXL2_ID, ADDR_MX_TORQUE_ENABLE, TORQUE_ENABLE);
-    if ((dxl_comm_result = GetLastTxRxResult(port_num2, PROTOCOL_VERSION)) != COMM_SUCCESS)
-        PrintTxRxResult(PROTOCOL_VERSION, dxl_comm_result);
-    else if ((dxl_error = GetLastRxPacketError(port_num2, PROTOCOL_VERSION)) != 0)
-        PrintRxPacketError(PROTOCOL_VERSION, dxl_error);
+    write1ByteTxRx(port_num2, PROTOCOL_VERSION, DXL2_ID, ADDR_MX_TORQUE_ENABLE, TORQUE_ENABLE);
+    if ((dxl_comm_result = getLastTxRxResult(port_num2, PROTOCOL_VERSION)) != COMM_SUCCESS)
+        printTxRxResult(PROTOCOL_VERSION, dxl_comm_result);
+    else if ((dxl_error = getLastRxPacketError(port_num2, PROTOCOL_VERSION)) != 0)
+        printRxPacketError(PROTOCOL_VERSION, dxl_error);
     else
         printf("Dynamixel#%d has been successfully connected \n", DXL2_ID);
 
     while (1)
     {
         printf("Press any key to continue! (or press ESC to quit!)\n");
-        if (_getch() == ESC_ASCII_VALUE)
+        if (getch() == ESC_ASCII_VALUE)
             break;
 
         // Write Dynamixel#1 goal position
-        Write2ByteTxRx(port_num1, PROTOCOL_VERSION, DXL1_ID, ADDR_MX_GOAL_POSITION, dxl_goal_position[index]);
-        if ((dxl_comm_result = GetLastTxRxResult(port_num1, PROTOCOL_VERSION)) != COMM_SUCCESS)
-            PrintTxRxResult(PROTOCOL_VERSION, dxl_comm_result);
-        else if ((dxl_error = GetLastRxPacketError(port_num1, PROTOCOL_VERSION)) != 0)
-            PrintRxPacketError(PROTOCOL_VERSION, dxl_error);
+        write2ByteTxRx(port_num1, PROTOCOL_VERSION, DXL1_ID, ADDR_MX_GOAL_POSITION, dxl_goal_position[index]);
+        if ((dxl_comm_result = getLastTxRxResult(port_num1, PROTOCOL_VERSION)) != COMM_SUCCESS)
+            printTxRxResult(PROTOCOL_VERSION, dxl_comm_result);
+        else if ((dxl_error = getLastRxPacketError(port_num1, PROTOCOL_VERSION)) != 0)
+            printRxPacketError(PROTOCOL_VERSION, dxl_error);
 
         // Write Dynamixel#2 goal position
-        Write2ByteTxRx(port_num2, PROTOCOL_VERSION, DXL2_ID, ADDR_MX_GOAL_POSITION, dxl_goal_position[index]);
-        if ((dxl_comm_result = GetLastTxRxResult(port_num2, PROTOCOL_VERSION)) != COMM_SUCCESS)
-            PrintTxRxResult(PROTOCOL_VERSION, dxl_comm_result);
-        else if ((dxl_error = GetLastRxPacketError(port_num2, PROTOCOL_VERSION)) != 0)
-            PrintRxPacketError(PROTOCOL_VERSION, dxl_error);
+        write2ByteTxRx(port_num2, PROTOCOL_VERSION, DXL2_ID, ADDR_MX_GOAL_POSITION, dxl_goal_position[index]);
+        if ((dxl_comm_result = getLastTxRxResult(port_num2, PROTOCOL_VERSION)) != COMM_SUCCESS)
+            printTxRxResult(PROTOCOL_VERSION, dxl_comm_result);
+        else if ((dxl_error = getLastRxPacketError(port_num2, PROTOCOL_VERSION)) != 0)
+            printRxPacketError(PROTOCOL_VERSION, dxl_error);
 
         do
         {
             // Read Dynamixel#1 present position
-        	dxl1_present_position = Read2ByteTxRx(port_num1, PROTOCOL_VERSION, DXL1_ID, ADDR_MX_PRESENT_POSITION);
-            if ((dxl_comm_result = GetLastTxRxResult(port_num1, PROTOCOL_VERSION)) != COMM_SUCCESS)
-                PrintTxRxResult(PROTOCOL_VERSION, dxl_comm_result);
-            else if ((dxl_error = GetLastRxPacketError(port_num1, PROTOCOL_VERSION)) != 0)
-                PrintRxPacketError(PROTOCOL_VERSION, dxl_error);
+        	dxl1_present_position = read2ByteTxRx(port_num1, PROTOCOL_VERSION, DXL1_ID, ADDR_MX_PRESENT_POSITION);
+            if ((dxl_comm_result = getLastTxRxResult(port_num1, PROTOCOL_VERSION)) != COMM_SUCCESS)
+                printTxRxResult(PROTOCOL_VERSION, dxl_comm_result);
+            else if ((dxl_error = getLastRxPacketError(port_num1, PROTOCOL_VERSION)) != 0)
+                printRxPacketError(PROTOCOL_VERSION, dxl_error);
 
             // Read Dynamixel#2 present position
-            dxl2_present_position = Read2ByteTxRx(port_num2, PROTOCOL_VERSION, DXL2_ID, ADDR_MX_PRESENT_POSITION);
-            if ((dxl_comm_result = GetLastTxRxResult(port_num2, PROTOCOL_VERSION)) != COMM_SUCCESS)
-                PrintTxRxResult(PROTOCOL_VERSION, dxl_comm_result);
-            else if ((dxl_error = GetLastRxPacketError(port_num2, PROTOCOL_VERSION)) != 0)
-                PrintRxPacketError(PROTOCOL_VERSION, dxl_error);
+            dxl2_present_position = read2ByteTxRx(port_num2, PROTOCOL_VERSION, DXL2_ID, ADDR_MX_PRESENT_POSITION);
+            if ((dxl_comm_result = getLastTxRxResult(port_num2, PROTOCOL_VERSION)) != COMM_SUCCESS)
+                printTxRxResult(PROTOCOL_VERSION, dxl_comm_result);
+            else if ((dxl_error = getLastRxPacketError(port_num2, PROTOCOL_VERSION)) != 0)
+                printRxPacketError(PROTOCOL_VERSION, dxl_error);
 
             printf("[ID:%03d] GoalPos:%03d  PresPos:%03d\t[ID:%03d] GoalPos:%03d  PresPos:%03d\n", DXL1_ID, dxl_goal_position[index], dxl1_present_position, DXL2_ID, dxl_goal_position[index], dxl2_present_position);
 
@@ -228,24 +234,24 @@ int main()
     }
 
     // Disable Dynamixel#1 Torque
-    Write1ByteTxRx(port_num1, PROTOCOL_VERSION, DXL1_ID, ADDR_MX_TORQUE_ENABLE, TORQUE_DISABLE);
-    if ((dxl_comm_result = GetLastTxRxResult(port_num1, PROTOCOL_VERSION)) != COMM_SUCCESS)
-        PrintTxRxResult(PROTOCOL_VERSION, dxl_comm_result);
-    else if ((dxl_error = GetLastRxPacketError(port_num1, PROTOCOL_VERSION)) != 0)
-        PrintRxPacketError(PROTOCOL_VERSION, dxl_error);
+    write1ByteTxRx(port_num1, PROTOCOL_VERSION, DXL1_ID, ADDR_MX_TORQUE_ENABLE, TORQUE_DISABLE);
+    if ((dxl_comm_result = getLastTxRxResult(port_num1, PROTOCOL_VERSION)) != COMM_SUCCESS)
+        printTxRxResult(PROTOCOL_VERSION, dxl_comm_result);
+    else if ((dxl_error = getLastRxPacketError(port_num1, PROTOCOL_VERSION)) != 0)
+        printRxPacketError(PROTOCOL_VERSION, dxl_error);
 
     // Disable Dynamixel#2 Torque
-    Write1ByteTxRx(port_num2, PROTOCOL_VERSION, DXL2_ID, ADDR_MX_TORQUE_ENABLE, TORQUE_DISABLE);
-    if ((dxl_comm_result = GetLastTxRxResult(port_num2, PROTOCOL_VERSION)) != COMM_SUCCESS)
-        PrintTxRxResult(PROTOCOL_VERSION, dxl_comm_result);
-    else if ((dxl_error = GetLastRxPacketError(port_num2, PROTOCOL_VERSION)) != 0)
-        PrintRxPacketError(PROTOCOL_VERSION, dxl_error);
+    write1ByteTxRx(port_num2, PROTOCOL_VERSION, DXL2_ID, ADDR_MX_TORQUE_ENABLE, TORQUE_DISABLE);
+    if ((dxl_comm_result = getLastTxRxResult(port_num2, PROTOCOL_VERSION)) != COMM_SUCCESS)
+        printTxRxResult(PROTOCOL_VERSION, dxl_comm_result);
+    else if ((dxl_error = getLastRxPacketError(port_num2, PROTOCOL_VERSION)) != 0)
+        printRxPacketError(PROTOCOL_VERSION, dxl_error);
 
     // Close port1
-    ClosePort(port_num1);
+    closePort(port_num1);
 
     // Close port2
-    ClosePort(port_num2);
+    closePort(port_num2);
 
     return 0;
 }

@@ -31,7 +31,7 @@
 /* Author: Leon Ryu Woon Jung */
 
 /*
- * RobotisDef.h
+ * robotis_def.h
  *
  *  Created on: 2016. 5. 4.
  */
@@ -39,14 +39,14 @@
 #ifndef DYNAMIXEL_SDK_INCLUDE_DYNAMIXEL_SDK_ROBOTISDEF_C_H_
 #define DYNAMIXEL_SDK_INCLUDE_DYNAMIXEL_SDK_ROBOTISDEF_C_H_
 
-
-typedef char                INT8_T;
-typedef short int           INT16_T;
-typedef int                 INT32_T;
-
-typedef unsigned char       UINT8_T;
-typedef unsigned short int  UINT16_T;
-typedef unsigned int        UINT32_T;
+//
+//typedef char                int8_t;
+//typedef short int           int16_t;
+//typedef int                 int32_t;
+//
+//typedef unsigned char       uint8_t;
+//typedef unsigned short int  uint16_t;
+//typedef unsigned int        uint32_t;
 
 typedef enum { false, true } bool;
 

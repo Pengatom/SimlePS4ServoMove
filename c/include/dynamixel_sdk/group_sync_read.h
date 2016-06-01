@@ -31,7 +31,7 @@
 /* Author: Leon Ryu Woon Jung */
 
 /*
-* GroupSyncRead.h
+* group_sync_read.h
 *
 *  Created on: 2016. 5. 4.
 */
@@ -39,23 +39,23 @@
 #ifndef DYNAMIXEL_SDK_INCLUDE_DYNAMIXEL_SDK_GROUPSYNCREAD_C_H_
 #define DYNAMIXEL_SDK_INCLUDE_DYNAMIXEL_SDK_GROUPSYNCREAD_C_H_
 
-#include "RobotisDef.h"
-#include "PortHandler.h"
-#include "PacketHandler.h"
+#include "robotis_def.h"
+#include "port_handler.h"
+#include "packet_handler.h"
 
-WINDECLSPEC int         GroupSyncRead               (int port_num, int protocol_version, UINT16_T start_address, UINT16_T data_length);
+WINDECLSPEC int         groupSyncRead               (int port_num, int protocol_version, uint16_t start_address, uint16_t data_length);
 
-WINDECLSPEC void        GroupSyncRead_MakeParam     (int group_num);
-WINDECLSPEC bool        GroupSyncRead_AddParam      (int group_num, UINT8_T id);
-WINDECLSPEC void        GroupSyncRead_RemoveParam   (int group_num, UINT8_T id);
-WINDECLSPEC void        GroupSyncRead_ClearParam    (int group_num);
+WINDECLSPEC void        groupSyncReadMakeParam     (int group_num);
+WINDECLSPEC bool        groupSyncReadAddParam      (int group_num, uint8_t id);
+WINDECLSPEC void        groupSyncReadRemoveParam   (int group_num, uint8_t id);
+WINDECLSPEC void        groupSyncReadClearParam    (int group_num);
 
-WINDECLSPEC void        GroupSyncRead_TxPacket      (int group_num);
-WINDECLSPEC void        GroupSyncRead_RxPacket      (int group_num);
-WINDECLSPEC void        GroupSyncRead_TxRxPacket    (int group_num);
+WINDECLSPEC void        groupSyncReadTxPacket      (int group_num);
+WINDECLSPEC void        groupSyncReadRxPacket      (int group_num);
+WINDECLSPEC void        groupSyncReadTxRxPacket    (int group_num);
 
-WINDECLSPEC bool        GroupSyncRead_IsAvailable   (int group_num, UINT8_T id, UINT16_T address, UINT16_T data_length);
-WINDECLSPEC UINT32_T    GroupSyncRead_GetData       (int group_num, UINT8_T id, UINT16_T address, UINT16_T data_length);
+WINDECLSPEC bool        groupSyncReadIsAvailable   (int group_num, uint8_t id, uint16_t address, uint16_t data_length);
+WINDECLSPEC uint32_t    groupSyncReadGetData       (int group_num, uint8_t id, uint16_t address, uint16_t data_length);
 
 
 #endif /* DYNAMIXEL_SDK_INCLUDE_DYNAMIXEL_SDK_GROUPSYNCREAD_C_H_ */

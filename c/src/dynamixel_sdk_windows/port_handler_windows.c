@@ -31,7 +31,7 @@
 /* Author: Leon Ryu Woon Jung */
 
 /*
-* PortHandlerWindows.c
+* port_handler_windows.c
 *
 *  Created on: 2016. 5. 4.
 */
@@ -43,7 +43,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <time.h>
-#include "dynamixel_sdk_windows/PortHandlerWindows.h"
+#include "dynamixel_sdk_windows/port_handler_windows.h"
 
 #define LATENCY_TIMER  16 // msec (USB latency timer)
 
@@ -62,7 +62,7 @@ typedef struct
 
 PortDataWindows *portDataWindows;
 
-int PortHandlerWindows(const char *port_name)
+int portHandlerWindows(const char *port_name)
 {
     int _port_num;
     char _port_name[15];
@@ -107,17 +107,17 @@ int PortHandlerWindows(const char *port_name)
 
     is_using_[_port_num] = false;
 
-    SetPortNameWindows(_port_num, port_name);
+    setPortNameWindows(_port_num, port_name);
 
     return _port_num;
 }
 
-bool OpenPortWindows(int port_num)
+bool openPortWindows(int port_num)
 {
-    return SetBaudRateWindows(port_num, portDataWindows[port_num].baudrate_);
+    return setBaudRateWindows(port_num, portDataWindows[port_num].baudrate_);
 }
 
-void ClosePortWindows(int port_num)
+void closePortWindows(int port_num)
 {
     if (portDataWindows[port_num].serial_handle_ != INVALID_HANDLE_VALUE)
     {
@@ -126,35 +126,35 @@ void ClosePortWindows(int port_num)
     }
 }
 
-void ClearPortWindows(int port_num)
+void clearPortWindows(int port_num)
 {
     PurgeComm(portDataWindows[port_num].serial_handle_, PURGE_RXABORT | PURGE_RXCLEAR);
 }
 
-void SetPortNameWindows(int port_num, const char *port_name)
+void setPortNameWindows(int port_num, const char *port_name)
 {
     strcpy_s(portDataWindows[port_num].port_name_, sizeof(portDataWindows[port_num].port_name_), port_name);
 }
 
-char *GetPortNameWindows(int port_num)
+char *getPortNameWindows(int port_num)
 {
     return portDataWindows[port_num].port_name_;
 }
 
-bool SetBaudRateWindows(int port_num, const int baudrate)
+bool setBaudRateWindows(int port_num, const int baudrate)
 {
-    ClosePortWindows(port_num);
+    closePortWindows(port_num);
 
     portDataWindows[port_num].baudrate_ = baudrate;
-    return SetupPortWindows(port_num, baudrate);
+    return setupPortWindows(port_num, baudrate);
 }
 
-int GetBaudRateWindows(int port_num)
+int getBaudRateWindows(int port_num)
 {
     return portDataWindows[port_num].baudrate_;
 }
 
-int ReadPortWindows(int port_num, UINT8_T *packet, int length)
+int readPortWindows(int port_num, uint8_t *packet, int length)
 {
     DWORD _dwRead = 0;
 
@@ -164,7 +164,7 @@ int ReadPortWindows(int port_num, UINT8_T *packet, int length)
     return (int)_dwRead;
 }
 
-int WritePortWindows(int port_num, UINT8_T *packet, int length)
+int writePortWindows(int port_num, uint8_t *packet, int length)
 {
     DWORD _dwWrite = 0;
 
@@ -174,53 +174,53 @@ int WritePortWindows(int port_num, UINT8_T *packet, int length)
     return (int)_dwWrite;
 }
 
-void SetPacketTimeoutWindows(int port_num, UINT16_T packet_length)
+void setPacketTimeoutWindows(int port_num, uint16_t packet_length)
 {
-    portDataWindows[port_num].packet_start_time_ = GetCurrentTimeWindows(port_num);
+    portDataWindows[port_num].packet_start_time_ = getCurrentTimeWindows(port_num);
     portDataWindows[port_num].packet_timeout_ = (portDataWindows[port_num].tx_time_per_byte_ * (double)packet_length) + (LATENCY_TIMER * 2.0) + 2.0;
 }
 
-void SetPacketTimeoutMSecWindows(int port_num, double msec)
+void setPacketTimeoutMSecWindows(int port_num, double msec)
 {
-    portDataWindows[port_num].packet_start_time_ = GetCurrentTimeWindows(port_num);
+    portDataWindows[port_num].packet_start_time_ = getCurrentTimeWindows(port_num);
     portDataWindows[port_num].packet_timeout_ = msec;
 }
 
-bool IsPacketTimeoutWindows(int port_num)
+bool isPacketTimeoutWindows(int port_num)
 {
-    if (GetTimeSinceStartWindows(port_num) > portDataWindows[port_num].packet_timeout_)
+    if (getTimeSinceStartWindows(port_num) > portDataWindows[port_num].packet_timeout_)
     {
         portDataWindows[port_num].packet_timeout_ = 0;
         return true;
     }
     return false;
 }
-#undef GetCurrentTime
-double GetCurrentTimeWindows(int port_num)
+
+double getCurrentTimeWindows(int port_num)
 {
     QueryPerformanceCounter(&portDataWindows[port_num].counter_);
     QueryPerformanceFrequency(&portDataWindows[port_num].freq_);
     return (double)portDataWindows[port_num].counter_.QuadPart / (double)portDataWindows[port_num].freq_.QuadPart * 1000.0;
 }
 
-double GetTimeSinceStartWindows(int port_num)
+double getTimeSinceStartWindows(int port_num)
 {
     double _time;
 
-    _time = GetCurrentTimeWindows(port_num) - portDataWindows[port_num].packet_start_time_;
+    _time = getCurrentTimeWindows(port_num) - portDataWindows[port_num].packet_start_time_;
     if (_time < 0.0)
-        portDataWindows[port_num].packet_start_time_ = GetCurrentTimeWindows(port_num);
+        portDataWindows[port_num].packet_start_time_ = getCurrentTimeWindows(port_num);
 
     return _time;
 }
 
-bool SetupPortWindows(int port_num, const int baudrate)
+bool setupPortWindows(int port_num, const int baudrate)
 {
     DCB dcb;
     COMMTIMEOUTS timeouts;
     DWORD dwError;
 
-    ClosePortWindows(port_num);
+    closePortWindows(port_num);
 
     portDataWindows[port_num].serial_handle_ = CreateFileA(portDataWindows[port_num].port_name_, GENERIC_READ | GENERIC_WRITE, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
     if (portDataWindows[port_num].serial_handle_ == INVALID_HANDLE_VALUE)
@@ -281,7 +281,7 @@ bool SetupPortWindows(int port_num, const int baudrate)
     return true;
 
     DXL_HAL_OPEN_ERROR:
-        ClosePortWindows(port_num);
+        closePortWindows(port_num);
 
     return false;
 }

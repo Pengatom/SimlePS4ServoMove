@@ -6,7 +6,7 @@
 */
 
 //
-// *********     Reboot Example      *********
+// *********     reboot Example      *********
 //
 //
 // Available Dynamixel model on this example : All models using Protocol 2.0
@@ -24,7 +24,7 @@
 #endif
 
 #include <stdio.h>
-#include "DynamixelSDK.h"                                   // Uses Dynamixel SDK library
+#include "dynamixel_sdk.h"                                   // Uses Dynamixel SDK library
 
 // Protocol version
 #define PROTOCOL_VERSION                2.0                 // See which protocol version is used in the Dynamixel
@@ -35,64 +35,70 @@
 #define DEVICENAME                      "/dev/ttyUSB0"      // Check which port is being used on your controller
                                                             // ex) Windows: "COM1"   Linux: "/dev/ttyUSB0"
 
+int getch()
+{
 #ifdef __linux__
-int _getch()
-{
-    struct termios oldt, newt;
-    int ch;
-    tcgetattr(STDIN_FILENO, &oldt);
-    newt = oldt;
-    newt.c_lflag &= ~(ICANON | ECHO);
-    tcsetattr(STDIN_FILENO, TCSANOW, &newt);
-    ch = getchar();
-    tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
-    return ch;
-}
-
-int _kbhit(void)
-{
-    struct termios oldt, newt;
-    int ch;
-    int oldf;
-
-    tcgetattr(STDIN_FILENO, &oldt);
-    newt = oldt;
-    newt.c_lflag &= ~(ICANON | ECHO);
-    tcsetattr(STDIN_FILENO, TCSANOW, &newt);
-    oldf = fcntl(STDIN_FILENO, F_GETFL, 0);
-    fcntl(STDIN_FILENO, F_SETFL, oldf | O_NONBLOCK);
-
-    ch = getchar();
-
-    tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
-    fcntl(STDIN_FILENO, F_SETFL, oldf);
-
-    if (ch != EOF)
-    {
-        ungetc(ch, stdin);
-        return 1;
-    }
-
-    return 0;
-}
+  struct termios oldt, newt;
+  int ch;
+  tcgetattr(STDIN_FILENO, &oldt);
+  newt = oldt;
+  newt.c_lflag &= ~(ICANON | ECHO);
+  tcsetattr(STDIN_FILENO, TCSANOW, &newt);
+  ch = getchar();
+  tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
+  return ch;
+#elif defined(_WIN32) || defined(_WIN64)
+  return _getch();
 #endif
+}
+
+int kbhit(void)
+{
+#ifdef __linux__
+  struct termios oldt, newt;
+  int ch;
+  int oldf;
+
+  tcgetattr(STDIN_FILENO, &oldt);
+  newt = oldt;
+  newt.c_lflag &= ~(ICANON | ECHO);
+  tcsetattr(STDIN_FILENO, TCSANOW, &newt);
+  oldf = fcntl(STDIN_FILENO, F_GETFL, 0);
+  fcntl(STDIN_FILENO, F_SETFL, oldf | O_NONBLOCK);
+
+  ch = getchar();
+
+  tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
+  fcntl(STDIN_FILENO, F_SETFL, oldf);
+
+  if (ch != EOF)
+  {
+    ungetc(ch, stdin);
+    return 1;
+  }
+
+  return 0;
+#elif defined(_WIN32) || defined(_WIN64)
+  return _kbhit();
+#endif
+}
 
 int main()
 {
     // Initialize PortHandler Structs
     // Set the port path
     // Get methods and members of PortHandlerLinux or PortHandlerWindows
-    int port_num = PortHandler(DEVICENAME);
+    int port_num = portHandler(DEVICENAME);
 
     // Initialize PacketHandler Structs 
-    PacketHandler();
+    packetHandler();
 
     int dxl_comm_result = COMM_TX_FAIL;             // Communication result
 
-    UINT8_T dxl_error = 0;                          // Dynamixel error
+    uint8_t dxl_error = 0;                          // Dynamixel error
 
     // Open port
-    if (OpenPort(port_num))
+    if (openPort(port_num))
     {
         printf("Succeeded to open the port!\n");
     }
@@ -100,12 +106,12 @@ int main()
     {
         printf("Failed to open the port!\n");
         printf("Press any key to terminate...\n");
-        _getch();
+        getch();
         return 0;
     }
 
     // Set port baudrate
-    if (SetBaudRate(port_num, BAUDRATE))
+    if (setBaudRate(port_num, BAUDRATE))
     {
         printf("Succeeded to change the baudrate!\n");
     }
@@ -113,27 +119,27 @@ int main()
     {
         printf("Failed to change the baudrate!\n");
         printf("Press any key to terminate...\n");
-        _getch();
+        getch();
         return 0;
     }
 
     // Trigger
     printf("Press any key to reboot\n");
-    _getch();
+    getch();
 
     printf("See the Dynamixel LED flickering\n");
     // Try reboot
     // Dynamixel LED will flicker while it reboots
-    Reboot(port_num, PROTOCOL_VERSION, DXL_ID);
-    if ((dxl_comm_result = GetLastTxRxResult(port_num, PROTOCOL_VERSION)) != COMM_SUCCESS)
-        PrintTxRxResult(PROTOCOL_VERSION, dxl_comm_result);
-    else if ((dxl_error = GetLastRxPacketError(port_num, PROTOCOL_VERSION)) != 0)
-        PrintRxPacketError(PROTOCOL_VERSION, dxl_error);
+    reboot(port_num, PROTOCOL_VERSION, DXL_ID);
+    if ((dxl_comm_result = getLastTxRxResult(port_num, PROTOCOL_VERSION)) != COMM_SUCCESS)
+        printTxRxResult(PROTOCOL_VERSION, dxl_comm_result);
+    else if ((dxl_error = getLastRxPacketError(port_num, PROTOCOL_VERSION)) != 0)
+        printRxPacketError(PROTOCOL_VERSION, dxl_error);
 
-    printf("[ID:%03d] Reboot Succeeded\n", DXL_ID);
+    printf("[ID:%03d] reboot Succeeded\n", DXL_ID);
 
     // Close port
-    ClosePort(port_num);
+    closePort(port_num);
 
     return 0;
 }

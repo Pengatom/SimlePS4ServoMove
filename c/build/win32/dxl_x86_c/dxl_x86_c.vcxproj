@@ -145,28 +145,28 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\src\dynamixel_sdk\GroupBulkRead.c" />
-    <ClCompile Include="..\..\..\src\dynamixel_sdk\GroupBulkWrite.c" />
-    <ClCompile Include="..\..\..\src\dynamixel_sdk\GroupSyncRead.c" />
-    <ClCompile Include="..\..\..\src\dynamixel_sdk\GroupSyncWrite.c" />
-    <ClCompile Include="..\..\..\src\dynamixel_sdk\PacketHandler.c" />
-    <ClCompile Include="..\..\..\src\dynamixel_sdk\PortHandler.c" />
-    <ClCompile Include="..\..\..\src\dynamixel_sdk\Protocol1PacketHandler.c" />
-    <ClCompile Include="..\..\..\src\dynamixel_sdk\Protocol2PacketHandler.c" />
-    <ClCompile Include="..\..\..\src\dynamixel_sdk_windows\PortHandlerWindows.c" />
+    <ClCompile Include="..\..\..\src\dynamixel_sdk\group_bulk_read.c" />
+    <ClCompile Include="..\..\..\src\dynamixel_sdk\group_bulk_write.c" />
+    <ClCompile Include="..\..\..\src\dynamixel_sdk\group_sync_read.c" />
+    <ClCompile Include="..\..\..\src\dynamixel_sdk\group_sync_write.c" />
+    <ClCompile Include="..\..\..\src\dynamixel_sdk\packet_handler.c" />
+    <ClCompile Include="..\..\..\src\dynamixel_sdk\port_handler.c" />
+    <ClCompile Include="..\..\..\src\dynamixel_sdk\protocol1_packet_handler.c" />
+    <ClCompile Include="..\..\..\src\dynamixel_sdk\protocol2_packet_handler.c" />
+    <ClCompile Include="..\..\..\src\dynamixel_sdk_windows\port_handler_windows.c" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\include\DynamixelSDK.h" />
-    <ClInclude Include="..\..\..\include\dynamixel_sdk\GroupBulkRead.h" />
-    <ClInclude Include="..\..\..\include\dynamixel_sdk\GroupBulkWrite.h" />
-    <ClInclude Include="..\..\..\include\dynamixel_sdk\GroupSyncRead.h" />
-    <ClInclude Include="..\..\..\include\dynamixel_sdk\GroupSyncWrite.h" />
-    <ClInclude Include="..\..\..\include\dynamixel_sdk\PacketHandler.h" />
-    <ClInclude Include="..\..\..\include\dynamixel_sdk\PortHandler.h" />
-    <ClInclude Include="..\..\..\include\dynamixel_sdk\Protocol1PacketHandler.h" />
-    <ClInclude Include="..\..\..\include\dynamixel_sdk\Protocol2PacketHandler.h" />
-    <ClInclude Include="..\..\..\include\dynamixel_sdk\RobotisDef.h" />
-    <ClInclude Include="..\..\..\include\dynamixel_sdk_windows\PortHandlerWindows.h" />
+    <ClInclude Include="..\..\..\include\dynamixel_sdk.h" />
+    <ClInclude Include="..\..\..\include\dynamixel_sdk\group_bulk_read.h" />
+    <ClInclude Include="..\..\..\include\dynamixel_sdk\group_bulk_write.h" />
+    <ClInclude Include="..\..\..\include\dynamixel_sdk\group_sync_read.h" />
+    <ClInclude Include="..\..\..\include\dynamixel_sdk\group_sync_write.h" />
+    <ClInclude Include="..\..\..\include\dynamixel_sdk\packet_handler.h" />
+    <ClInclude Include="..\..\..\include\dynamixel_sdk\port_handler.h" />
+    <ClInclude Include="..\..\..\include\dynamixel_sdk\protocol1_packet_handler.h" />
+    <ClInclude Include="..\..\..\include\dynamixel_sdk\protocol2_packet_handler.h" />
+    <ClInclude Include="..\..\..\include\dynamixel_sdk\robotis_def.h" />
+    <ClInclude Include="..\..\..\include\dynamixel_sdk_windows\port_handler_windows.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

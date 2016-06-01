@@ -31,7 +31,7 @@
 /* Author: Leon Ryu Woon Jung */
 
 /*
-* GroupBulkRead.c
+* group_bulk_read.c
 *
 *  Created on: 2016. 5. 4.
 */
@@ -41,16 +41,16 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "dynamixel_sdk/GroupBulkRead.h"
+#include "dynamixel_sdk/group_bulk_read.h"
 
 #define NOT_USED_ID         255
 
 typedef struct
 {
-    UINT8_T     id_;
-    UINT16_T    start_address_;
-    UINT16_T    data_length_;
-    UINT8_T     *data_;
+    uint8_t     id_;
+    uint16_t    start_address_;
+    uint16_t    data_length_;
+    uint8_t     *data_;
 }DataListBulkRead;
 
 typedef struct
@@ -70,7 +70,7 @@ GroupDataBulkRead *groupDataBulkRead;
 
 int used_group_num_bulkread_ = 0;
 
-int GroupBulkRead_Size(int group_num)
+int groupBulkReadSize(int group_num)
 {
     int _data_num;
     int size = 0;
@@ -81,7 +81,7 @@ int GroupBulkRead_Size(int group_num)
     return size;
 }
 
-int GroupBulkRead_Find(int group_num, int id)
+int groupBulkReadFind(int group_num, int id)
 {
     int _data_num;
 
@@ -92,7 +92,7 @@ int GroupBulkRead_Find(int group_num, int id)
     return _data_num;
 }
 
-int GroupBulkRead(int port_num, int protocol_version)
+int groupBulkRead(int port_num, int protocol_version)
 {
     int _group_num = 0;
 
@@ -114,23 +114,23 @@ int GroupBulkRead(int port_num, int protocol_version)
     groupDataBulkRead[_group_num].is_param_changed_ = false;
     groupDataBulkRead[_group_num].data_list_ = 0;
 
-    GroupBulkRead_ClearParam(_group_num);
+    groupBulkReadClearParam(_group_num);
 
     return _group_num;
 }
 
-void GroupBulkRead_MakeParam(int group_num)
+void groupBulkReadMakeParam(int group_num)
 {
     int _data_num, _idx;
     int _port_num = groupDataBulkRead[group_num].port_num;
 
-    if (GroupBulkRead_Size(group_num) == 0)
+    if (groupBulkReadSize(group_num) == 0)
         return;
 
     if (groupDataBulkRead[group_num].protocol_version == 1)
-        packetData[_port_num].data_write_ = (UINT8_T*)realloc(packetData[_port_num].data_write_, GroupBulkRead_Size(group_num) * sizeof(UINT8_T) * 3); // ID(1) + ADDR(1) + LENGTH(1)
+        packetData[_port_num].data_write_ = (uint8_t*)realloc(packetData[_port_num].data_write_, groupBulkReadSize(group_num) * sizeof(uint8_t) * 3); // ID(1) + ADDR(1) + LENGTH(1)
     else    // 2.0
-        packetData[_port_num].data_write_ = (UINT8_T*)realloc(packetData[_port_num].data_write_, GroupBulkRead_Size(group_num) * sizeof(UINT8_T) * 5); // ID(1) + ADDR(2) + LENGTH(2)
+        packetData[_port_num].data_write_ = (uint8_t*)realloc(packetData[_port_num].data_write_, groupBulkReadSize(group_num) * sizeof(uint8_t) * 5); // ID(1) + ADDR(2) + LENGTH(2)
 
     _idx = 0;
     for (_data_num = 0; _data_num < groupDataBulkRead[group_num].data_list_length_; _data_num++)
@@ -140,9 +140,9 @@ void GroupBulkRead_MakeParam(int group_num)
 
         if (groupDataBulkRead[group_num].protocol_version == 1)
         {
-            packetData[_port_num].data_write_[_idx++] = (UINT8_T)groupDataBulkRead[group_num].data_list_[_data_num].data_length_;       // LEN
+            packetData[_port_num].data_write_[_idx++] = (uint8_t)groupDataBulkRead[group_num].data_list_[_data_num].data_length_;       // LEN
             packetData[_port_num].data_write_[_idx++] = groupDataBulkRead[group_num].data_list_[_data_num].id_;                         // ID
-            packetData[_port_num].data_write_[_idx++] = (UINT8_T)groupDataBulkRead[group_num].data_list_[_data_num].start_address_;     // ADDR
+            packetData[_port_num].data_write_[_idx++] = (uint8_t)groupDataBulkRead[group_num].data_list_[_data_num].start_address_;     // ADDR
         }
         else    // 2.0
         {
@@ -155,7 +155,7 @@ void GroupBulkRead_MakeParam(int group_num)
     }
 }
 
-bool GroupBulkRead_AddParam(int group_num, UINT8_T id, UINT16_T start_address, UINT16_T data_length)
+bool groupBulkReadAddParam(int group_num, uint8_t id, uint16_t start_address, uint16_t data_length)
 {
     int _data_num = 0;
 
@@ -163,7 +163,7 @@ bool GroupBulkRead_AddParam(int group_num, UINT8_T id, UINT16_T start_address, U
         return false;
 
     if (groupDataBulkRead[group_num].data_list_length_ != 0)
-        _data_num = GroupBulkRead_Find(group_num, id);
+        _data_num = groupBulkReadFind(group_num, id);
 
     if (groupDataBulkRead[group_num].data_list_length_ == _data_num)
     {
@@ -173,16 +173,16 @@ bool GroupBulkRead_AddParam(int group_num, UINT8_T id, UINT16_T start_address, U
         groupDataBulkRead[group_num].data_list_[_data_num].id_ = id;
         groupDataBulkRead[group_num].data_list_[_data_num].data_length_ = data_length;
         groupDataBulkRead[group_num].data_list_[_data_num].start_address_ = start_address;
-        groupDataBulkRead[group_num].data_list_[_data_num].data_ = (UINT8_T *)calloc(groupDataBulkRead[group_num].data_list_[_data_num].data_length_, sizeof(UINT8_T));
+        groupDataBulkRead[group_num].data_list_[_data_num].data_ = (uint8_t *)calloc(groupDataBulkRead[group_num].data_list_[_data_num].data_length_, sizeof(uint8_t));
     }
 
     groupDataBulkRead[group_num].is_param_changed_ = true;
     return true;
 }
 
-void GroupBulkRead_RemoveParam(int group_num, UINT8_T id)
+void groupBulkReadRemoveParam(int group_num, uint8_t id)
 {
-    int _data_num = GroupBulkRead_Find(group_num, id);
+    int _data_num = groupBulkReadFind(group_num, id);
 
     if (groupDataBulkRead[group_num].data_list_[_data_num].id_ == NOT_USED_ID)  // NOT exist
         return;
@@ -196,11 +196,11 @@ void GroupBulkRead_RemoveParam(int group_num, UINT8_T id)
     groupDataBulkRead[group_num].is_param_changed_ = true;
 }
 
-void GroupBulkRead_ClearParam(int group_num)
+void groupBulkReadClearParam(int group_num)
 {
     int _port_num = groupDataBulkRead[group_num].port_num;
 
-    if (GroupBulkRead_Size(group_num) == 0)
+    if (groupBulkReadSize(group_num) == 0)
         return;
 
     groupDataBulkRead[group_num].data_list_ = 0;
@@ -210,26 +210,26 @@ void GroupBulkRead_ClearParam(int group_num)
     groupDataBulkRead[group_num].data_list_length_ = 0;
 }
 
-void GroupBulkRead_TxPacket(int group_num)
+void groupBulkReadTxPacket(int group_num)
 {
     int _port_num = groupDataBulkRead[group_num].port_num;
 
-    if (GroupBulkRead_Size(group_num) == 0)
+    if (groupBulkReadSize(group_num) == 0)
     {
         packetData[_port_num].communication_result_ = COMM_NOT_AVAILABLE;
         return;
     }
 
     if (groupDataBulkRead[group_num].is_param_changed_ == true)
-        GroupBulkRead_MakeParam(group_num);
+        groupBulkReadMakeParam(group_num);
 
     if (groupDataBulkRead[group_num].protocol_version == 1)
-        BulkReadTx(groupDataBulkRead[group_num].port_num, groupDataBulkRead[group_num].protocol_version, GroupBulkRead_Size(group_num) * 3);
+        bulkReadTx(groupDataBulkRead[group_num].port_num, groupDataBulkRead[group_num].protocol_version, groupBulkReadSize(group_num) * 3);
     else
-        BulkReadTx(groupDataBulkRead[group_num].port_num, groupDataBulkRead[group_num].protocol_version, GroupBulkRead_Size(group_num) * 5);
+        bulkReadTx(groupDataBulkRead[group_num].port_num, groupDataBulkRead[group_num].protocol_version, groupBulkReadSize(group_num) * 5);
 }
 
-void GroupBulkRead_RxPacket(int group_num)
+void groupBulkReadRxPacket(int group_num)
 {
     int _data_num, _c;
     int _port_num = groupDataBulkRead[group_num].port_num;
@@ -238,7 +238,7 @@ void GroupBulkRead_RxPacket(int group_num)
 
     groupDataBulkRead[group_num].last_result_ = false;
 
-    if (GroupBulkRead_Size(group_num) == 0)
+    if (groupBulkReadSize(group_num) == 0)
     {
         packetData[groupDataBulkRead[group_num].port_num].communication_result_ = COMM_NOT_AVAILABLE;
         return;
@@ -250,9 +250,9 @@ void GroupBulkRead_RxPacket(int group_num)
             continue;
 
         packetData[_port_num].data_read_
-            = (UINT8_T *)realloc(packetData[_port_num].data_read_, groupDataBulkRead[group_num].data_list_[_data_num].data_length_ * sizeof(UINT8_T));
+            = (uint8_t *)realloc(packetData[_port_num].data_read_, groupDataBulkRead[group_num].data_list_[_data_num].data_length_ * sizeof(uint8_t));
 
-        ReadRx(groupDataBulkRead[group_num].port_num, groupDataBulkRead[group_num].protocol_version, groupDataBulkRead[group_num].data_list_[_data_num].data_length_);
+        readRx(groupDataBulkRead[group_num].port_num, groupDataBulkRead[group_num].protocol_version, groupDataBulkRead[group_num].data_list_[_data_num].data_length_);
         if (packetData[groupDataBulkRead[group_num].port_num].communication_result_ != COMM_SUCCESS)
             return;
 
@@ -264,23 +264,23 @@ void GroupBulkRead_RxPacket(int group_num)
         groupDataBulkRead[group_num].last_result_ = true;
 }
 
-void GroupBulkRead_TxRxPacket(int group_num)
+void groupBulkReadTxRxPacket(int group_num)
 {
     int _port_num = groupDataBulkRead[group_num].port_num;
 
     packetData[_port_num].communication_result_ = COMM_TX_FAIL;
 
-    GroupBulkRead_TxPacket(group_num);
+    groupBulkReadTxPacket(group_num);
     if (packetData[_port_num].communication_result_ != COMM_SUCCESS)
         return;
 
-    GroupBulkRead_RxPacket(group_num);
+    groupBulkReadRxPacket(group_num);
 }
 
-bool GroupBulkRead_IsAvailable(int group_num, UINT8_T id, UINT16_T address, UINT16_T data_length)
+bool groupBulkReadIsAvailable(int group_num, uint8_t id, uint16_t address, uint16_t data_length)
 {
-    int _data_num = GroupBulkRead_Find(group_num, id);
-    UINT16_T _start_addr, _data_length;
+    int _data_num = groupBulkReadFind(group_num, id);
+    uint16_t _start_addr, _data_length;
 
     if (groupDataBulkRead[group_num].last_result_ == false || groupDataBulkRead[group_num].data_list_[_data_num].id_ == NOT_USED_ID)
         return false;
@@ -294,14 +294,14 @@ bool GroupBulkRead_IsAvailable(int group_num, UINT8_T id, UINT16_T address, UINT
     return true;
 }
 
-UINT32_T GroupBulkRead_GetData(int group_num, UINT8_T id, UINT16_T address, UINT16_T data_length)
+uint32_t groupBulkReadGetData(int group_num, uint8_t id, uint16_t address, uint16_t data_length)
 {
-    int _data_num = GroupBulkRead_Find(group_num, id);
+    int _data_num = groupBulkReadFind(group_num, id);
 
-    if (GroupBulkRead_IsAvailable(group_num, id, address, data_length) == false)
+    if (groupBulkReadIsAvailable(group_num, id, address, data_length) == false)
         return 0;
 
-    UINT16_T _start_addr = groupDataBulkRead[group_num].data_list_[_data_num].start_address_;
+    uint16_t _start_addr = groupDataBulkRead[group_num].data_list_[_data_num].start_address_;
 
     switch (data_length)
     {

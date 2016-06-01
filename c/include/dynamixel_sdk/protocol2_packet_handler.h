@@ -31,7 +31,7 @@
 /* Author: Leon Ryu Woon Jung */
 
 /*
-* Protocol2PacketHandler.h
+* protocol2_packet_handler.h
 *
 *  Created on: 2016. 5. 4.
 */
@@ -40,80 +40,80 @@
 #define DYNAMIXEL_SDK_INCLUDE_DYNAMIXEL_SDK_PROTOCOL2PACKETHANDLER_C_H_
 
 
-#include "PacketHandler.h"
+#include "packet_handler.h"
 
-WINDECLSPEC UINT16_T    UpdateCRC           (UINT16_T crc_accum, UINT8_T *data_blk_ptr, UINT16_T data_blk_size);
-WINDECLSPEC void        AddStuffing         (UINT8_T *packet);
-WINDECLSPEC void        RemoveStuffing      (UINT8_T *packet);
+WINDECLSPEC uint16_t    updateCRC           (uint16_t crc_accum, uint8_t *data_blk_ptr, uint16_t data_blk_size);
+WINDECLSPEC void        addStuffing         (uint8_t *packet);
+WINDECLSPEC void        removeStuffing      (uint8_t *packet);
 
-WINDECLSPEC void        PrintTxRxResult2    (int result);
-WINDECLSPEC void        PrintRxPacketError2     (UINT8_T error);
+WINDECLSPEC void        printTxRxResult2    (int result);
+WINDECLSPEC void        printRxPacketError2     (uint8_t error);
 
-WINDECLSPEC int         GetLastTxRxResult2  (int port_num);
-WINDECLSPEC UINT8_T     GetLastRxPacketError2   (int port_num);
+WINDECLSPEC int         getLastTxRxResult2  (int port_num);
+WINDECLSPEC uint8_t     getLastRxPacketError2   (int port_num);
 
-WINDECLSPEC void        SetDataWrite2       (int port_num, UINT16_T data_length, UINT16_T data_pos, UINT32_T data);
-WINDECLSPEC UINT32_T    GetDataRead2        (int port_num, UINT16_T data_length, UINT16_T data_pos);
+WINDECLSPEC void        setDataWrite2       (int port_num, uint16_t data_length, uint16_t data_pos, uint32_t data);
+WINDECLSPEC uint32_t    getDataRead2        (int port_num, uint16_t data_length, uint16_t data_pos);
 
-WINDECLSPEC void        TxPacket2           (int port_num);
-WINDECLSPEC void        RxPacket2           (int port_num);
-WINDECLSPEC void        TxRxPacket2         (int port_num);
+WINDECLSPEC void        txPacket2           (int port_num);
+WINDECLSPEC void        rxPacket2           (int port_num);
+WINDECLSPEC void        txRxPacket2         (int port_num);
 
-WINDECLSPEC void        Ping2               (int port_num, UINT8_T id);
-WINDECLSPEC UINT16_T    PingGetModelNum2    (int port_num, UINT8_T id);
+WINDECLSPEC void        ping2               (int port_num, uint8_t id);
+WINDECLSPEC uint16_t    pingGetModelNum2    (int port_num, uint8_t id);
 
 // BroadcastPing
-WINDECLSPEC void        BroadcastPing2      (int port_num);
-WINDECLSPEC bool        GetBroadcastPingResult2 (int port_num, int id);
+WINDECLSPEC void        broadcastPing2      (int port_num);
+WINDECLSPEC bool        getBroadcastPingResult2 (int port_num, int id);
 
-WINDECLSPEC void        Action2             (int port_num, UINT8_T id);
-WINDECLSPEC void        Reboot2             (int port_num, UINT8_T id);
-WINDECLSPEC void        FactoryReset2       (int port_num, UINT8_T id, UINT8_T option);
+WINDECLSPEC void        action2             (int port_num, uint8_t id);
+WINDECLSPEC void        reboot2             (int port_num, uint8_t id);
+WINDECLSPEC void        factoryReset2       (int port_num, uint8_t id, uint8_t option);
 
-WINDECLSPEC void        ReadTx2             (int port_num, UINT8_T id, UINT16_T address, UINT16_T length);
-WINDECLSPEC void        ReadRx2             (int port_num, UINT16_T length);
-WINDECLSPEC void        ReadTxRx2           (int port_num, UINT8_T id, UINT16_T address, UINT16_T length);
+WINDECLSPEC void        readTx2             (int port_num, uint8_t id, uint16_t address, uint16_t length);
+WINDECLSPEC void        readRx2             (int port_num, uint16_t length);
+WINDECLSPEC void        readTxRx2           (int port_num, uint8_t id, uint16_t address, uint16_t length);
 
-WINDECLSPEC void        Read1ByteTx2        (int port_num, UINT8_T id, UINT16_T address);
-WINDECLSPEC UINT8_T     Read1ByteRx2        (int port_num);
-WINDECLSPEC UINT8_T     Read1ByteTxRx2      (int port_num, UINT8_T id, UINT16_T address);
+WINDECLSPEC void        read1ByteTx2        (int port_num, uint8_t id, uint16_t address);
+WINDECLSPEC uint8_t     read1ByteRx2        (int port_num);
+WINDECLSPEC uint8_t     read1ByteTxRx2      (int port_num, uint8_t id, uint16_t address);
 
-WINDECLSPEC void        Read2ByteTx2        (int port_num, UINT8_T id, UINT16_T address);
-WINDECLSPEC UINT16_T    Read2ByteRx2        (int port_num);
-WINDECLSPEC UINT16_T    Read2ByteTxRx2      (int port_num, UINT8_T id, UINT16_T address);
+WINDECLSPEC void        read2ByteTx2        (int port_num, uint8_t id, uint16_t address);
+WINDECLSPEC uint16_t    read2ByteRx2        (int port_num);
+WINDECLSPEC uint16_t    read2ByteTxRx2      (int port_num, uint8_t id, uint16_t address);
 
-WINDECLSPEC void        Read4ByteTx2        (int port_num, UINT8_T id, UINT16_T address);
-WINDECLSPEC UINT32_T    Read4ByteRx2        (int port_num);
-WINDECLSPEC UINT32_T    Read4ByteTxRx2      (int port_num, UINT8_T id, UINT16_T address);
+WINDECLSPEC void        read4ByteTx2        (int port_num, uint8_t id, uint16_t address);
+WINDECLSPEC uint32_t    read4ByteRx2        (int port_num);
+WINDECLSPEC uint32_t    read4ByteTxRx2      (int port_num, uint8_t id, uint16_t address);
 
-WINDECLSPEC void        WriteTxOnly2        (int port_num, UINT8_T id, UINT16_T address, UINT16_T length);
-WINDECLSPEC void        WriteTxRx2          (int port_num, UINT8_T id, UINT16_T address, UINT16_T length);
+WINDECLSPEC void        writeTxOnly2        (int port_num, uint8_t id, uint16_t address, uint16_t length);
+WINDECLSPEC void        writeTxRx2          (int port_num, uint8_t id, uint16_t address, uint16_t length);
 
-WINDECLSPEC void        Write1ByteTxOnly2   (int port_num, UINT8_T id, UINT16_T address, UINT8_T data);
-WINDECLSPEC void        Write1ByteTxRx2     (int port_num, UINT8_T id, UINT16_T address, UINT8_T data);
+WINDECLSPEC void        write1ByteTxOnly2   (int port_num, uint8_t id, uint16_t address, uint8_t data);
+WINDECLSPEC void        write1ByteTxRx2     (int port_num, uint8_t id, uint16_t address, uint8_t data);
 
-WINDECLSPEC void        Write2ByteTxOnly2   (int port_num, UINT8_T id, UINT16_T address, UINT16_T data);
-WINDECLSPEC void        Write2ByteTxRx2     (int port_num, UINT8_T id, UINT16_T address, UINT16_T data);
+WINDECLSPEC void        write2ByteTxOnly2   (int port_num, uint8_t id, uint16_t address, uint16_t data);
+WINDECLSPEC void        write2ByteTxRx2     (int port_num, uint8_t id, uint16_t address, uint16_t data);
 
-WINDECLSPEC void        Write4ByteTxOnly2   (int port_num, UINT8_T id, UINT16_T address, UINT32_T data);
-WINDECLSPEC void        Write4ByteTxRx2     (int port_num, UINT8_T id, UINT16_T address, UINT32_T data);
+WINDECLSPEC void        write4ByteTxOnly2   (int port_num, uint8_t id, uint16_t address, uint32_t data);
+WINDECLSPEC void        write4ByteTxRx2     (int port_num, uint8_t id, uint16_t address, uint32_t data);
 
-WINDECLSPEC void        RegWriteTxOnly2     (int port_num, UINT8_T id, UINT16_T address, UINT16_T length);
-WINDECLSPEC void        RegWriteTxRx2       (int port_num, UINT8_T id, UINT16_T address, UINT16_T length);
+WINDECLSPEC void        regWriteTxOnly2     (int port_num, uint8_t id, uint16_t address, uint16_t length);
+WINDECLSPEC void        regWriteTxRx2       (int port_num, uint8_t id, uint16_t address, uint16_t length);
 
-WINDECLSPEC void        SyncReadTx2         (int port_num, UINT16_T start_address, UINT16_T data_length, UINT16_T param_length);
-// SyncReadRx   -> GroupSyncRead class
-// SyncReadTxRx -> GroupSyncRead class
+WINDECLSPEC void        syncReadTx2         (int port_num, uint16_t start_address, uint16_t data_length, uint16_t param_length);
+// syncReadRx   -> GroupSyncRead
+// syncReadTxRx -> GroupSyncRead
 
 // param : ID1 DATA0 DATA1 ... DATAn ID2 DATA0 DATA1 ... DATAn ID3 DATA0 DATA1 ... DATAn
-WINDECLSPEC void        SyncWriteTxOnly2   (int port_num, UINT16_T start_address, UINT16_T data_length, UINT16_T param_length);
+WINDECLSPEC void        syncWriteTxOnly2   (int port_num, uint16_t start_address, uint16_t data_length, uint16_t param_length);
 
 // param : ID1 ADDR_L1 ADDR_H1 LEN_L1 LEN_H1 ID2 ADDR_L2 ADDR_H2 LEN_L2 LEN_H2 ...
-WINDECLSPEC void        BulkReadTx2        (int port_num, UINT16_T param_length);
-// BulkReadRx   -> GroupBulkRead class
-// BulkReadTxRx -> GroupBulkRead class
+WINDECLSPEC void        bulkReadTx2        (int port_num, uint16_t param_length);
+// bulkReadRx   -> GroupBulkRead
+// bulkReadTxRx -> GroupBulkRead
 
 // param : ID1 START_ADDR_L START_ADDR_H DATA_LEN_L DATA_LEN_H DATA0 DATA1 ... DATAn ID2 START_ADDR_L START_ADDR_H DATA_LEN_L DATA_LEN_H DATA0 DATA1 ... DATAn
-WINDECLSPEC void        BulkWriteTxOnly2   (int port_num, UINT16_T param_length);
+WINDECLSPEC void        bulkWriteTxOnly2   (int port_num, uint16_t param_length);
 
 #endif /* DYNAMIXEL_SDK_INCLUDE_DYNAMIXEL_SDK_PROTOCOL2PACKETHANDLER_C_H_ */

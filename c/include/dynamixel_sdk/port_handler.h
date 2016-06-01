@@ -31,7 +31,7 @@
 /* Author: Leon Ryu Woon Jung */
 
 /*
-* PortHandler.h
+* port_handler.h
 *
 *  Created on: 2016. 5. 4.
 */
@@ -49,35 +49,36 @@
 #endif
 #endif
 
-#include "RobotisDef.h"
+#include <stdint.h>
+#include "robotis_def.h"
 
 static const int DEFAULT_BAUDRATE = 1000000;
 
 int     used_port_num_;
 bool    *is_using_;
 
-WINDECLSPEC int     PortHandler             (const char *port_name);
+WINDECLSPEC int     portHandler             (const char *port_name);
 
-WINDECLSPEC bool    OpenPort                (int port_num);
-WINDECLSPEC void    ClosePort               (int port_num);
-WINDECLSPEC void    ClearPort               (int port_num);
+WINDECLSPEC bool    openPort                (int port_num);
+WINDECLSPEC void    closePort               (int port_num);
+WINDECLSPEC void    clearPort               (int port_num);
 
-WINDECLSPEC void    SetPortName             (int port_num, const char* port_name);
-WINDECLSPEC char   *GetPortName             (int port_num);
+WINDECLSPEC void    setPortName             (int port_num, const char* port_name);
+WINDECLSPEC char   *getPortName             (int port_num);
 
-WINDECLSPEC bool    SetBaudRate             (int port_num, const int baudrate);
-WINDECLSPEC int     GetBaudRate             (int port_num);
+WINDECLSPEC bool    setBaudRate             (int port_num, const int baudrate);
+WINDECLSPEC int     getBaudRate             (int port_num);
 
 #ifdef __linux__
-WINDECLSPEC int     GetBytesAvailable       (int port_num);
+WINDECLSPEC int     getBytesAvailable       (int port_num);
 #endif
 
-WINDECLSPEC int     ReadPort                (int port_num, UINT8_T *packet, int length);
-WINDECLSPEC int     WritePort               (int port_num, UINT8_T *packet, int length);
+WINDECLSPEC int     readPort                (int port_num, uint8_t *packet, int length);
+WINDECLSPEC int     writePort               (int port_num, uint8_t *packet, int length);
 
-WINDECLSPEC void    SetPacketTimeout        (int port_num, UINT16_T packet_length);
-WINDECLSPEC void    SetPacketTimeoutMSec    (int port_num, double msec);
-WINDECLSPEC bool    IsPacketTimeout         (int port_num);
+WINDECLSPEC void    setPacketTimeout        (int port_num, uint16_t packet_length);
+WINDECLSPEC void    setPacketTimeoutMSec    (int port_num, double msec);
+WINDECLSPEC bool    isPacketTimeout         (int port_num);
 
 
 #endif /* DYNAMIXEL_SDK_INCLUDE_DYNAMIXEL_SDK_PORTHANDLER_C_H_ */

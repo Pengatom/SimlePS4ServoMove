@@ -31,7 +31,7 @@
 /* Author: Leon Ryu Woon Jung */
 
 /*
-* PortHandlerLinux.c
+* port_handler_linux.c
 *
 *  Created on: 2016. 5. 17.
 */
@@ -47,7 +47,7 @@
 #include <sys/ioctl.h>
 #include <linux/serial.h>
 
-#include "dynamixel_sdk_linux/PortHandlerLinux.h"
+#include "dynamixel_sdk_linux/port_handler_linux.h"
 
 #define LATENCY_TIMER   4  // msec (USB latency timer)
 
@@ -64,7 +64,7 @@ typedef struct
 
 PortDataLinux *portDataLinux;
 
-int PortHandlerLinux(const char *port_name)
+int portHandlerLinux(const char *port_name)
 {
     int _port_num;
 
@@ -106,17 +106,17 @@ int PortHandlerLinux(const char *port_name)
 
     is_using_[_port_num] = false;
 
-    SetPortNameLinux(_port_num, port_name);
+    setPortNameLinux(_port_num, port_name);
 
     return _port_num;
 }
 
-bool OpenPortLinux(int port_num)
+bool openPortLinux(int port_num)
 {
-    return SetBaudRateLinux(port_num, portDataLinux[port_num].baudrate_);
+    return setBaudRateLinux(port_num, portDataLinux[port_num].baudrate_);
 }
 
-void ClosePortLinux(int port_num)
+void closePortLinux(int port_num)
 {
     if (portDataLinux[port_num].socket_fd_ != -1)
     {
@@ -125,77 +125,77 @@ void ClosePortLinux(int port_num)
     }
 }
 
-void ClearPortLinux(int port_num)
+void clearPortLinux(int port_num)
 {
     tcflush(portDataLinux[port_num].socket_fd_, TCIOFLUSH);
 }
 
-void SetPortNameLinux(int port_num, const char *port_name)
+void setPortNameLinux(int port_num, const char *port_name)
 {
     strcpy(portDataLinux[port_num].port_name_, port_name);
 }
 
-char *GetPortNameLinux(int port_num)
+char *getPortNameLinux(int port_num)
 {
     return portDataLinux[port_num].port_name_;
 }
 
-bool SetBaudRateLinux(int port_num, const int baudrate)
+bool setBaudRateLinux(int port_num, const int baudrate)
 {
-    int _baud = GetCFlagBaud(baudrate);
+    int _baud = getCFlagBaud(baudrate);
 
-    ClosePortLinux(port_num);
+    closePortLinux(port_num);
 
     if (_baud <= 0)   // custom baudrate
     {
-        SetupPortLinux(port_num, B38400);
+        setupPortLinux(port_num, B38400);
         portDataLinux[port_num].baudrate_ = baudrate;
-        return SetCustomBaudrateLinux(port_num, baudrate);
+        return setCustomBaudrateLinux(port_num, baudrate);
     }
     else
     {
         portDataLinux[port_num].baudrate_ = baudrate;
-        return SetupPortLinux(port_num, _baud);
+        return setupPortLinux(port_num, _baud);
     }
 }
 
-int GetBaudRateLinux(int port_num)
+int getBaudRateLinux(int port_num)
 {
     return portDataLinux[port_num].baudrate_;
 }
 
-int GetBytesAvailableLinux(int port_num)
+int getBytesAvailableLinux(int port_num)
 {
     int _bytes_available;
     ioctl(portDataLinux[port_num].socket_fd_, FIONREAD, &_bytes_available);
     return _bytes_available;
 }
 
-int ReadPortLinux(int port_num, UINT8_T *packet, int length)
+int readPortLinux(int port_num, uint8_t *packet, int length)
 {
     return read(portDataLinux[port_num].socket_fd_, packet, length);
 }
 
-int WritePortLinux(int port_num, UINT8_T *packet, int length)
+int writePortLinux(int port_num, uint8_t *packet, int length)
 {
     return write(portDataLinux[port_num].socket_fd_, packet, length);
 }
 
-void SetPacketTimeoutLinux(int port_num, UINT16_T packet_length)
+void setPacketTimeoutLinux(int port_num, uint16_t packet_length)
 {
-    portDataLinux[port_num].packet_start_time_ = GetCurrentTimeLinux();
+    portDataLinux[port_num].packet_start_time_ = getCurrentTimeLinux();
     portDataLinux[port_num].packet_timeout_ = (portDataLinux[port_num].tx_time_per_byte * (double)packet_length) + (LATENCY_TIMER * 2.0) + 2.0;
 }
 
-void SetPacketTimeoutMSecLinux(int port_num, double msec)
+void setPacketTimeoutMSecLinux(int port_num, double msec)
 {
-    portDataLinux[port_num].packet_start_time_ = GetCurrentTimeLinux();
+    portDataLinux[port_num].packet_start_time_ = getCurrentTimeLinux();
     portDataLinux[port_num].packet_timeout_ = msec;
 }
 
-bool IsPacketTimeoutLinux(int port_num)
+bool isPacketTimeoutLinux(int port_num)
 {
-    if (GetTimeSinceStartLinux(port_num) > portDataLinux[port_num].packet_timeout_)
+    if (getTimeSinceStartLinux(port_num) > portDataLinux[port_num].packet_timeout_)
     {
         portDataLinux[port_num].packet_timeout_ = 0;
         return true;
@@ -203,25 +203,25 @@ bool IsPacketTimeoutLinux(int port_num)
     return false;
 }
 
-double GetCurrentTimeLinux()
+double getCurrentTimeLinux()
 {
     struct timespec _tv;
     clock_gettime(CLOCK_REALTIME, &_tv);
     return ((double)_tv.tv_sec*1000.0 + (double)_tv.tv_nsec*0.001*0.001);
 }
 
-double GetTimeSinceStartLinux(int port_num)
+double getTimeSinceStartLinux(int port_num)
 {
     double _time;
 
-    _time = GetCurrentTimeLinux() - portDataLinux[port_num].packet_start_time_;
+    _time = getCurrentTimeLinux() - portDataLinux[port_num].packet_start_time_;
     if (_time < 0.0)
-        portDataLinux[port_num].packet_start_time_ = GetCurrentTimeLinux();
+        portDataLinux[port_num].packet_start_time_ = getCurrentTimeLinux();
 
     return _time;
 }
 
-bool SetupPortLinux(int port_num, int cflag_baud)
+bool setupPortLinux(int port_num, int cflag_baud)
 {
     struct termios newtio;
 
@@ -250,7 +250,7 @@ bool SetupPortLinux(int port_num, int cflag_baud)
     return true;
 }
 
-bool SetCustomBaudrateLinux(int port_num, int speed)
+bool setCustomBaudrateLinux(int port_num, int speed)
 {
     // try to set a custom divisor
     struct serial_struct ss;
@@ -266,13 +266,13 @@ bool SetCustomBaudrateLinux(int port_num, int speed)
 
     if (closest_speed < speed * 98 / 100 || closest_speed > speed * 102 / 100)
     {
-        printf("[PortHandlerLinux::SetCustomBaudrate] Cannot set speed to %d, closest is %d \n", speed, closest_speed);
+        printf("[PortHandlerLinux::setCustomBaudrate] Cannot set speed to %d, closest is %d \n", speed, closest_speed);
         return false;
     }
 
     if (ioctl(portDataLinux[port_num].socket_fd_, TIOCSSERIAL, &ss) < 0)
     {
-        printf("[PortHandlerLinux::SetCustomBaudrate] TIOCSSERIAL failed!\n");
+        printf("[PortHandlerLinux::setCustomBaudrate] TIOCSSERIAL failed!\n");
         return false;
     }
 
@@ -280,7 +280,7 @@ bool SetCustomBaudrateLinux(int port_num, int speed)
     return true;
 }
 
-int GetCFlagBaud(int baudrate)
+int getCFlagBaud(int baudrate)
 {
     switch (baudrate)
     {

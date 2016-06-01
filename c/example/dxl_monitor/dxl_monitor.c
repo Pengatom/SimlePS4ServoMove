@@ -26,7 +26,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "DynamixelSDK.h"                                   // Uses Dynamixel SDK library
+#include "dynamixel_sdk.h"                                   // Uses Dynamixel SDK library
 
 // Protocol version
 #define PROTOCOL_VERSION1               1.0                 // See which protocol version is used in the Dynamixel
@@ -36,47 +36,53 @@
 #define DEVICENAME                      "/dev/ttyUSB0"      // Check which port is being used on your controller
                                                             // ex) Windows: "COM1"   Linux: "/dev/ttyUSB0"
 
+int getch()
+{
 #ifdef __linux__
-int _getch()
-{
-    struct termios oldt, newt;
-    int ch;
-    tcgetattr(STDIN_FILENO, &oldt);
-    newt = oldt;
-    newt.c_lflag &= ~(ICANON | ECHO);
-    tcsetattr(STDIN_FILENO, TCSANOW, &newt);
-    ch = getchar();
-    tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
-    return ch;
-}
-
-int _kbhit(void)
-{
-    struct termios oldt, newt;
-    int ch;
-    int oldf;
-
-    tcgetattr(STDIN_FILENO, &oldt);
-    newt = oldt;
-    newt.c_lflag &= ~(ICANON | ECHO);
-    tcsetattr(STDIN_FILENO, TCSANOW, &newt);
-    oldf = fcntl(STDIN_FILENO, F_GETFL, 0);
-    fcntl(STDIN_FILENO, F_SETFL, oldf | O_NONBLOCK);
-
-    ch = getchar();
-
-    tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
-    fcntl(STDIN_FILENO, F_SETFL, oldf);
-
-    if(ch != EOF)
-    {
-        ungetc(ch, stdin);
-        return 1;
-    }
-
-    return 0;
-}
+  struct termios oldt, newt;
+  int ch;
+  tcgetattr(STDIN_FILENO, &oldt);
+  newt = oldt;
+  newt.c_lflag &= ~(ICANON | ECHO);
+  tcsetattr(STDIN_FILENO, TCSANOW, &newt);
+  ch = getchar();
+  tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
+  return ch;
+#elif defined(_WIN32) || defined(_WIN64)
+  return _getch();
 #endif
+}
+
+int kbhit(void)
+{
+#ifdef __linux__
+  struct termios oldt, newt;
+  int ch;
+  int oldf;
+
+  tcgetattr(STDIN_FILENO, &oldt);
+  newt = oldt;
+  newt.c_lflag &= ~(ICANON | ECHO);
+  tcsetattr(STDIN_FILENO, TCSANOW, &newt);
+  oldf = fcntl(STDIN_FILENO, F_GETFL, 0);
+  fcntl(STDIN_FILENO, F_SETFL, oldf | O_NONBLOCK);
+
+  ch = getchar();
+
+  tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
+  fcntl(STDIN_FILENO, F_SETFL, oldf);
+
+  if (ch != EOF)
+  {
+    ungetc(ch, stdin);
+    return 1;
+  }
+
+  return 0;
+#elif defined(_WIN32) || defined(_WIN64)
+  return _kbhit();
+#endif
+}
 
 void Usage(char *progname)
 {
@@ -121,7 +127,7 @@ void Help()
     printf(" rdb2 [ID] [ADDR]            :Read byte value from [ADDR] of [ID]\n");
     printf(" rdw2 [ID] [ADDR]            :Read word value from [ADDR] of [ID]\n");
     printf(" rdd2 [ID] [ADDR]            :Read dword value from [ADDR] of [ID]\n");
-    printf(" reboot2|rbt2 [ID]           :Reboot the Dynamixel of [ID]\n");
+    printf(" reboot2|rbt2 [ID]           :reboot the Dynamixel of [ID]\n");
     printf(" reset2|rst2 [ID] [OPTION]   :Factory reset the Dynamixel of [ID]\n");
     printf("                               OPTION: 255(All), 1(Except ID), 2(Except ID&Baud)\n");
 
@@ -131,15 +137,15 @@ void Help()
 void Scan(int port_num, int protocol_version1, int protocol_version2)
 {
 	int id;
-    UINT16_T dxl_model_num;
+    uint16_t dxl_model_num;
     int dxl_comm_result;
 
     fprintf(stderr, "\n");
     fprintf(stderr, "Scan Dynamixel Using Protocol 1.0\n");
     for(id = 1; id < 253; id++)
     {
-    	dxl_model_num = PingGetModelNum(port_num, protocol_version1, id);
-        if((dxl_comm_result = GetLastTxRxResult(port_num, protocol_version1)) == COMM_SUCCESS)
+    	dxl_model_num = pingGetModelNum(port_num, protocol_version1, id);
+        if((dxl_comm_result = getLastTxRxResult(port_num, protocol_version1)) == COMM_SUCCESS)
     	{
             fprintf(stderr, "\n                                          ... SUCCESS \r");
             fprintf(stderr, " [ID:%.3d] Model No : %.5d \n",
@@ -150,7 +156,7 @@ void Scan(int port_num, int protocol_version1, int protocol_version2)
 
         if(_kbhit())
         {
-            char c = _getch();
+            char c = getch();
             if(c == 0x1b)
                 break;
         }
@@ -160,8 +166,8 @@ void Scan(int port_num, int protocol_version1, int protocol_version2)
     fprintf(stderr, "Scan Dynamixel Using Protocol 2.0\n");
     for(id = 1; id < 253; id++)
     {
-    	dxl_model_num = PingGetModelNum(port_num, protocol_version2, id);
-        if((dxl_comm_result = GetLastTxRxResult(port_num, protocol_version2)) == COMM_SUCCESS)
+    	dxl_model_num = pingGetModelNum(port_num, protocol_version2, id);
+        if((dxl_comm_result = getLastTxRxResult(port_num, protocol_version2)) == COMM_SUCCESS)
     	{
             fprintf(stderr, "\n                                          ... SUCCESS \r");
             fprintf(stderr, " [ID:%.3d] Model No : %.5d \n",
@@ -172,7 +178,7 @@ void Scan(int port_num, int protocol_version1, int protocol_version2)
 
         if(_kbhit())
         {
-            char c = _getch();
+            char c = getch();
             if(c == 0x1b) {
                 break;
             }
@@ -181,63 +187,63 @@ void Scan(int port_num, int protocol_version1, int protocol_version2)
     fprintf(stderr, "\n\n");
 }
 
-void Write(int port_num, int protocol_version, UINT8_T id, UINT16_T addr, UINT16_T length, UINT32_T value)
+void Write(int port_num, int protocol_version, uint8_t id, uint16_t addr, uint16_t length, uint32_t value)
 {
-    UINT8_T dxl_error = 0;
+    uint8_t dxl_error = 0;
     int dxl_comm_result = COMM_TX_FAIL;
 
     if(length == 1)
-        Write1ByteTxRx(port_num, protocol_version, id, addr, (UINT8_T)value);
+        write1ByteTxRx(port_num, protocol_version, id, addr, (uint8_t)value);
     else if(length == 2)
-        Write2ByteTxRx(port_num, protocol_version, id, addr, (UINT16_T)value);
+        write2ByteTxRx(port_num, protocol_version, id, addr, (uint16_t)value);
     else if(length == 4)
-        Write4ByteTxRx(port_num, protocol_version, id, addr, (UINT32_T)value);
+        write4ByteTxRx(port_num, protocol_version, id, addr, (uint32_t)value);
 
-    if((dxl_comm_result = GetLastTxRxResult(port_num, protocol_version)) == COMM_SUCCESS)
+    if((dxl_comm_result = getLastTxRxResult(port_num, protocol_version)) == COMM_SUCCESS)
     {
-        if((dxl_error = GetLastRxPacketError(port_num, protocol_version)) != 0)
-			PrintRxPacketError(protocol_version, dxl_error);
+        if((dxl_error = getLastRxPacketError(port_num, protocol_version)) != 0)
+			printRxPacketError(protocol_version, dxl_error);
         fprintf(stderr, "\n Success to write\n\n");
     }
     else
     {
-        PrintTxRxResult(protocol_version, dxl_comm_result);
+        printTxRxResult(protocol_version, dxl_comm_result);
         fprintf(stderr, "\n Fail to write! \n\n");
     }
 }
 
-void Read(int port_num, int protocol_version, UINT8_T id, UINT16_T addr, UINT16_T length)
+void Read(int port_num, int protocol_version, uint8_t id, uint16_t addr, uint16_t length)
 {
-    UINT8_T dxl_error = 0;
+    uint8_t dxl_error = 0;
     int     dxl_comm_result = COMM_TX_FAIL;
 
-    INT8_T  value8    = 0;
-    INT16_T value16   = 0;
-    INT32_T value32   = 0;
+    int8_t  value8    = 0;
+    int16_t value16   = 0;
+    int32_t value32   = 0;
 
 
     if(length == 1)
-        value8 = Read1ByteTxRx(port_num, protocol_version, id, addr);
+        value8 = read1ByteTxRx(port_num, protocol_version, id, addr);
     else if(length == 2)
-        value16 = Read2ByteTxRx(port_num, protocol_version, id, addr);
+        value16 = read2ByteTxRx(port_num, protocol_version, id, addr);
     else if(length == 4)
-        value32 = Read4ByteTxRx(port_num, protocol_version, id, addr);
+        value32 = read4ByteTxRx(port_num, protocol_version, id, addr);
 
-    if((dxl_comm_result = GetLastTxRxResult(port_num, protocol_version)) == COMM_SUCCESS)
+    if((dxl_comm_result = getLastTxRxResult(port_num, protocol_version)) == COMM_SUCCESS)
     {
-        if((dxl_error = GetLastRxPacketError(port_num, protocol_version)) != 0)
-			PrintRxPacketError(protocol_version, dxl_error);
+        if((dxl_error = getLastRxPacketError(port_num, protocol_version)) != 0)
+			printRxPacketError(protocol_version, dxl_error);
 
         if(length == 1)
-            fprintf(stderr, "\n READ VALUE : (UNSIGNED) %u , (SIGNED) %d \n\n", (UINT8_T)value8, value8);
+            fprintf(stderr, "\n READ VALUE : (UNSIGNED) %u , (SIGNED) %d \n\n", (uint8_t)value8, value8);
         else if(length == 2)
-            fprintf(stderr, "\n READ VALUE : (UNSIGNED) %u , (SIGNED) %d \n\n", (UINT16_T)value16, value16);
+            fprintf(stderr, "\n READ VALUE : (UNSIGNED) %u , (SIGNED) %d \n\n", (uint16_t)value16, value16);
         else if(length == 4)
-            fprintf(stderr, "\n READ VALUE : (UNSIGNED) %u , (SIGNED) %d \n\n", (UINT32_T)value32, value32);
+            fprintf(stderr, "\n READ VALUE : (UNSIGNED) %u , (SIGNED) %d \n\n", (uint32_t)value32, value32);
     }
     else
     {
-        PrintTxRxResult(protocol_version, dxl_comm_result);
+        printTxRxResult(protocol_version, dxl_comm_result);
         fprintf(stderr, "\n Fail to write! \n\n");
     }
 }
@@ -307,13 +313,13 @@ int main(int argc, char *argv[])
     // Initialize PortHandler Structs
     // Set the port path
     // Get methods and members of PortHandlerLinux or PortHandlerWindows
-    int port_num = PortHandler(dev_name);
+    int port_num = portHandler(dev_name);
 
     // Initialize PacketHandler Structs 
-    PacketHandler();
+    packetHandler();
 
     // Open port
-    if(OpenPort(port_num))
+    if(openPort(port_num))
     {
         printf("Succeeded to open the port!\n\n");
         printf(" - Device Name : %s\n", dev_name);
@@ -323,7 +329,7 @@ int main(int argc, char *argv[])
     {
         printf("Failed to open the port! [%s]\n", dev_name);
         printf("Press any key to terminate...\n");
-        _getch();
+        getch();
         return 0;
     }
 
@@ -332,7 +338,7 @@ int main(int argc, char *argv[])
     char    param[20][30];
     int     num_param;
     char*   token;
-    UINT8_T dxl_error;
+    uint8_t dxl_error;
 
     while(1)
     {
@@ -366,7 +372,7 @@ int main(int argc, char *argv[])
         {
             if(num_param == 1)
             {
-                if(SetBaudRate(port_num, atoi(param[0])) == false)
+                if(setBaudRate(port_num, atoi(param[0])) == false)
                     fprintf(stderr, " Failed to change baudrate! \n");
                 else
                     fprintf(stderr, " Success to change baudrate! [ BAUD RATE: %d ]\n", atoi(param[0]));
@@ -379,7 +385,7 @@ int main(int argc, char *argv[])
         }
         else if(strcmp(cmd, "exit") == 0)
         {
-            ClosePort(port_num);
+            closePort(port_num);
             return 0;
         }
         else if(strcmp(cmd, "scan") == 0)
@@ -389,7 +395,7 @@ int main(int argc, char *argv[])
         else if(strcmp(cmd, "ping") == 0)
         {
 	        int i;
-            UINT16_T dxl_model_num;
+            uint16_t dxl_model_num;
             int dxl_comm_result;
 
             if(num_param == 0)
@@ -399,11 +405,11 @@ int main(int argc, char *argv[])
             }
 
             fprintf(stderr, "\n");
-            fprintf(stderr, "Ping Using Protocol 1.0\n");
+            fprintf(stderr, "ping Using Protocol 1.0\n");
             for(i = 0; i < num_param; i++)
             {
-            	dxl_model_num = PingGetModelNum(port_num, PROTOCOL_VERSION1, atoi(param[i]));
-				if((dxl_comm_result = GetLastTxRxResult(port_num, PROTOCOL_VERSION1)) == COMM_SUCCESS)
+            	dxl_model_num = pingGetModelNum(port_num, PROTOCOL_VERSION1, atoi(param[i]));
+				if((dxl_comm_result = getLastTxRxResult(port_num, PROTOCOL_VERSION1)) == COMM_SUCCESS)
                 {
                     fprintf(stderr, "\n                                          ... SUCCESS \r");
                     fprintf(stderr, " [ID:%.3d] Model No : %.5d \n",
@@ -418,11 +424,11 @@ int main(int argc, char *argv[])
             fprintf(stderr, "\n");
 
             fprintf(stderr, "\n");
-            fprintf(stderr, "Ping Using Protocol 2.0\n");
+            fprintf(stderr, "ping Using Protocol 2.0\n");
             for(i = 0; i < num_param; i++)
             {
-            	dxl_model_num = PingGetModelNum(port_num, PROTOCOL_VERSION2, atoi(param[i]));
-				if((dxl_comm_result = GetLastTxRxResult(port_num, PROTOCOL_VERSION2)) == COMM_SUCCESS)
+            	dxl_model_num = pingGetModelNum(port_num, PROTOCOL_VERSION2, atoi(param[i]));
+				if((dxl_comm_result = getLastTxRxResult(port_num, PROTOCOL_VERSION2)) == COMM_SUCCESS)
                 {
                     fprintf(stderr, "\n                                          ... SUCCESS \r");
                     fprintf(stderr, " [ID:%.3d] Model No : %.5d \n",
@@ -442,14 +448,14 @@ int main(int argc, char *argv[])
             {
                 int dxl_comm_result, id;
 
-                BroadcastPing(port_num, PROTOCOL_VERSION2);
-                if ((dxl_comm_result = GetLastTxRxResult(port_num, PROTOCOL_VERSION2)) != COMM_SUCCESS)
-                    PrintTxRxResult(PROTOCOL_VERSION2, dxl_comm_result);
+                broadcastPing(port_num, PROTOCOL_VERSION2);
+                if ((dxl_comm_result = getLastTxRxResult(port_num, PROTOCOL_VERSION2)) != COMM_SUCCESS)
+                    printTxRxResult(PROTOCOL_VERSION2, dxl_comm_result);
 
                 printf("Detected Dynamixel : \n");
                 for (id = 0; id < MAX_ID; id++)
                 {
-                    if (GetBroadcastPingResult(port_num, id, PROTOCOL_VERSION2))
+                    if (getBroadcastPingResult(port_num, id, PROTOCOL_VERSION2))
                         printf("[ID:%03d]\n", id);
                 }
                 printf("\n");
@@ -535,16 +541,16 @@ int main(int argc, char *argv[])
             if(num_param == 1)
             {
                 int dxl_comm_result;
-                Reboot(port_num, PROTOCOL_VERSION2, atoi(param[0]));
-                if((dxl_comm_result = GetLastTxRxResult(port_num, PROTOCOL_VERSION2)) == COMM_SUCCESS)
+                reboot(port_num, PROTOCOL_VERSION2, atoi(param[0]));
+                if((dxl_comm_result = getLastTxRxResult(port_num, PROTOCOL_VERSION2)) == COMM_SUCCESS)
                 {
-					if((dxl_error = GetLastRxPacketError(port_num, PROTOCOL_VERSION2)) != 0)
-						PrintRxPacketError(PROTOCOL_VERSION2, dxl_error);
+					if((dxl_error = getLastRxPacketError(port_num, PROTOCOL_VERSION2)) != 0)
+						printRxPacketError(PROTOCOL_VERSION2, dxl_error);
                     fprintf(stderr, "\n Success to reboot! \n\n");
                 }
                 else
                 {
-					PrintTxRxResult(PROTOCOL_VERSION2, dxl_comm_result);
+					printTxRxResult(PROTOCOL_VERSION2, dxl_comm_result);
                     fprintf(stderr, "\n Fail to reboot! \n\n");
                 }
             }
@@ -558,16 +564,16 @@ int main(int argc, char *argv[])
             if(num_param == 1)
             {
                 int dxl_comm_result;
-                FactoryReset(port_num, PROTOCOL_VERSION1, atoi(param[0]), 0x00);
-                if((dxl_comm_result = GetLastTxRxResult(port_num, PROTOCOL_VERSION1)) == COMM_SUCCESS)
+                factoryReset(port_num, PROTOCOL_VERSION1, atoi(param[0]), 0x00);
+                if((dxl_comm_result = getLastTxRxResult(port_num, PROTOCOL_VERSION1)) == COMM_SUCCESS)
                 {
-					if((dxl_error = GetLastRxPacketError(port_num, PROTOCOL_VERSION1)) != 0)
-						PrintRxPacketError(PROTOCOL_VERSION1, dxl_error);
+					if((dxl_error = getLastRxPacketError(port_num, PROTOCOL_VERSION1)) != 0)
+						printRxPacketError(PROTOCOL_VERSION1, dxl_error);
                     fprintf(stderr, "\n Success to reset! \n\n");
                 }
                 else
                 {
-					PrintTxRxResult(PROTOCOL_VERSION1, dxl_comm_result);
+					printTxRxResult(PROTOCOL_VERSION1, dxl_comm_result);
                     fprintf(stderr, "\n Fail to reset! \n\n");
                 }
             }
@@ -581,16 +587,16 @@ int main(int argc, char *argv[])
             if(num_param == 2)
             {
                 int dxl_comm_result;
-                FactoryReset(port_num, PROTOCOL_VERSION2, atoi(param[0]), 0x00);
-                if((dxl_comm_result = GetLastTxRxResult(port_num, PROTOCOL_VERSION2)) == COMM_SUCCESS)
+                factoryReset(port_num, PROTOCOL_VERSION2, atoi(param[0]), 0x00);
+                if((dxl_comm_result = getLastTxRxResult(port_num, PROTOCOL_VERSION2)) == COMM_SUCCESS)
                 {
-					if((dxl_error = GetLastRxPacketError(port_num, PROTOCOL_VERSION2)) != 0)
-						PrintRxPacketError(PROTOCOL_VERSION2, dxl_error);
+					if((dxl_error = getLastRxPacketError(port_num, PROTOCOL_VERSION2)) != 0)
+						printRxPacketError(PROTOCOL_VERSION2, dxl_error);
                     fprintf(stderr, "\n Success to reset! \n\n");
                 }
                 else
                 {
-					PrintTxRxResult(PROTOCOL_VERSION2, dxl_comm_result);
+					printTxRxResult(PROTOCOL_VERSION2, dxl_comm_result);
                     fprintf(stderr, "\n Fail to reset! \n\n");
                 }
             }

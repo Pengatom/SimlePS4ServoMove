@@ -28,7 +28,7 @@
 #endif
 
 #include <stdio.h>
-#include "DynamixelSDK.h"                                   // Uses Dynamixel SDK library
+#include "dynamixel_sdk.h"                                   // Uses Dynamixel SDK library
 
 // Control table address
 #define ADDR_MX_BAUDRATE                4                   // Control table address is different in Dynamixel model
@@ -49,47 +49,53 @@
 #define TORQUE_ENABLE                   1                   // Value for enabling the torque
 #define TORQUE_DISABLE                  0                   // Value for disabling the torque
 
+int getch()
+{
 #ifdef __linux__
-int _getch()
-{
-    struct termios oldt, newt;
-    int ch;
-    tcgetattr(STDIN_FILENO, &oldt);
-    newt = oldt;
-    newt.c_lflag &= ~(ICANON | ECHO);
-    tcsetattr(STDIN_FILENO, TCSANOW, &newt);
-    ch = getchar();
-    tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
-    return ch;
-}
-
-int _kbhit(void)
-{
-    struct termios oldt, newt;
-    int ch;
-    int oldf;
-
-    tcgetattr(STDIN_FILENO, &oldt);
-    newt = oldt;
-    newt.c_lflag &= ~(ICANON | ECHO);
-    tcsetattr(STDIN_FILENO, TCSANOW, &newt);
-    oldf = fcntl(STDIN_FILENO, F_GETFL, 0);
-    fcntl(STDIN_FILENO, F_SETFL, oldf | O_NONBLOCK);
-
-    ch = getchar();
-
-    tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
-    fcntl(STDIN_FILENO, F_SETFL, oldf);
-
-    if (ch != EOF)
-    {
-        ungetc(ch, stdin);
-        return 1;
-    }
-
-    return 0;
-}
+  struct termios oldt, newt;
+  int ch;
+  tcgetattr(STDIN_FILENO, &oldt);
+  newt = oldt;
+  newt.c_lflag &= ~(ICANON | ECHO);
+  tcsetattr(STDIN_FILENO, TCSANOW, &newt);
+  ch = getchar();
+  tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
+  return ch;
+#elif defined(_WIN32) || defined(_WIN64)
+  return _getch();
 #endif
+}
+
+int kbhit(void)
+{
+#ifdef __linux__
+  struct termios oldt, newt;
+  int ch;
+  int oldf;
+
+  tcgetattr(STDIN_FILENO, &oldt);
+  newt = oldt;
+  newt.c_lflag &= ~(ICANON | ECHO);
+  tcsetattr(STDIN_FILENO, TCSANOW, &newt);
+  oldf = fcntl(STDIN_FILENO, F_GETFL, 0);
+  fcntl(STDIN_FILENO, F_SETFL, oldf | O_NONBLOCK);
+
+  ch = getchar();
+
+  tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
+  fcntl(STDIN_FILENO, F_SETFL, oldf);
+
+  if (ch != EOF)
+  {
+    ungetc(ch, stdin);
+    return 1;
+  }
+
+  return 0;
+#elif defined(_WIN32) || defined(_WIN64)
+  return _kbhit();
+#endif
+}
 
 void msecSleep(int waitTime)
 {
@@ -105,18 +111,18 @@ int main()
     // Initialize PortHandler Structs
     // Set the port path
     // Get methods and members of PortHandlerLinux or PortHandlerWindows
-    int port_num = PortHandler(DEVICENAME);
+    int port_num = portHandler(DEVICENAME);
 
     // Initialize PacketHandler Structs 
-    PacketHandler();
+    packetHandler();
 
     int dxl_comm_result = COMM_TX_FAIL;             // Communication result
 
-    UINT8_T dxl_error = 0;                          // Dynamixel error
-    UINT8_T dxl_baudnum_read;                       // Read baudnum
+    uint8_t dxl_error = 0;                          // Dynamixel error
+    uint8_t dxl_baudnum_read;                       // Read baudnum
 
      // Open port
-    if (OpenPort(port_num))
+    if (openPort(port_num))
     {
         printf("Succeeded to open the port!\n");
     }
@@ -124,12 +130,12 @@ int main()
     {
         printf("Failed to open the port!\n");
         printf("Press any key to terminate...\n");
-        _getch();
+        getch();
         return 0;
     }
 
     // Set port baudrate
-    if (SetBaudRate(port_num, BAUDRATE))
+    if (setBaudRate(port_num, BAUDRATE))
     {
         printf("Succeeded to change the baudrate!\n");
     }
@@ -137,7 +143,7 @@ int main()
     {
         printf("Failed to change the baudrate!\n");
         printf("Press any key to terminate...\n");
-        _getch();
+        getch();
         return 0;
     }
 
@@ -146,24 +152,24 @@ int main()
 
     // Try factoryreset
     printf("[ID:%03d] Try factoryreset : ", DXL_ID);
-    FactoryReset(port_num, PROTOCOL_VERSION, DXL_ID, OPERATION_MODE);
-    if ((dxl_comm_result = GetLastTxRxResult(port_num, PROTOCOL_VERSION)) != COMM_SUCCESS)
+    factoryReset(port_num, PROTOCOL_VERSION, DXL_ID, OPERATION_MODE);
+    if ((dxl_comm_result = getLastTxRxResult(port_num, PROTOCOL_VERSION)) != COMM_SUCCESS)
     {
         printf("Aborted\n");
-        PrintTxRxResult(PROTOCOL_VERSION, dxl_comm_result);
+        printTxRxResult(PROTOCOL_VERSION, dxl_comm_result);
         return 0;
     }
-    else if ((dxl_error = GetLastRxPacketError(port_num, PROTOCOL_VERSION)) != 0)
-        PrintRxPacketError(PROTOCOL_VERSION, dxl_error);
+    else if ((dxl_error = getLastRxPacketError(port_num, PROTOCOL_VERSION)) != 0)
+        printRxPacketError(PROTOCOL_VERSION, dxl_error);
 
     // Wait for reset
     printf("Wait for reset...\n");
     msecSleep(2000);
 
-    printf("[ID:%03d] FactoryReset Success!\n", DXL_ID);
+    printf("[ID:%03d] factoryReset Success!\n", DXL_ID);
 
     // Set controller baudrate to dxl default baudrate
-    if (SetBaudRate(port_num, FACTORYRST_DEFAULTBAUDRATE))
+    if (setBaudRate(port_num, FACTORYRST_DEFAULTBAUDRATE))
     {
         printf("Succeed to change the controller baudrate to : %d\n", FACTORYRST_DEFAULTBAUDRATE);
     }
@@ -171,30 +177,30 @@ int main()
     {
         printf("Failed to change the controller baudrate\n");
         printf("Press any key to terminate...\n");
-        _getch();
+        getch();
         return 0;
     }
 
     // Read Dynamixel baudnum
-    dxl_baudnum_read = Read1ByteTxRx(port_num, PROTOCOL_VERSION, DXL_ID, ADDR_MX_BAUDRATE);
-    if ((dxl_comm_result = GetLastTxRxResult(port_num, PROTOCOL_VERSION)) != COMM_SUCCESS)
-        PrintTxRxResult(PROTOCOL_VERSION, dxl_comm_result);
-    else if ((dxl_error = GetLastRxPacketError(port_num, PROTOCOL_VERSION)) != 0)
-        PrintRxPacketError(PROTOCOL_VERSION, dxl_error);
+    dxl_baudnum_read = read1ByteTxRx(port_num, PROTOCOL_VERSION, DXL_ID, ADDR_MX_BAUDRATE);
+    if ((dxl_comm_result = getLastTxRxResult(port_num, PROTOCOL_VERSION)) != COMM_SUCCESS)
+        printTxRxResult(PROTOCOL_VERSION, dxl_comm_result);
+    else if ((dxl_error = getLastRxPacketError(port_num, PROTOCOL_VERSION)) != 0)
+        printRxPacketError(PROTOCOL_VERSION, dxl_error);
     else
         printf("[ID:%03d] Dynamixel baudnum is now : %d\n", DXL_ID, dxl_baudnum_read);
 
     // Write new baudnum
-    Write1ByteTxRx(port_num, PROTOCOL_VERSION, DXL_ID, ADDR_MX_BAUDRATE, NEW_BAUDNUM);
-    if ((dxl_comm_result = GetLastTxRxResult(port_num, PROTOCOL_VERSION)) != COMM_SUCCESS)
-        PrintTxRxResult(PROTOCOL_VERSION, dxl_comm_result);
-    else if ((dxl_error = GetLastRxPacketError(port_num, PROTOCOL_VERSION)) != 0)
-        PrintRxPacketError(PROTOCOL_VERSION, dxl_error);
+    write1ByteTxRx(port_num, PROTOCOL_VERSION, DXL_ID, ADDR_MX_BAUDRATE, NEW_BAUDNUM);
+    if ((dxl_comm_result = getLastTxRxResult(port_num, PROTOCOL_VERSION)) != COMM_SUCCESS)
+        printTxRxResult(PROTOCOL_VERSION, dxl_comm_result);
+    else if ((dxl_error = getLastRxPacketError(port_num, PROTOCOL_VERSION)) != 0)
+        printRxPacketError(PROTOCOL_VERSION, dxl_error);
     else
         printf("[ID:%03d] Set Dynamixel baudnum to : %d\n", DXL_ID, NEW_BAUDNUM);
 
     // Set port baudrate to BAUDRATE
-    if (SetBaudRate(port_num, BAUDRATE))
+    if (setBaudRate(port_num, BAUDRATE))
     {
         printf("Succeed to change the controller baudrate to : %d\n", BAUDRATE);
     }
@@ -202,23 +208,23 @@ int main()
     {
         printf("Failed to change the controller baudrate\n");
         printf("Press any key to terminate...\n");
-        _getch();
+        getch();
         return 0;
     }
 
     msecSleep(200);
 
     // Read Dynamixel baudnum
-    dxl_baudnum_read = Read1ByteTxRx(port_num, PROTOCOL_VERSION, DXL_ID, ADDR_MX_BAUDRATE);
-    if ((dxl_comm_result = GetLastTxRxResult(port_num, PROTOCOL_VERSION)) != COMM_SUCCESS)
-        PrintTxRxResult(PROTOCOL_VERSION, dxl_comm_result);
-    else if ((dxl_error = GetLastRxPacketError(port_num, PROTOCOL_VERSION)) != 0)
-        PrintRxPacketError(PROTOCOL_VERSION, dxl_error);
+    dxl_baudnum_read = read1ByteTxRx(port_num, PROTOCOL_VERSION, DXL_ID, ADDR_MX_BAUDRATE);
+    if ((dxl_comm_result = getLastTxRxResult(port_num, PROTOCOL_VERSION)) != COMM_SUCCESS)
+        printTxRxResult(PROTOCOL_VERSION, dxl_comm_result);
+    else if ((dxl_error = getLastRxPacketError(port_num, PROTOCOL_VERSION)) != 0)
+        printRxPacketError(PROTOCOL_VERSION, dxl_error);
     else
         printf("[ID:%03d] Dynamixel Baudnum is now : %d\n", DXL_ID, dxl_baudnum_read);
 
     // Close port
-    ClosePort(port_num);
+    closePort(port_num);
 
     return 0;
 }

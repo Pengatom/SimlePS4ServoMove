@@ -31,7 +31,7 @@
 /* Author: Leon Ryu Woon Jung */
 
 /*
-* DynamixelSDK.h
+* dynamixel_sdk.h
 *
 *  Created on: 2016. 5. 4.
 */
@@ -40,20 +40,20 @@
 #define DYNAMIXEL_SDK_INCLUDE_DYNAMIXEL_SDK_DYNAMIXELSDK_C_H_
 
 
-#include "dynamixel_sdk/RobotisDef.h"
-#include "dynamixel_sdk/GroupBulkRead.h"
-#include "dynamixel_sdk/GroupBulkWrite.h"
-#include "dynamixel_sdk/GroupSyncRead.h"
-#include "dynamixel_sdk/GroupSyncWrite.h"
-#include "dynamixel_sdk/Protocol1PacketHandler.h"
-#include "dynamixel_sdk/Protocol2PacketHandler.h"
+#include "dynamixel_sdk/robotis_def.h"
+#include "dynamixel_sdk/group_bulk_read.h"
+#include "dynamixel_sdk/group_bulk_write.h"
+#include "dynamixel_sdk/group_sync_read.h"
+#include "dynamixel_sdk/group_sync_write.h"
+#include "dynamixel_sdk/protocol1_packet_handler.h"
+#include "dynamixel_sdk/protocol2_packet_handler.h"
 
 #ifdef __linux__
-#include "dynamixel_sdk_linux/PortHandlerLinux.h"
+#include "dynamixel_sdk_linux/port_handler_linux.h"
 #endif
 
 #if defined(_WIN32) || defined(_WIN64)
-#include "dynamixel_sdk_windows/PortHandlerWindows.h"
+#include "dynamixel_sdk_windows/port_handler_windows.h"
 #endif
 
 

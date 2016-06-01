@@ -31,7 +31,7 @@
 /* Author: Leon Ryu Woon Jung */
 
 /*
-* GroupSyncWrite.h
+* group_sync_write.h
 *
 *  Created on: 2016. 5. 4.
 */
@@ -39,19 +39,19 @@
 #ifndef DYNAMIXEL_SDK_INCLUDE_DYNAMIXEL_SDK_GROUPSYNCWRITE_C_H_
 #define DYNAMIXEL_SDK_INCLUDE_DYNAMIXEL_SDK_GROUPSYNCWRITE_C_H_
 
-#include "RobotisDef.h"
-#include "PortHandler.h"
-#include "PacketHandler.h"
+#include "robotis_def.h"
+#include "port_handler.h"
+#include "packet_handler.h"
 
-WINDECLSPEC int     GroupSyncWrite              (int port_num, int protocol_version, UINT16_T start_address, UINT16_T data_length);
+WINDECLSPEC int     groupSyncWrite              (int port_num, int protocol_version, uint16_t start_address, uint16_t data_length);
 
-WINDECLSPEC void    GroupSyncWrite_MakeParam    (int group_num);
-WINDECLSPEC bool    GroupSyncWrite_AddParam     (int group_num, UINT8_T id, UINT32_T data, UINT16_T data_length);
-WINDECLSPEC void    GroupSyncWrite_RemoveParam  (int group_num, UINT8_T id);
-WINDECLSPEC bool    GroupSyncWrite_ChangeParam  (int group_num, UINT8_T id, UINT32_T data, UINT16_T data_length, UINT16_T data_pos);
-WINDECLSPEC void    GroupSyncWrite_ClearParam   (int group_num);
+WINDECLSPEC void    groupSyncWriteMakeParam    (int group_num);
+WINDECLSPEC bool    groupSyncWriteAddParam     (int group_num, uint8_t id, uint32_t data, uint16_t data_length);
+WINDECLSPEC void    groupSyncWriteRemoveParam  (int group_num, uint8_t id);
+WINDECLSPEC bool    groupSyncWriteChangeParam  (int group_num, uint8_t id, uint32_t data, uint16_t data_length, uint16_t data_pos);
+WINDECLSPEC void    groupSyncWriteClearParam   (int group_num);
 
-WINDECLSPEC void    GroupSyncWrite_TxPacket     (int group_num);
+WINDECLSPEC void    groupSyncWriteTxPacket     (int group_num);
 
 
 #endif /* DYNAMIXEL_SDK_INCLUDE_DYNAMIXEL_SDK_GROUPSYNCWRITE_C_H_ */

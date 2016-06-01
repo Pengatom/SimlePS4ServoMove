@@ -31,7 +31,7 @@
 /* Author: Leon Ryu Woon Jung */
 
 /*
-* GroupBulkWrite.c
+* group_bulk_write.c
 *
 *  Created on: 2016. 5. 4.
 */
@@ -40,17 +40,17 @@
 #endif
 
 #include <stdlib.h>
-#include "dynamixel_sdk/GroupBulkWrite.h"
+#include "dynamixel_sdk/group_bulk_write.h"
 
 #define NOT_USED_ID         255
 
 typedef struct
 {
-    UINT8_T     id_;
-    UINT16_T    data_end_;
-    UINT16_T    start_address_;
-    UINT16_T    data_length_;
-    UINT8_T     *data_;
+    uint8_t     id_;
+    uint16_t    data_end_;
+    uint16_t    start_address_;
+    uint16_t    data_length_;
+    uint8_t     *data_;
 }DataListBulkWrite;
 
 typedef struct
@@ -62,7 +62,7 @@ typedef struct
 
     bool        is_param_changed_;
 
-    UINT16_T    param_length_;
+    uint16_t    param_length_;
 
     DataListBulkWrite   *data_list_;
 }GroupDataBulkWrite;
@@ -71,7 +71,7 @@ GroupDataBulkWrite *groupDataBulkWrite;
 
 int used_group_num_bulkwrite_ = 0;
 
-int GroupBulkWrite_Size(int group_num)
+int groupBulkWriteSize(int group_num)
 {
     int _data_num;
     int size = 0;
@@ -82,7 +82,7 @@ int GroupBulkWrite_Size(int group_num)
     return size;
 }
 
-int GroupBulkWrite_Find(int group_num, int id)
+int groupBulkWriteFind(int group_num, int id)
 {
     int _data_num;
 
@@ -93,7 +93,7 @@ int GroupBulkWrite_Find(int group_num, int id)
     return _data_num;
 }
 
-int GroupBulkWrite(int port_num, int protocol_version)
+int groupBulkWrite(int port_num, int protocol_version)
 {
     int _group_num = 0;
 
@@ -115,12 +115,12 @@ int GroupBulkWrite(int port_num, int protocol_version)
     groupDataBulkWrite[_group_num].param_length_ = 0;
     groupDataBulkWrite[_group_num].data_list_ = 0;
 
-    GroupBulkWrite_ClearParam(_group_num);
+    groupBulkWriteClearParam(_group_num);
 
     return _group_num;
 }
 
-void GroupBulkWrite_MakeParam(int group_num)
+void groupBulkWriteMakeParam(int group_num)
 {
     int _data_num, _idx, _c;
     int _port_num = groupDataBulkWrite[group_num].port_num;
@@ -128,7 +128,7 @@ void GroupBulkWrite_MakeParam(int group_num)
     if (groupDataBulkWrite[group_num].protocol_version == 1)
         return;
 
-    if (GroupBulkWrite_Size(group_num) == 0)
+    if (groupBulkWriteSize(group_num) == 0)
         return;
 
     groupDataBulkWrite[group_num].param_length_ = 0;
@@ -141,7 +141,7 @@ void GroupBulkWrite_MakeParam(int group_num)
 
         groupDataBulkWrite[group_num].param_length_ += 1 + 2 + 2 + groupDataBulkWrite[group_num].data_list_[_data_num].data_length_;
 
-        packetData[_port_num].data_write_ = (UINT8_T*)realloc(packetData[_port_num].data_write_, groupDataBulkWrite[group_num].param_length_ * sizeof(UINT8_T));
+        packetData[_port_num].data_write_ = (uint8_t*)realloc(packetData[_port_num].data_write_, groupDataBulkWrite[group_num].param_length_ * sizeof(uint8_t));
 
         packetData[_port_num].data_write_[_idx++] = groupDataBulkWrite[group_num].data_list_[_data_num].id_;
         packetData[_port_num].data_write_[_idx++] = DXL_LOBYTE(groupDataBulkWrite[group_num].data_list_[_data_num].start_address_);
@@ -154,7 +154,7 @@ void GroupBulkWrite_MakeParam(int group_num)
     }
 }
 
-bool GroupBulkWrite_AddParam(int group_num, UINT8_T id, UINT16_T start_address, UINT16_T data_length, UINT32_T data, UINT16_T input_length)
+bool groupBulkWriteAddParam(int group_num, uint8_t id, uint16_t start_address, uint16_t data_length, uint32_t data, uint16_t input_length)
 {
     int _data_num = 0;
 
@@ -165,7 +165,7 @@ bool GroupBulkWrite_AddParam(int group_num, UINT8_T id, UINT16_T start_address, 
         return false;
 
     if (groupDataBulkWrite[group_num].data_list_length_ != 0)
-        _data_num = GroupBulkWrite_Find(group_num, id);
+        _data_num = groupBulkWriteFind(group_num, id);
 
     if (groupDataBulkWrite[group_num].data_list_length_ == _data_num)
     {
@@ -175,7 +175,7 @@ bool GroupBulkWrite_AddParam(int group_num, UINT8_T id, UINT16_T start_address, 
         groupDataBulkWrite[group_num].data_list_[_data_num].id_ = id;
         groupDataBulkWrite[group_num].data_list_[_data_num].data_length_ = data_length;
         groupDataBulkWrite[group_num].data_list_[_data_num].start_address_ = start_address;
-        groupDataBulkWrite[group_num].data_list_[_data_num].data_ = (UINT8_T *)calloc(groupDataBulkWrite[group_num].data_list_[_data_num].data_length_, sizeof(UINT8_T));
+        groupDataBulkWrite[group_num].data_list_[_data_num].data_ = (uint8_t *)calloc(groupDataBulkWrite[group_num].data_list_[_data_num].data_length_, sizeof(uint8_t));
         groupDataBulkWrite[group_num].data_list_[_data_num].data_end_ = 0;
     }
     else
@@ -208,9 +208,9 @@ bool GroupBulkWrite_AddParam(int group_num, UINT8_T id, UINT16_T start_address, 
     groupDataBulkWrite[group_num].is_param_changed_ = true;
     return true;
 }
-void GroupBulkWrite_RemoveParam(int group_num, UINT8_T id)
+void groupBulkWriteRemoveParam(int group_num, uint8_t id)
 {
-    int _data_num = GroupBulkWrite_Find(group_num, id);
+    int _data_num = groupBulkWriteFind(group_num, id);
 
     if (groupDataBulkWrite[group_num].protocol_version == 1)
         return;
@@ -232,9 +232,9 @@ void GroupBulkWrite_RemoveParam(int group_num, UINT8_T id)
     groupDataBulkWrite[group_num].is_param_changed_ = true;
 }
 
-bool GroupBulkWrite_ChangeParam(int group_num, UINT8_T id, UINT16_T start_address, UINT16_T data_length, UINT32_T data, UINT16_T input_length, UINT16_T data_pos)
+bool groupBulkWriteChangeParam(int group_num, uint8_t id, uint16_t start_address, uint16_t data_length, uint32_t data, uint16_t input_length, uint16_t data_pos)
 {
-    int _data_num = GroupBulkWrite_Find(group_num, id);
+    int _data_num = groupBulkWriteFind(group_num, id);
 
     if (groupDataBulkWrite[group_num].protocol_version == 1)
         return false;
@@ -276,14 +276,14 @@ bool GroupBulkWrite_ChangeParam(int group_num, UINT8_T id, UINT16_T start_addres
     groupDataBulkWrite[group_num].is_param_changed_ = true;
     return true;
 }
-void GroupBulkWrite_ClearParam(int group_num)
+void groupBulkWriteClearParam(int group_num)
 {
     int _port_num = groupDataBulkWrite[group_num].port_num;
 
     if (groupDataBulkWrite[group_num].protocol_version == 1)
         return;
 
-    if (GroupBulkWrite_Size(group_num) == 0)
+    if (groupBulkWriteSize(group_num) == 0)
         return;
 
     groupDataBulkWrite[group_num].data_list_ = 0;
@@ -292,7 +292,7 @@ void GroupBulkWrite_ClearParam(int group_num)
 
     groupDataBulkWrite[group_num].data_list_length_ = 0;
 }
-void GroupBulkWrite_TxPacket(int group_num)
+void groupBulkWriteTxPacket(int group_num)
 {
     if(groupDataBulkWrite[group_num].protocol_version == 1)
     {
@@ -300,14 +300,14 @@ void GroupBulkWrite_TxPacket(int group_num)
         return;
     }
 
-    if (GroupBulkWrite_Size(group_num) == 0)
+    if (groupBulkWriteSize(group_num) == 0)
     {
         packetData[groupDataBulkWrite[group_num].port_num].communication_result_ = COMM_NOT_AVAILABLE;
         return;
     }
 
     if(groupDataBulkWrite[group_num].is_param_changed_ == true)
-        GroupBulkWrite_MakeParam(group_num);
+        groupBulkWriteMakeParam(group_num);
 
-    BulkWriteTxOnly(groupDataBulkWrite[group_num].port_num, groupDataBulkWrite[group_num].protocol_version, groupDataBulkWrite[group_num].param_length_);
+    bulkWriteTxOnly(groupDataBulkWrite[group_num].port_num, groupDataBulkWrite[group_num].protocol_version, groupDataBulkWrite[group_num].param_length_);
 }

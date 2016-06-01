@@ -31,7 +31,7 @@
 /* Author: Leon Ryu Woon Jung */
 
 /*
-* GroupBulkRead.h
+* group_bulk_read.h
 *
 *  Created on: 2016. 5. 4.
 */
@@ -40,22 +40,22 @@
 #define DYNAMIXEL_SDK_INCLUDE_DYNAMIXEL_SDK_GROUPBULKREAD_C_H_
 
 
-#include "RobotisDef.h"
-#include "PortHandler.h"
-#include "PacketHandler.h"
+#include "robotis_def.h"
+#include "port_handler.h"
+#include "packet_handler.h"
 
-WINDECLSPEC int         GroupBulkRead               (int port_num, int protocol_version);
+WINDECLSPEC int         groupBulkRead               (int port_num, int protocol_version);
 
-WINDECLSPEC void        GroupBulkRead_MakeParam     (int group_num);
-WINDECLSPEC bool        GroupBulkRead_AddParam      (int group_num, UINT8_T id, UINT16_T start_address, UINT16_T data_length);
-WINDECLSPEC void        GroupBulkRead_RemoveParam   (int group_num, UINT8_T id);
-WINDECLSPEC void        GroupBulkRead_ClearParam    (int group_num);
+WINDECLSPEC void        groupBulkReadMakeParam     (int group_num);
+WINDECLSPEC bool        groupBulkReadAddParam      (int group_num, uint8_t id, uint16_t start_address, uint16_t data_length);
+WINDECLSPEC void        groupBulkReadRemoveParam   (int group_num, uint8_t id);
+WINDECLSPEC void        groupBulkReadClearParam    (int group_num);
 
-WINDECLSPEC void        GroupBulkRead_TxPacket      (int group_num);
-WINDECLSPEC void        GroupBulkRead_RxPacket      (int group_num);
-WINDECLSPEC void        GroupBulkRead_TxRxPacket    (int group_num);
+WINDECLSPEC void        groupBulkReadTxPacket      (int group_num);
+WINDECLSPEC void        groupBulkReadRxPacket      (int group_num);
+WINDECLSPEC void        groupBulkReadTxRxPacket    (int group_num);
 
-WINDECLSPEC bool        GroupBulkRead_IsAvailable   (int group_num, UINT8_T id, UINT16_T address, UINT16_T data_length);
-WINDECLSPEC UINT32_T    GroupBulkRead_GetData       (int group_num, UINT8_T id, UINT16_T address, UINT16_T data_length);
+WINDECLSPEC bool        groupBulkReadIsAvailable   (int group_num, uint8_t id, uint16_t address, uint16_t data_length);
+WINDECLSPEC uint32_t    groupBulkReadGetData       (int group_num, uint8_t id, uint16_t address, uint16_t data_length);
 
 #endif /* DYNAMIXEL_SDK_INCLUDE_DYNAMIXEL_SDK_GROUPBULKREAD_C_H_ */

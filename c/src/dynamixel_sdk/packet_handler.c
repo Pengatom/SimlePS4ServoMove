@@ -31,7 +31,7 @@
 /* Author: Leon Ryu Woon Jung */
 
 /*
-* PacketHandler.c
+* packet_handler.c
 *
 *  Created on: 2016. 5. 4.
 */
@@ -40,11 +40,11 @@
 #endif
 
 #include <stdlib.h>
-#include "dynamixel_sdk/PacketHandler.h"
-#include "dynamixel_sdk/Protocol1PacketHandler.h"
-#include "dynamixel_sdk/Protocol2PacketHandler.h"
+#include "dynamixel_sdk/packet_handler.h"
+#include "dynamixel_sdk/protocol1_packet_handler.h"
+#include "dynamixel_sdk/protocol2_packet_handler.h"
 
-void PacketHandler()
+void packetHandler()
 {
     int _port_num;
 
@@ -56,329 +56,329 @@ void PacketHandler()
 
     for (_port_num = 0; _port_num < used_port_num_; _port_num++)
     {
-        packetData[_port_num].data_write_ = (UINT8_T *)calloc(1, sizeof(UINT8_T));
-        packetData[_port_num].data_read_ = (UINT8_T *)calloc(1, sizeof(UINT8_T));
-        packetData[_port_num].txpacket_ = (UINT8_T *)calloc(1, sizeof(UINT8_T));
-        packetData[_port_num].rxpacket_ = (UINT8_T *)calloc(1, sizeof(UINT8_T));
+        packetData[_port_num].data_write_ = (uint8_t *)calloc(1, sizeof(uint8_t));
+        packetData[_port_num].data_read_ = (uint8_t *)calloc(1, sizeof(uint8_t));
+        packetData[_port_num].txpacket_ = (uint8_t *)calloc(1, sizeof(uint8_t));
+        packetData[_port_num].rxpacket_ = (uint8_t *)calloc(1, sizeof(uint8_t));
         packetData[_port_num].error_ = 0;
         packetData[_port_num].communication_result_ = 0;
     }
 }
 
-void PrintTxRxResult(int protocol_version, int result)
+void printTxRxResult(int protocol_version, int result)
 {
     if (protocol_version == 1)
-        PrintTxRxResult1(result);
+        printTxRxResult1(result);
     else
-        PrintTxRxResult2(result);
+        printTxRxResult2(result);
 };
-void PrintRxPacketError(int protocol_version, UINT8_T error)
+void printRxPacketError(int protocol_version, uint8_t error)
 {
     if (protocol_version == 1)
-        PrintRxPacketError1(error);
+        printRxPacketError1(error);
     else
-        PrintRxPacketError2(error);
+        printRxPacketError2(error);
 };
 
-int GetLastTxRxResult(int port_num, int protocol_version)
+int getLastTxRxResult(int port_num, int protocol_version)
 {
     if (protocol_version == 1)
-        return GetLastTxRxResult1(port_num);
+        return getLastTxRxResult1(port_num);
     else
-        return GetLastTxRxResult2(port_num);
+        return getLastTxRxResult2(port_num);
 }
-UINT8_T GetLastRxPacketError(int port_num, int protocol_version)
+uint8_t getLastRxPacketError(int port_num, int protocol_version)
 {
     if (protocol_version == 1)
-        return GetLastRxPacketError1(port_num);
+        return getLastRxPacketError1(port_num);
     else
-        return GetLastRxPacketError2(port_num);
-}
-
-
-void SetDataWrite(int port_num, int protocol_version, UINT16_T data_length, UINT16_T data_pos, UINT32_T data)
-{
-    if (protocol_version == 1)
-        SetDataWrite1(port_num, data_length, data_pos, data);
-    else
-        SetDataWrite2(port_num, data_length, data_pos, data);
-}
-UINT32_T GetDataRead(int port_num, int protocol_version, UINT16_T data_length, UINT16_T data_pos)
-{
-    if (protocol_version == 1)
-        return GetDataRead1(port_num, data_length, data_pos);
-    else
-        return GetDataRead2(port_num, data_length, data_pos);
+        return getLastRxPacketError2(port_num);
 }
 
-void TxPacket(int port_num, int protocol_version)
-{
-    if (protocol_version == 1)
-        TxPacket1(port_num);
-    else
-        TxPacket2(port_num);
-};
 
-void RxPacket(int port_num, int protocol_version)
+void setDataWrite(int port_num, int protocol_version, uint16_t data_length, uint16_t data_pos, uint32_t data)
 {
     if (protocol_version == 1)
-        RxPacket1(port_num);
+        setDataWrite1(port_num, data_length, data_pos, data);
     else
-        return RxPacket2(port_num);
-};
-
-void TxRxPacket(int port_num, int protocol_version)
+        setDataWrite2(port_num, data_length, data_pos, data);
+}
+uint32_t getDataRead(int port_num, int protocol_version, uint16_t data_length, uint16_t data_pos)
 {
     if (protocol_version == 1)
-        TxRxPacket1(port_num);
+        return getDataRead1(port_num, data_length, data_pos);
     else
-        return TxRxPacket2(port_num);
-};
-
-void Ping(int port_num, int protocol_version, UINT8_T id)
-{
-    if (protocol_version == 1)
-        Ping1(port_num, id);
-    else
-        Ping2(port_num, id);
-};
-
-UINT16_T PingGetModelNum(int port_num, int protocol_version, UINT8_T id)
-{
-    if (protocol_version == 1)
-        return PingGetModelNum1(port_num, id);
-    else
-        return PingGetModelNum2(port_num, id);
-};
-
-// BroadcastPing
-void BroadcastPing(int port_num, int protocol_version)
-{
-    if (protocol_version == 1)
-        BroadcastPing1(port_num);
-    else
-        BroadcastPing2(port_num);
-};
-
-bool GetBroadcastPingResult(int port_num, int protocol_version, int id)
-{
-    if (protocol_version == 1)
-        return GetBroadcastPingResult1(port_num, id);
-    else
-        return GetBroadcastPingResult2(port_num, id);
+        return getDataRead2(port_num, data_length, data_pos);
 }
 
-void Reboot(int port_num, int protocol_version, UINT8_T id)
+void txPacket(int port_num, int protocol_version)
 {
     if (protocol_version == 1)
-        Reboot1(port_num, id);
+        txPacket1(port_num);
     else
-        Reboot2(port_num, id);
+        txPacket2(port_num);
 };
 
-void FactoryReset(int port_num, int protocol_version, UINT8_T id, UINT8_T option)
+void rxPacket(int port_num, int protocol_version)
 {
     if (protocol_version == 1)
-        FactoryReset1(port_num, id, option);
+        rxPacket1(port_num);
     else
-        FactoryReset2(port_num, id, option);
+        rxPacket2(port_num);
 };
 
-void ReadTx(int port_num, int protocol_version, UINT8_T id, UINT16_T address, UINT16_T length)
+void txRxPacket(int port_num, int protocol_version)
 {
     if (protocol_version == 1)
-        ReadTx1(port_num, id, address, length);
+        txRxPacket1(port_num);
     else
-        ReadTx2(port_num, id, address, length);
-};
-void ReadRx(int port_num, int protocol_version, UINT16_T length)
-{
-    if (protocol_version == 1)
-        ReadRx1(port_num, length);
-    else
-        ReadRx2(port_num, length);
-};
-void ReadTxRx(int port_num, int protocol_version, UINT8_T id, UINT16_T address, UINT16_T length)
-{
-    if (protocol_version == 1)
-        ReadTxRx1(port_num, id, address, length);
-    else
-        ReadTxRx2(port_num, id, address, length);
+        txRxPacket2(port_num);
 };
 
-void Read1ByteTx(int port_num, int protocol_version, UINT8_T id, UINT16_T address)
+void ping(int port_num, int protocol_version, uint8_t id)
 {
     if (protocol_version == 1)
-        Read1ByteTx1(port_num, id, address);
+        ping1(port_num, id);
     else
-        Read1ByteTx2(port_num, id, address);
-};
-UINT8_T Read1ByteRx(int port_num, int protocol_version)
-{
-    if (protocol_version == 1)
-        return Read1ByteRx1(port_num);
-    else
-        return Read1ByteRx2(port_num);
-};
-UINT8_T Read1ByteTxRx(int port_num, int protocol_version, UINT8_T id, UINT16_T address)
-{
-    if (protocol_version == 1)
-        return Read1ByteTxRx1(port_num, id, address);
-    else
-        return Read1ByteTxRx2(port_num, id, address);
+        ping2(port_num, id);
 };
 
-void Read2ByteTx(int port_num, int protocol_version, UINT8_T id, UINT16_T address)
+uint16_t pingGetModelNum(int port_num, int protocol_version, uint8_t id)
 {
     if (protocol_version == 1)
-        Read2ByteTx1(port_num, id, address);
+        return pingGetModelNum1(port_num, id);
     else
-        Read2ByteTx2(port_num, id, address);
-};
-UINT16_T Read2ByteRx(int port_num, int protocol_version)
-{
-    if (protocol_version == 1)
-        return Read2ByteRx1(port_num);
-    else
-        return Read2ByteRx2(port_num);
-};
-UINT16_T Read2ByteTxRx(int port_num, int protocol_version, UINT8_T id, UINT16_T address)
-{
-    if (protocol_version == 1)
-        return Read2ByteTxRx1(port_num, id, address);
-    else
-        return Read2ByteTxRx2(port_num, id, address);
+        return pingGetModelNum2(port_num, id);
 };
 
-void Read4ByteTx(int port_num, int protocol_version, UINT8_T id, UINT16_T address)
+// broadcastPing
+void broadcastPing(int port_num, int protocol_version)
 {
     if (protocol_version == 1)
-        Read4ByteTx1(port_num, id, address);
+        broadcastPing1(port_num);
     else
-        Read4ByteTx2(port_num, id, address);
-};
-UINT32_T Read4ByteRx(int port_num, int protocol_version)
-{
-    if (protocol_version == 1)
-        return Read4ByteRx1(port_num);
-    else
-        return Read4ByteRx2(port_num);
-};
-UINT32_T Read4ByteTxRx(int port_num, int protocol_version, UINT8_T id, UINT16_T address)
-{
-    if (protocol_version == 1)
-        return Read4ByteTxRx1(port_num, id, address);
-    else
-        return Read4ByteTxRx2(port_num, id, address);
+        broadcastPing2(port_num);
 };
 
-void WriteTxOnly(int port_num, int protocol_version, UINT8_T id, UINT16_T address, UINT16_T length)
+bool getBroadcastPingResult(int port_num, int protocol_version, int id)
 {
     if (protocol_version == 1)
-        WriteTxOnly1(port_num, id, address, length);
+        return getBroadcastPingResult1(port_num, id);
     else
-        WriteTxOnly2(port_num, id, address, length);
-};
-void WriteTxRx(int port_num, int protocol_version, UINT8_T id, UINT16_T address, UINT16_T length)
+        return getBroadcastPingResult2(port_num, id);
+}
+
+void reboot(int port_num, int protocol_version, uint8_t id)
 {
     if (protocol_version == 1)
-        WriteTxRx1(port_num, id, address, length);
+        reboot1(port_num, id);
     else
-        WriteTxRx2(port_num, id, address, length);
+        reboot2(port_num, id);
 };
 
-void Write1ByteTxOnly(int port_num, int protocol_version, UINT8_T id, UINT16_T address, UINT8_T data)
+void factoryReset(int port_num, int protocol_version, uint8_t id, uint8_t option)
 {
     if (protocol_version == 1)
-        Write1ByteTxOnly1(port_num, id, address, data);
+        factoryReset1(port_num, id, option);
     else
-        Write1ByteTxOnly2(port_num, id, address, data);
-};
-void Write1ByteTxRx(int port_num, int protocol_version, UINT8_T id, UINT16_T address, UINT8_T data)
-{
-    if (protocol_version == 1)
-        Write1ByteTxRx1(port_num, id, address, data);
-    else
-        Write1ByteTxRx2(port_num, id, address, data);
+        factoryReset2(port_num, id, option);
 };
 
-void Write2ByteTxOnly(int port_num, int protocol_version, UINT8_T id, UINT16_T address, UINT16_T data)
+void readTx(int port_num, int protocol_version, uint8_t id, uint16_t address, uint16_t length)
 {
     if (protocol_version == 1)
-        Write2ByteTxOnly1(port_num, id, address, data);
+        readTx1(port_num, id, address, length);
     else
-        Write2ByteTxOnly2(port_num, id, address, data);
+        readTx2(port_num, id, address, length);
 };
-void Write2ByteTxRx(int port_num, int protocol_version, UINT8_T id, UINT16_T address, UINT16_T data)
+void readRx(int port_num, int protocol_version, uint16_t length)
 {
     if (protocol_version == 1)
-        Write2ByteTxRx1(port_num, id, address, data);
+        readRx1(port_num, length);
     else
-        Write2ByteTxRx2(port_num, id, address, data);
+        readRx2(port_num, length);
 };
-
-void Write4ByteTxOnly(int port_num, int protocol_version, UINT8_T id, UINT16_T address, UINT32_T data)
+void readTxRx(int port_num, int protocol_version, uint8_t id, uint16_t address, uint16_t length)
 {
     if (protocol_version == 1)
-        Write4ByteTxOnly1(port_num, id, address, data);
+        readTxRx1(port_num, id, address, length);
     else
-        Write4ByteTxOnly2(port_num, id, address, data);
-};
-void Write4ByteTxRx(int port_num, int protocol_version, UINT8_T id, UINT16_T address, UINT32_T data)
-{
-    if (protocol_version == 1)
-        Write4ByteTxRx1(port_num, id, address, data);
-    else
-        Write4ByteTxRx2(port_num, id, address, data);
+        readTxRx2(port_num, id, address, length);
 };
 
-void RegWriteTxOnly(int port_num, int protocol_version, UINT8_T id, UINT16_T address, UINT16_T length)
+void read1ByteTx(int port_num, int protocol_version, uint8_t id, uint16_t address)
 {
     if (protocol_version == 1)
-        RegWriteTxOnly1(port_num, id, address, length);
+        read1ByteTx1(port_num, id, address);
     else
-        RegWriteTxOnly2(port_num, id, address, length);
+        read1ByteTx2(port_num, id, address);
 };
-void RegWriteTxRx(int port_num, int protocol_version, UINT8_T id, UINT16_T address, UINT16_T length)
+uint8_t read1ByteRx(int port_num, int protocol_version)
 {
     if (protocol_version == 1)
-        RegWriteTxRx1(port_num, id, address, length);
+        return read1ByteRx1(port_num);
     else
-        RegWriteTxRx2(port_num, id, address, length);
+        return read1ByteRx2(port_num);
 };
-
-void SyncReadTx(int port_num, int protocol_version, UINT16_T start_address, UINT16_T data_length, UINT16_T param_length)
+uint8_t read1ByteTxRx(int port_num, int protocol_version, uint8_t id, uint16_t address)
 {
     if (protocol_version == 1)
-        SyncReadTx1(port_num, start_address, data_length, param_length);
+        return read1ByteTxRx1(port_num, id, address);
     else
-        SyncReadTx2(port_num, start_address, data_length, param_length);
-};
-// SyncReadRx   -> GroupSyncRead class
-// SyncReadTxRx -> GroupSyncRead class
-
-void SyncWriteTxOnly(int port_num, int protocol_version, UINT16_T start_address, UINT16_T data_length, UINT16_T param_length)
-{
-    if (protocol_version == 1)
-        SyncWriteTxOnly1(port_num, start_address, data_length, param_length);
-    else
-        SyncWriteTxOnly2(port_num, start_address, data_length, param_length);
+        return read1ByteTxRx2(port_num, id, address);
 };
 
-void BulkReadTx(int port_num, int protocol_version, UINT16_T param_length)
+void read2ByteTx(int port_num, int protocol_version, uint8_t id, uint16_t address)
 {
     if (protocol_version == 1)
-        BulkReadTx1(port_num, param_length);
+        read2ByteTx1(port_num, id, address);
     else
-        BulkReadTx2(port_num, param_length);
+        read2ByteTx2(port_num, id, address);
 };
-// BulkReadRx   -> GroupBulkRead class
-// BulkReadTxRx -> GroupBulkRead class
-
-void BulkWriteTxOnly(int port_num, int protocol_version, UINT16_T param_length)
+uint16_t read2ByteRx(int port_num, int protocol_version)
 {
     if (protocol_version == 1)
-        BulkWriteTxOnly1(port_num, param_length);
+        return read2ByteRx1(port_num);
     else
-        BulkWriteTxOnly2(port_num, param_length);
+        return read2ByteRx2(port_num);
+};
+uint16_t read2ByteTxRx(int port_num, int protocol_version, uint8_t id, uint16_t address)
+{
+    if (protocol_version == 1)
+        return read2ByteTxRx1(port_num, id, address);
+    else
+        return read2ByteTxRx2(port_num, id, address);
+};
+
+void read4ByteTx(int port_num, int protocol_version, uint8_t id, uint16_t address)
+{
+    if (protocol_version == 1)
+        read4ByteTx1(port_num, id, address);
+    else
+        read4ByteTx2(port_num, id, address);
+};
+uint32_t read4ByteRx(int port_num, int protocol_version)
+{
+    if (protocol_version == 1)
+        return read4ByteRx1(port_num);
+    else
+        return read4ByteRx2(port_num);
+};
+uint32_t read4ByteTxRx(int port_num, int protocol_version, uint8_t id, uint16_t address)
+{
+    if (protocol_version == 1)
+        return read4ByteTxRx1(port_num, id, address);
+    else
+        return read4ByteTxRx2(port_num, id, address);
+};
+
+void writeTxOnly(int port_num, int protocol_version, uint8_t id, uint16_t address, uint16_t length)
+{
+    if (protocol_version == 1)
+        writeTxOnly1(port_num, id, address, length);
+    else
+        writeTxOnly2(port_num, id, address, length);
+};
+void writeTxRx(int port_num, int protocol_version, uint8_t id, uint16_t address, uint16_t length)
+{
+    if (protocol_version == 1)
+        writeTxRx1(port_num, id, address, length);
+    else
+        writeTxRx2(port_num, id, address, length);
+};
+
+void write1ByteTxOnly(int port_num, int protocol_version, uint8_t id, uint16_t address, uint8_t data)
+{
+    if (protocol_version == 1)
+        write1ByteTxOnly1(port_num, id, address, data);
+    else
+        write1ByteTxOnly2(port_num, id, address, data);
+};
+void write1ByteTxRx(int port_num, int protocol_version, uint8_t id, uint16_t address, uint8_t data)
+{
+    if (protocol_version == 1)
+        write1ByteTxRx1(port_num, id, address, data);
+    else
+        write1ByteTxRx2(port_num, id, address, data);
+};
+
+void write2ByteTxOnly(int port_num, int protocol_version, uint8_t id, uint16_t address, uint16_t data)
+{
+    if (protocol_version == 1)
+        write2ByteTxOnly1(port_num, id, address, data);
+    else
+        write2ByteTxOnly2(port_num, id, address, data);
+};
+void write2ByteTxRx(int port_num, int protocol_version, uint8_t id, uint16_t address, uint16_t data)
+{
+    if (protocol_version == 1)
+        write2ByteTxRx1(port_num, id, address, data);
+    else
+        write2ByteTxRx2(port_num, id, address, data);
+};
+
+void write4ByteTxOnly(int port_num, int protocol_version, uint8_t id, uint16_t address, uint32_t data)
+{
+    if (protocol_version == 1)
+        write4ByteTxOnly1(port_num, id, address, data);
+    else
+        write4ByteTxOnly2(port_num, id, address, data);
+};
+void write4ByteTxRx(int port_num, int protocol_version, uint8_t id, uint16_t address, uint32_t data)
+{
+    if (protocol_version == 1)
+        write4ByteTxRx1(port_num, id, address, data);
+    else
+        write4ByteTxRx2(port_num, id, address, data);
+};
+
+void regWriteTxOnly(int port_num, int protocol_version, uint8_t id, uint16_t address, uint16_t length)
+{
+    if (protocol_version == 1)
+        regWriteTxOnly1(port_num, id, address, length);
+    else
+        regWriteTxOnly2(port_num, id, address, length);
+};
+void regWriteTxRx(int port_num, int protocol_version, uint8_t id, uint16_t address, uint16_t length)
+{
+    if (protocol_version == 1)
+        regWriteTxRx1(port_num, id, address, length);
+    else
+        regWriteTxRx2(port_num, id, address, length);
+};
+
+void syncReadTx(int port_num, int protocol_version, uint16_t start_address, uint16_t data_length, uint16_t param_length)
+{
+    if (protocol_version == 1)
+        syncReadTx1(port_num, start_address, data_length, param_length);
+    else
+        syncReadTx2(port_num, start_address, data_length, param_length);
+};
+// syncReadRx   -> GroupSyncRead
+// syncReadTxRx -> GroupSyncRead
+
+void syncWriteTxOnly(int port_num, int protocol_version, uint16_t start_address, uint16_t data_length, uint16_t param_length)
+{
+    if (protocol_version == 1)
+        syncWriteTxOnly1(port_num, start_address, data_length, param_length);
+    else
+        syncWriteTxOnly2(port_num, start_address, data_length, param_length);
+};
+
+void bulkReadTx(int port_num, int protocol_version, uint16_t param_length)
+{
+    if (protocol_version == 1)
+        bulkReadTx1(port_num, param_length);
+    else
+        bulkReadTx2(port_num, param_length);
+};
+// bulkReadRx   -> GroupBulkRead
+// bulkReadTxRx -> GroupBulkRead
+
+void bulkWriteTxOnly(int port_num, int protocol_version, uint16_t param_length)
+{
+    if (protocol_version == 1)
+        bulkWriteTxOnly1(port_num, param_length);
+    else
+        bulkWriteTxOnly2(port_num, param_length);
 };

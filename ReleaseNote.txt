@@ -4,7 +4,7 @@
 
 - 05.31.2016
 
-* Code Refactoring
+* Code Refactoring (Solved issue : #3)
 * Code style modified into ROS c++ code style
 * License specified in the source code
 

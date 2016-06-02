@@ -85,57 +85,61 @@ int kbhit(void)
 
 int main()
 {
-    // Initialize PortHandler Structs
-    // Set the port path
-    // Get methods and members of PortHandlerLinux or PortHandlerWindows
-    int port_num = portHandler(DEVICENAME);
+  // Initialize PortHandler Structs
+  // Set the port path
+  // Get methods and members of PortHandlerLinux or PortHandlerWindows
+  int port_num = portHandler(DEVICENAME);
 
-    // Initialize PacketHandler Structs 
-    packetHandler();
+  // Initialize PacketHandler Structs
+  packetHandler();
 
-    int dxl_comm_result = COMM_TX_FAIL;             // Communication result
+  int dxl_comm_result = COMM_TX_FAIL;             // Communication result
 
-    uint8_t dxl_error = 0;                          // Dynamixel error
-    uint16_t dxl_model_number;                      // Dynamixel model number
+  uint8_t dxl_error = 0;                          // Dynamixel error
+  uint16_t dxl_model_number;                      // Dynamixel model number
 
-    // Open port
-    if (openPort(port_num))
-    {
-        printf("Succeeded to open the port!\n");
-    }
-    else
-    {
-        printf("Failed to open the port!\n");
-        printf("Press any key to terminate...\n");
-        getch();
-        return 0;
-    }
-
-    // Set port baudrate
-    if (setBaudRate(port_num, BAUDRATE))
-    {
-        printf("Succeeded to change the baudrate!\n");
-    }
-    else
-    {
-        printf("Failed to change the baudrate!\n");
-        printf("Press any key to terminate...\n");
-        getch();
-        return 0;
-    }
-
-    // Try to ping the Dynamixel
-    // Get Dynamixel model number
-    dxl_model_number = pingGetModelNum(port_num, PROTOCOL_VERSION, DXL_ID);
-    if ((dxl_comm_result = getLastTxRxResult(port_num, PROTOCOL_VERSION)) != COMM_SUCCESS)
-        printTxRxResult(PROTOCOL_VERSION, dxl_comm_result);
-    else if ((dxl_error = getLastRxPacketError(port_num, PROTOCOL_VERSION)) != 0)
-        printRxPacketError(PROTOCOL_VERSION, dxl_error);
-
-    printf("[ID:%03d] ping Succeeded. Dynamixel model number : %d\n", DXL_ID, dxl_model_number);
-
-    // Close port
-    closePort(port_num);
-
+  // Open port
+  if (openPort(port_num))
+  {
+    printf("Succeeded to open the port!\n");
+  }
+  else
+  {
+    printf("Failed to open the port!\n");
+    printf("Press any key to terminate...\n");
+    getch();
     return 0;
+  }
+
+  // Set port baudrate
+  if (setBaudRate(port_num, BAUDRATE))
+  {
+    printf("Succeeded to change the baudrate!\n");
+  }
+  else
+  {
+    printf("Failed to change the baudrate!\n");
+    printf("Press any key to terminate...\n");
+    getch();
+    return 0;
+  }
+
+  // Try to ping the Dynamixel
+  // Get Dynamixel model number
+  dxl_model_number = pingGetModelNum(port_num, PROTOCOL_VERSION, DXL_ID);
+  if ((dxl_comm_result = getLastTxRxResult(port_num, PROTOCOL_VERSION)) != COMM_SUCCESS)
+  {
+    printTxRxResult(PROTOCOL_VERSION, dxl_comm_result);
+  }
+  else if ((dxl_error = getLastRxPacketError(port_num, PROTOCOL_VERSION)) != 0)
+  {
+    printRxPacketError(PROTOCOL_VERSION, dxl_error);
+  }
+
+  printf("[ID:%03d] ping Succeeded. Dynamixel model number : %d\n", DXL_ID, dxl_model_number);
+
+  // Close port
+  closePort(port_num);
+
+  return 0;
 }

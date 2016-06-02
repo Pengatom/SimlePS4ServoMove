@@ -57,7 +57,7 @@ bool    openPort            (int port_num) { return openPortLinux(port_num); };
 void    closePort           (int port_num) { closePortLinux(port_num); };
 void    clearPort           (int port_num) { clearPortLinux(port_num); };
 
-void    setPortName         (int port_num, const char* port_name) { setPortNameLinux(port_num, port_name); };
+void    setPortName         (int port_num, const char *port_name) { setPortNameLinux(port_num, port_name); };
 char   *getPortName         (int port_num) { return getPortNameLinux(port_num); };
 
 bool    setBaudRate         (int port_num, const int baudrate) { return setBaudRateLinux(port_num, baudrate); };
@@ -80,7 +80,7 @@ bool    openPort            (int port_num) { return openPortWindows(port_num); }
 void    closePort           (int port_num) { closePortWindows(port_num); };
 void    clearPort           (int port_num) { clearPortWindows(port_num); };
 
-void    setPortName         (int port_num, const char* port_name) { setPortNameWindows(port_num, port_name); };
+void    setPortName         (int port_num, const char *port_name) { setPortNameWindows(port_num, port_name); };
 char   *getPortName         (int port_num) { return getPortNameWindows(port_num); };
 
 bool    setBaudRate         (int port_num, const int baudrate) { return setBaudRateWindows(port_num, baudrate); };

@@ -10,7 +10,7 @@
 //
 //
 // Available Dynamixel model on this example : All models using Protocol 2.0
-// This example is designed for using a Dynamixel PRO 54-200, and an USB2DYNAMIXEL. 
+// This example is designed for using a Dynamixel PRO 54-200, and an USB2DYNAMIXEL.
 // To use another Dynamixel model, such as X series, see their details in E-Manual(support.robotis.com) and edit below "#define"d variables yourself.
 // Be sure that Dynamixel PRO properties are already set as %% ID : 1 / Baudnum : 3 (Baudrate : 1000000 [1M])
 //
@@ -84,55 +84,57 @@ int kbhit(void)
 
 int main()
 {
-    // Initialize PortHandler Structs
-    // Set the port path
-    // Get methods and members of PortHandlerLinux or PortHandlerWindows
-    int port_num = portHandler(DEVICENAME);
+  // Initialize PortHandler Structs
+  // Set the port path
+  // Get methods and members of PortHandlerLinux or PortHandlerWindows
+  int port_num = portHandler(DEVICENAME);
 
-    // Initialize PacketHandler Structs 
-    packetHandler();
+  // Initialize PacketHandler Structs
+  packetHandler();
 
-    int dxl_comm_result = COMM_TX_FAIL;             // Communication result
-    int id;
-    
-    // Open port
-    if (openPort(port_num))
-    {
-        printf("Succeeded to open the port!\n");
-    }
-    else
-    {
-        printf("Failed to open the port!\n");
-        printf("Press any key to terminate...\n");
-        getch();
-        return 0;
-    }
+  int dxl_comm_result = COMM_TX_FAIL;             // Communication result
+  int id;
 
-    // Set port baudrate
-    if (setBaudRate(port_num, BAUDRATE))
-    {
-        printf("Succeeded to change the baudrate!\n");
-    }
-    else
-    {
-        printf("Failed to change the baudrate!\n");
-        printf("Press any key to terminate...\n");
-        getch();
-        return 0;
-    }
-
-    // Try to broadcast ping the Dynamixel
-    broadcastPing(port_num, PROTOCOL_VERSION);
-    if ((dxl_comm_result = getLastTxRxResult(port_num, PROTOCOL_VERSION)) != COMM_SUCCESS)
-        printTxRxResult(PROTOCOL_VERSION, dxl_comm_result);
-
-    printf("Detected Dynamixel : \n");
-    for (id = 0; id < MAX_ID; id++)
-        if(getBroadcastPingResult(port_num, PROTOCOL_VERSION, id))
-            printf("[ID:%03d]\n", id);
-
-    // Close port
-    closePort(port_num);
-
+  // Open port
+  if (openPort(port_num))
+  {
+    printf("Succeeded to open the port!\n");
+  }
+  else
+  {
+    printf("Failed to open the port!\n");
+    printf("Press any key to terminate...\n");
+    getch();
     return 0;
+  }
+
+  // Set port baudrate
+  if (setBaudRate(port_num, BAUDRATE))
+  {
+    printf("Succeeded to change the baudrate!\n");
+  }
+  else
+  {
+    printf("Failed to change the baudrate!\n");
+    printf("Press any key to terminate...\n");
+    getch();
+    return 0;
+  }
+
+  // Try to broadcast ping the Dynamixel
+  broadcastPing(port_num, PROTOCOL_VERSION);
+  if ((dxl_comm_result = getLastTxRxResult(port_num, PROTOCOL_VERSION)) != COMM_SUCCESS)
+    printTxRxResult(PROTOCOL_VERSION, dxl_comm_result);
+
+  printf("Detected Dynamixel : \n");
+  for (id = 0; id < MAX_ID; id++)
+  {
+    if (getBroadcastPingResult(port_num, PROTOCOL_VERSION, id))
+      printf("[ID:%03d]\n", id);
+  }
+
+  // Close port
+  closePort(port_num);
+
+  return 0;
 }

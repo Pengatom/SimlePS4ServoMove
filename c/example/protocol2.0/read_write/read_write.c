@@ -10,7 +10,7 @@
 //
 //
 // Available Dynamixel model on this example : All models using Protocol 2.0
-// This example is designed for using a Dynamixel PRO 54-200, and an USB2DYNAMIXEL. 
+// This example is designed for using a Dynamixel PRO 54-200, and an USB2DYNAMIXEL.
 // To use another Dynamixel model, such as X series, see their details in E-Manual(support.robotis.com) and edit below "#define"d variables yourself.
 // Be sure that Dynamixel PRO properties are already set as %% ID : 1 / Baudnum : 3 (Baudrate : 1000000 [1M])
 //
@@ -99,98 +99,120 @@ int kbhit(void)
 
 int main()
 {
-    // Initialize PortHandler Structs
-    // Set the port path
-    // Get methods and members of PortHandlerLinux or PortHandlerWindows
-    int port_num = portHandler(DEVICENAME);
+  // Initialize PortHandler Structs
+  // Set the port path
+  // Get methods and members of PortHandlerLinux or PortHandlerWindows
+  int port_num = portHandler(DEVICENAME);
 
-    // Initialize PacketHandler Structs 
-    packetHandler();
+  // Initialize PacketHandler Structs
+  packetHandler();
 
-    int index = 0;
-    int dxl_comm_result = COMM_TX_FAIL;             // Communication result
-    int dxl_goal_position[2] = { DXL_MINIMUM_POSITION_VALUE, DXL_MAXIMUM_POSITION_VALUE };         // Goal position
+  int index = 0;
+  int dxl_comm_result = COMM_TX_FAIL;             // Communication result
+  int dxl_goal_position[2] = { DXL_MINIMUM_POSITION_VALUE, DXL_MAXIMUM_POSITION_VALUE };         // Goal position
 
-    uint8_t dxl_error = 0;                          // Dynamixel error
-    int32_t dxl_present_position = 0;               // Present position
+  uint8_t dxl_error = 0;                          // Dynamixel error
+  int32_t dxl_present_position = 0;               // Present position
 
-    // Open port
-    if (openPort(port_num))
-    {
-        printf("Succeeded to open the port!\n");
-    }
-    else
-    {
-        printf("Failed to open the port!\n");
-        printf("Press any key to terminate...\n");
-        getch();
-        return 0;
-    }
-
-    // Set port baudrate
-    if (setBaudRate(port_num, BAUDRATE))
-    {
-        printf("Succeeded to change the baudrate!\n");
-    }
-    else
-    {
-        printf("Failed to change the baudrate!\n");
-        printf("Press any key to terminate...\n");
-        getch();
-        return 0;
-    }
-
-    // Enable Dynamixel Torque
-    write1ByteTxRx(port_num, PROTOCOL_VERSION, DXL_ID, ADDR_PRO_TORQUE_ENABLE, TORQUE_ENABLE);
-    if ((dxl_comm_result = getLastTxRxResult(port_num, PROTOCOL_VERSION)) != COMM_SUCCESS)
-        printTxRxResult(PROTOCOL_VERSION, dxl_comm_result);
-    else if ((dxl_error = getLastRxPacketError(port_num, PROTOCOL_VERSION)) != 0)
-        printRxPacketError(PROTOCOL_VERSION, dxl_error);
-    else
-        printf("Dynamixel has been successfully connected \n");
-
-    while (1)
-    {
-        printf("Press any key to continue! (or press ESC to quit!)\n");
-        if (getch() == ESC_ASCII_VALUE)
-            break;
-
-        // Write goal position
-        write4ByteTxRx(port_num, PROTOCOL_VERSION, DXL_ID, ADDR_PRO_GOAL_POSITION, dxl_goal_position[index]);
-        if ((dxl_comm_result = getLastTxRxResult(port_num, PROTOCOL_VERSION)) != COMM_SUCCESS)
-            printTxRxResult(PROTOCOL_VERSION, dxl_comm_result);
-        else if ((dxl_error = getLastRxPacketError(port_num, PROTOCOL_VERSION)) != 0)
-            printRxPacketError(PROTOCOL_VERSION, dxl_error);
-
-        do
-        {
-            // Read present position
-            dxl_present_position = read4ByteTxRx(port_num, PROTOCOL_VERSION, DXL_ID, ADDR_PRO_PRESENT_POSITION);
-            if ((dxl_comm_result = getLastTxRxResult(port_num, PROTOCOL_VERSION)) != COMM_SUCCESS)
-                printTxRxResult(PROTOCOL_VERSION, dxl_comm_result);
-            else if ((dxl_error = getLastRxPacketError(port_num, PROTOCOL_VERSION)) != 0)
-                printRxPacketError(PROTOCOL_VERSION, dxl_error);
-
-            printf("[ID:%03d] GoalPos:%03d  PresPos:%03d\n", DXL_ID, dxl_goal_position[index], dxl_present_position);
-
-        } while ((abs(dxl_goal_position[index] - dxl_present_position) > DXL_MOVING_STATUS_THRESHOLD));
-
-        // Change goal position
-        if (index == 0)
-            index = 1;
-        else
-            index = 0;
-    }
-
-    // Disable Dynamixel Torque
-    write1ByteTxRx(port_num, PROTOCOL_VERSION, DXL_ID, ADDR_PRO_TORQUE_ENABLE, TORQUE_DISABLE);
-    if ((dxl_comm_result = getLastTxRxResult(port_num, PROTOCOL_VERSION)) != COMM_SUCCESS)
-        printTxRxResult(PROTOCOL_VERSION, dxl_comm_result);
-    else if ((dxl_error = getLastRxPacketError(port_num, PROTOCOL_VERSION)) != 0)
-        printRxPacketError(PROTOCOL_VERSION, dxl_error);
-
-    // Close port
-    closePort(port_num);
-
+  // Open port
+  if (openPort(port_num))
+  {
+    printf("Succeeded to open the port!\n");
+  }
+  else
+  {
+    printf("Failed to open the port!\n");
+    printf("Press any key to terminate...\n");
+    getch();
     return 0;
+  }
+
+  // Set port baudrate
+  if (setBaudRate(port_num, BAUDRATE))
+  {
+    printf("Succeeded to change the baudrate!\n");
+  }
+  else
+  {
+    printf("Failed to change the baudrate!\n");
+    printf("Press any key to terminate...\n");
+    getch();
+    return 0;
+  }
+
+  // Enable Dynamixel Torque
+  write1ByteTxRx(port_num, PROTOCOL_VERSION, DXL_ID, ADDR_PRO_TORQUE_ENABLE, TORQUE_ENABLE);
+  if ((dxl_comm_result = getLastTxRxResult(port_num, PROTOCOL_VERSION)) != COMM_SUCCESS)
+  {
+    printTxRxResult(PROTOCOL_VERSION, dxl_comm_result);
+  }
+  else if ((dxl_error = getLastRxPacketError(port_num, PROTOCOL_VERSION)) != 0)
+  {
+    printRxPacketError(PROTOCOL_VERSION, dxl_error);
+  }
+  else
+  {
+    printf("Dynamixel has been successfully connected \n");
+  }
+
+  while (1)
+  {
+    printf("Press any key to continue! (or press ESC to quit!)\n");
+    if (getch() == ESC_ASCII_VALUE)
+      break;
+
+    // Write goal position
+    write4ByteTxRx(port_num, PROTOCOL_VERSION, DXL_ID, ADDR_PRO_GOAL_POSITION, dxl_goal_position[index]);
+    if ((dxl_comm_result = getLastTxRxResult(port_num, PROTOCOL_VERSION)) != COMM_SUCCESS)
+    {
+      printTxRxResult(PROTOCOL_VERSION, dxl_comm_result);
+    }
+    else if ((dxl_error = getLastRxPacketError(port_num, PROTOCOL_VERSION)) != 0)
+    {
+      printRxPacketError(PROTOCOL_VERSION, dxl_error);
+    }
+
+    do
+    {
+      // Read present position
+      dxl_present_position = read4ByteTxRx(port_num, PROTOCOL_VERSION, DXL_ID, ADDR_PRO_PRESENT_POSITION);
+      if ((dxl_comm_result = getLastTxRxResult(port_num, PROTOCOL_VERSION)) != COMM_SUCCESS)
+      {
+        printTxRxResult(PROTOCOL_VERSION, dxl_comm_result);
+      }
+      else if ((dxl_error = getLastRxPacketError(port_num, PROTOCOL_VERSION)) != 0)
+      {
+        printRxPacketError(PROTOCOL_VERSION, dxl_error);
+      }
+
+      printf("[ID:%03d] GoalPos:%03d  PresPos:%03d\n", DXL_ID, dxl_goal_position[index], dxl_present_position);
+
+    } while ((abs(dxl_goal_position[index] - dxl_present_position) > DXL_MOVING_STATUS_THRESHOLD));
+
+    // Change goal position
+    if (index == 0)
+    {
+      index = 1;
+    }
+    else
+    {
+      index = 0;
+    }
+  }
+
+  // Disable Dynamixel Torque
+  write1ByteTxRx(port_num, PROTOCOL_VERSION, DXL_ID, ADDR_PRO_TORQUE_ENABLE, TORQUE_DISABLE);
+  if ((dxl_comm_result = getLastTxRxResult(port_num, PROTOCOL_VERSION)) != COMM_SUCCESS)
+  {
+    printTxRxResult(PROTOCOL_VERSION, dxl_comm_result);
+  }
+  else if ((dxl_error = getLastRxPacketError(port_num, PROTOCOL_VERSION)) != 0)
+  {
+    printRxPacketError(PROTOCOL_VERSION, dxl_error);
+  }
+
+  // Close port
+  closePort(port_num);
+
+  return 0;
 }

@@ -16,10 +16,12 @@
 | SDK Examples : | | | |
 | (C ver. Library binded)| C | | C| 
 | | | C++| | 
-| | | C#| | 
-| | | MATLAB| | 
-| | | LabVIEW| | 
+| | | C#| C# (To be released)| 
+| | | MATLAB| MATLAB (To be released)| 
+| | | LabVIEW| LabVIEW (To be released)| 
 | | | VB| | 
+| | | | Python (To be released)| 
+| | | | Java (To be released)| 
 | (C++ ver. Library binded)¹| C++|  | C++| 
 
 #####¹ C++ ver. Library is not optimized in binding other languages. Please use C ver. Library instead.  

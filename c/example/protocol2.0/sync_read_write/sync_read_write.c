@@ -2,7 +2,7 @@
 * sync_read_write.c
 *
 *  Created on: 2016. 5. 16.
-*      Author: leon
+*      Author: Leon Ryu Woon Jung
 */
 
 //
@@ -206,7 +206,7 @@ int main()
       break;
 
     // Add Dynamixel#1 goal position value to the Syncwrite storage
-    dxl_addparam_result = groupSyncWriteAddParam(groupwrite_num, DXL1_ID, dxl_goal_position[index], 4);
+    dxl_addparam_result = groupSyncWriteAddParam(groupwrite_num, DXL1_ID, dxl_goal_position[index], LEN_PRO_GOAL_POSITION);
     if (dxl_addparam_result != True)
     {
       fprintf(stderr, "[ID:%03d] groupSyncWrite addparam failed", DXL1_ID);
@@ -214,7 +214,7 @@ int main()
     }
 
     // Add Dynamixel#2 goal position value to the Syncwrite parameter storage
-    dxl_addparam_result = groupSyncWriteAddParam(groupwrite_num, DXL2_ID, dxl_goal_position[index], 4);
+    dxl_addparam_result = groupSyncWriteAddParam(groupwrite_num, DXL2_ID, dxl_goal_position[index], LEN_PRO_GOAL_POSITION);
     if (dxl_addparam_result != True)
     {
       fprintf(stderr, "[ID:%03d] groupSyncWrite addparam failed", DXL2_ID);

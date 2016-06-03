@@ -2,7 +2,7 @@
 * bulk_read.c
 *
 *  Created on: 2016. 5. 16.
-*      Author: leon
+*      Author: Leon Ryu Woon Jung
 */
 
 //
@@ -186,7 +186,7 @@ int main()
   dxl_addparam_result = groupBulkReadAddParam(group_num, DXL1_ID, ADDR_MX_PRESENT_POSITION, LEN_MX_PRESENT_POSITION);
   if (dxl_addparam_result != True)
   {
-    fprintf(stderr, "[ID:%03d] grouBulkRead addparam failed", DXL1_ID);
+    fprintf(stderr, "[ID:%03d] groupBulkRead addparam failed", DXL1_ID);
     return 0;
   }
 
@@ -194,7 +194,7 @@ int main()
   dxl_addparam_result = groupBulkReadAddParam(group_num, DXL2_ID, ADDR_MX_MOVING, LEN_MX_MOVING);
   if (dxl_addparam_result != True)
   {
-    fprintf(stderr, "[ID:%03d] grouBulkRead addparam failed", DXL2_ID);
+    fprintf(stderr, "[ID:%03d] groupBulkRead addparam failed", DXL2_ID);
     return 0;
   }
 

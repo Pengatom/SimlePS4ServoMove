@@ -2,7 +2,7 @@
 * reboot.c
 *
 *  Created on: 2016. 5. 16.
-*      Author: leon
+*      Author: Leon Ryu Woon Jung
 */
 
 //

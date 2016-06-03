@@ -2,7 +2,7 @@
 * read_write.c
 *
 *  Created on: 2016. 5. 16.
-*      Author: leon
+*      Author: Leon Ryu Woon Jung
 */
 
 //
@@ -36,6 +36,7 @@
 #define PROTOCOL_VERSION                1.0                 // See which protocol version is used in the Dynamixel
 
 // Default setting
+
 #define DXL_ID                          1                   // Dynamixel ID: 1
 #define BAUDRATE                        1000000
 #define DEVICENAME                      "/dev/ttyUSB0"      // Check which port is being used on your controller

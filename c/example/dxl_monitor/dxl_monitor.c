@@ -2,7 +2,7 @@
  * dxl_monitor.c
  *
  *  Created on: 2016. 5. 16.
- *      Author: leon
+ *      Author: Leon Ryu Woon Jung
  */
 
 //
@@ -84,17 +84,17 @@ int kbhit(void)
 #endif
 }
 
-void Usage(char *progname)
+void usage(char *progname)
 {
   printf("-----------------------------------------------------------------------\n");
-  printf("Usage: %s\n" \
+  printf("usage: %s\n" \
          " [-h | --help]........: display this help\n" \
          " [-d | --device]......: port to open                                   \n" \
          , progname);
   printf("-----------------------------------------------------------------------\n");
 }
 
-void Help()
+void help()
 {
   printf("\n");
   printf("                    .----------------------------.\n");
@@ -113,20 +113,20 @@ void Help()
   printf(" \n");
   printf(" ==================== Commands for Dynamixel Protocol 1.0 ====================\n");
   printf(" \n");
-  printf(" wrb1|w1 [ID] [ADDR] [VALUE] :Write byte [VALUE] to [ADDR] of [ID]\n");
-  printf(" wrw1 [ID] [ADDR] [VALUE]    :Write word [VALUE] to [ADDR] of [ID]\n");
-  printf(" rdb1 [ID] [ADDR]            :Read byte value from [ADDR] of [ID]\n");
-  printf(" rdw1 [ID] [ADDR]            :Read word value from [ADDR] of [ID]\n");
+  printf(" wrb1|w1 [ID] [ADDR] [VALUE] :write byte [VALUE] to [ADDR] of [ID]\n");
+  printf(" wrw1 [ID] [ADDR] [VALUE]    :write word [VALUE] to [ADDR] of [ID]\n");
+  printf(" rdb1 [ID] [ADDR]            :read byte value from [ADDR] of [ID]\n");
+  printf(" rdw1 [ID] [ADDR]            :read word value from [ADDR] of [ID]\n");
   printf(" reset1|rst1 [ID]            :Factory reset the Dynamixel of [ID]\n");
   printf(" \n");
   printf(" ==================== Commands for Dynamixel Protocol 2.0 ====================\n");
   printf(" \n");
-  printf(" wrb2|w2 [ID] [ADDR] [VALUE] :Write byte [VALUE] to [ADDR] of [ID]\n");
-  printf(" wrw2 [ID] [ADDR] [VALUE]    :Write word [VALUE] to [ADDR] of [ID]\n");
-  printf(" wrd2 [ID] [ADDR] [VALUE]    :Write dword [VALUE] to [ADDR] of [ID]\n");
-  printf(" rdb2 [ID] [ADDR]            :Read byte value from [ADDR] of [ID]\n");
-  printf(" rdw2 [ID] [ADDR]            :Read word value from [ADDR] of [ID]\n");
-  printf(" rdd2 [ID] [ADDR]            :Read dword value from [ADDR] of [ID]\n");
+  printf(" wrb2|w2 [ID] [ADDR] [VALUE] :write byte [VALUE] to [ADDR] of [ID]\n");
+  printf(" wrw2 [ID] [ADDR] [VALUE]    :write word [VALUE] to [ADDR] of [ID]\n");
+  printf(" wrd2 [ID] [ADDR] [VALUE]    :write dword [VALUE] to [ADDR] of [ID]\n");
+  printf(" rdb2 [ID] [ADDR]            :read byte value from [ADDR] of [ID]\n");
+  printf(" rdw2 [ID] [ADDR]            :read word value from [ADDR] of [ID]\n");
+  printf(" rdd2 [ID] [ADDR]            :read dword value from [ADDR] of [ID]\n");
   printf(" reboot2|rbt2 [ID]           :reboot the Dynamixel of [ID]\n");
   printf(" reset2|rst2 [ID] [OPTION]   :Factory reset the Dynamixel of [ID]\n");
   printf("                               OPTION: 255(All), 1(Except ID), 2(Except ID&Baud)\n");
@@ -134,14 +134,14 @@ void Help()
   printf("\n");
 }
 
-void Scan(int port_num, int protocol_version1, int protocol_version2)
+void scan(int port_num, int protocol_version1, int protocol_version2)
 {
 	int id;
   uint16_t dxl_model_num;
   int dxl_comm_result;
 
   fprintf(stderr, "\n");
-  fprintf(stderr, "Scan Dynamixel Using Protocol 1.0\n");
+  fprintf(stderr, "scan Dynamixel Using Protocol 1.0\n");
   for (id = 1; id < 253; id++)
   {
     dxl_model_num = pingGetModelNum(port_num, protocol_version1, id);
@@ -164,7 +164,7 @@ void Scan(int port_num, int protocol_version1, int protocol_version2)
   }
   fprintf(stderr, "\n\n");
 
-  fprintf(stderr, "Scan Dynamixel Using Protocol 2.0\n");
+  fprintf(stderr, "scan Dynamixel Using Protocol 2.0\n");
   for (id = 1; id < 253; id++)
   {
   	dxl_model_num = pingGetModelNum(port_num, protocol_version2, id);
@@ -188,7 +188,7 @@ void Scan(int port_num, int protocol_version1, int protocol_version2)
   fprintf(stderr, "\n\n");
 }
 
-void Write(int port_num, int protocol_version, uint8_t id, uint16_t addr, uint16_t length, uint32_t value)
+void write(int port_num, int protocol_version, uint8_t id, uint16_t addr, uint16_t length, uint32_t value)
 {
   uint8_t dxl_error = 0;
   int dxl_comm_result = COMM_TX_FAIL;
@@ -200,7 +200,7 @@ void Write(int port_num, int protocol_version, uint8_t id, uint16_t addr, uint16
   else if (length == 2)
   {
     write2ByteTxRx(port_num, protocol_version, id, addr, (uint16_t)value);
-
+  }
   else if (length == 4)
   {
     write4ByteTxRx(port_num, protocol_version, id, addr, (uint32_t)value);
@@ -218,7 +218,7 @@ void Write(int port_num, int protocol_version, uint8_t id, uint16_t addr, uint16
   }
 }
 
-void Read(int port_num, int protocol_version, uint8_t id, uint16_t addr, uint16_t length)
+void read(int port_num, int protocol_version, uint8_t id, uint16_t addr, uint16_t length)
 {
   uint8_t dxl_error = 0;
   int     dxl_comm_result = COMM_TX_FAIL;
@@ -295,7 +295,7 @@ int main(int argc, char *argv[])
     /* unrecognized option */
     if (c == '?')
     {
-      Usage(argv[0]);
+      usage(argv[0]);
       return 0;
     }
 
@@ -305,7 +305,7 @@ int main(int argc, char *argv[])
       /* h, help */
       case 0:
       case 1:
-        Usage(argv[0]);
+        usage(argv[0]);
         return 0;
         break;
 
@@ -325,7 +325,7 @@ int main(int argc, char *argv[])
         break;
 
         default:
-          Usage(argv[0]);
+          usage(argv[0]);
           return 0;
     }
   }
@@ -344,7 +344,7 @@ int main(int argc, char *argv[])
   {
     printf("Succeeded to open the port!\n\n");
     printf(" - Device Name : %s\n", dev_name);
-    printf(" - Baudrate    : %d\n\n", GetBaudRate(port_num));
+    printf(" - Baudrate    : %d\n\n", getBaudRate(port_num));
   }
   else
   {
@@ -387,7 +387,7 @@ int main(int argc, char *argv[])
 
     if (strcmp(cmd, "help") == 0 || strcmp(cmd, "h") == 0 || strcmp(cmd, "?") == 0)
     {
-      Help();
+      help();
     }
     else if (strcmp(cmd, "baud") == 0)
     {
@@ -415,7 +415,7 @@ int main(int argc, char *argv[])
     }
     else if (strcmp(cmd, "scan") == 0)
     {
-      Scan(port_num, PROTOCOL_VERSION1, PROTOCOL_VERSION2);
+      scan(port_num, PROTOCOL_VERSION1, PROTOCOL_VERSION2);
     }
     else if (strcmp(cmd, "ping") == 0)
     {
@@ -493,7 +493,7 @@ int main(int argc, char *argv[])
     {
       if (num_param == 3)
       {
-        Write(port_num, PROTOCOL_VERSION1, atoi(param[0]), atoi(param[1]), 1, atoi(param[2]));
+        write(port_num, PROTOCOL_VERSION1, atoi(param[0]), atoi(param[1]), 1, atoi(param[2]));
       }
       else
       {
@@ -504,7 +504,7 @@ int main(int argc, char *argv[])
     {
       if (num_param == 3)
       {
-        Write(port_num, PROTOCOL_VERSION2, atoi(param[0]), atoi(param[1]), 1, atoi(param[2]));
+        write(port_num, PROTOCOL_VERSION2, atoi(param[0]), atoi(param[1]), 1, atoi(param[2]));
       }
       else
       {
@@ -515,7 +515,7 @@ int main(int argc, char *argv[])
     {
       if (num_param == 3)
       {
-        Write(port_num, PROTOCOL_VERSION1, atoi(param[0]), atoi(param[1]), 2, atoi(param[2]));
+        write(port_num, PROTOCOL_VERSION1, atoi(param[0]), atoi(param[1]), 2, atoi(param[2]));
       }
       else
       {
@@ -526,7 +526,7 @@ int main(int argc, char *argv[])
     {
       if (num_param == 3)
       {
-        Write(port_num, PROTOCOL_VERSION2, atoi(param[0]), atoi(param[1]), 2, atoi(param[2]));
+        write(port_num, PROTOCOL_VERSION2, atoi(param[0]), atoi(param[1]), 2, atoi(param[2]));
       }
       else
       {
@@ -537,7 +537,7 @@ int main(int argc, char *argv[])
     {
       if (num_param == 3)
       {
-        Write(port_num, PROTOCOL_VERSION2, atoi(param[0]), atoi(param[1]), 4, atoi(param[2]));
+        write(port_num, PROTOCOL_VERSION2, atoi(param[0]), atoi(param[1]), 4, atoi(param[2]));
       }
       else
       {
@@ -548,7 +548,7 @@ int main(int argc, char *argv[])
     {
       if (num_param == 2)
       {
-        Read(port_num, PROTOCOL_VERSION1, atoi(param[0]), atoi(param[1]), 1);
+        read(port_num, PROTOCOL_VERSION1, atoi(param[0]), atoi(param[1]), 1);
       }
       else
       {
@@ -559,7 +559,7 @@ int main(int argc, char *argv[])
     {
       if (num_param == 2)
       {
-        Read(port_num, PROTOCOL_VERSION2, atoi(param[0]), atoi(param[1]), 1);
+        read(port_num, PROTOCOL_VERSION2, atoi(param[0]), atoi(param[1]), 1);
       }
       else
       {
@@ -570,7 +570,7 @@ int main(int argc, char *argv[])
     {
       if (num_param == 2)
       {
-        Read(port_num, PROTOCOL_VERSION1, atoi(param[0]), atoi(param[1]), 2);
+        read(port_num, PROTOCOL_VERSION1, atoi(param[0]), atoi(param[1]), 2);
       }
       else
       {  fprintf(stderr, " Invalid parameters! \n");}
@@ -579,7 +579,7 @@ int main(int argc, char *argv[])
     {
       if (num_param == 2)
       {
-        Read(port_num, PROTOCOL_VERSION2, atoi(param[0]), atoi(param[1]), 2);
+        read(port_num, PROTOCOL_VERSION2, atoi(param[0]), atoi(param[1]), 2);
       }
       else
       {  fprintf(stderr, " Invalid parameters! \n");}
@@ -588,7 +588,7 @@ int main(int argc, char *argv[])
     {
       if (num_param == 2)
       {
-        Read(port_num, PROTOCOL_VERSION2, atoi(param[0]), atoi(param[1]), 4);
+        read(port_num, PROTOCOL_VERSION2, atoi(param[0]), atoi(param[1]), 4);
       }
       else
       {  fprintf(stderr, " Invalid parameters! \n");}

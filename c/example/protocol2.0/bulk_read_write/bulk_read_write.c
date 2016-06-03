@@ -2,7 +2,7 @@
 * bulk_read_write.c
 *
 *  Created on: 2016. 5. 16.
-*      Author: leon
+*      Author: Leon Ryu Woon Jung
 */
 
 //
@@ -110,7 +110,7 @@ int main()
   // Set the port path
   // Get methods and members of PortHandlerLinux or PortHandlerWindows
   int port_num = portHandler(DEVICENAME);
-  
+
   // Initialize PacketHandler Structs
   packetHandler();
 
@@ -192,7 +192,7 @@ int main()
   dxl_addparam_result = groupBulkReadAddParam(groupread_num, DXL1_ID, ADDR_PRO_PRESENT_POSITION, LEN_PRO_PRESENT_POSITION);
   if (dxl_addparam_result != True)
   {
-    fprintf(stderr, "[ID:%03d] grouBulkRead addparam failed", DXL1_ID);
+    fprintf(stderr, "[ID:%03d] groupBulkRead addparam failed", DXL1_ID);
     return 0;
   }
 
@@ -200,7 +200,7 @@ int main()
   dxl_addparam_result = groupBulkReadAddParam(groupread_num, DXL2_ID, ADDR_PRO_LED_RED, LEN_PRO_LED_RED);
   if (dxl_addparam_result != True)
   {
-    fprintf(stderr, "[ID:%03d] grouBulkRead addparam failed", DXL2_ID);
+    fprintf(stderr, "[ID:%03d] groupBulkRead addparam failed", DXL2_ID);
     return 0;
   }
 
@@ -211,7 +211,7 @@ int main()
       break;
 
     // Add parameter storage for Dynamixel#1 goal position
-    dxl_addparam_result = groupBulkWriteAddParam(groupwrite_num, DXL1_ID, ADDR_PRO_GOAL_POSITION, LEN_PRO_GOAL_POSITION, dxl_goal_position[index], 4);
+    dxl_addparam_result = groupBulkWriteAddParam(groupwrite_num, DXL1_ID, ADDR_PRO_GOAL_POSITION, LEN_PRO_GOAL_POSITION, dxl_goal_position[index], LEN_PRO_GOAL_POSITION);
     if (dxl_addparam_result != True)
     {
       fprintf(stderr, "[ID:%03d] groupBulkWrite addparam failed", DXL1_ID);
@@ -219,7 +219,7 @@ int main()
     }
 
     // Add parameter storage for Dynamixel#2 LED value
-    dxl_addparam_result = groupBulkWriteAddParam(groupwrite_num, DXL2_ID, ADDR_PRO_LED_RED, LEN_PRO_LED_RED, dxl_led_value[index], 1);
+    dxl_addparam_result = groupBulkWriteAddParam(groupwrite_num, DXL2_ID, ADDR_PRO_LED_RED, LEN_PRO_LED_RED, dxl_led_value[index], LEN_PRO_LED_RED);
     if (dxl_addparam_result != True)
     {
       fprintf(stderr, "[ID:%03d] groupBulkWrite addparam failed", DXL2_ID);

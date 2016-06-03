@@ -83,13 +83,13 @@
 
 typedef struct
 {
-    uint8_t     *data_write_;
-    uint8_t     *data_read_;
-    uint8_t     *txpacket_;
-    uint8_t     *rxpacket_;
-    uint8_t     error_;
-    int         communication_result_;
-    uint8_t     *broadcastping_id_list;
+  uint8_t     *data_write;
+  uint8_t     *data_read;
+  uint8_t     *tx_packet;
+  uint8_t     *rx_packet;
+  uint8_t     error;
+  int         communication_result;
+  uint8_t     *broadcast_ping_id_list;
 }PacketData;
 
 PacketData *packetData;
@@ -117,7 +117,7 @@ WINDECLSPEC uint16_t    pingGetModelNum     (int port_num, int protocol_version,
 
 // broadcastPing
 WINDECLSPEC void        broadcastPing       (int port_num, int protocol_version);
-WINDECLSPEC bool        getBroadcastPingResult  (int port_num, int protocol_version, int id);
+WINDECLSPEC uint8_t     getBroadcastPingResult  (int port_num, int protocol_version, int id);
 
 WINDECLSPEC void        reboot              (int port_num, int protocol_version, uint8_t id);
 

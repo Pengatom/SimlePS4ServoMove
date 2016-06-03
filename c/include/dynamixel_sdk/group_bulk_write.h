@@ -45,10 +45,9 @@
 
 WINDECLSPEC int     groupBulkWrite              (int port_num, int protocol_version);
 
-WINDECLSPEC void    groupBulkWriteMakeParam     (int group_num);
-WINDECLSPEC bool    groupBulkWriteAddParam      (int group_num, uint8_t id, uint16_t start_address, uint16_t data_length, uint32_t data, uint16_t input_length);
+WINDECLSPEC uint8_t groupBulkWriteAddParam      (int group_num, uint8_t id, uint16_t start_address, uint16_t data_length, uint32_t data, uint16_t input_length);
 WINDECLSPEC void    groupBulkWriteRemoveParam   (int group_num, uint8_t id);
-WINDECLSPEC bool    groupBulkWriteChangeParam   (int group_num, uint8_t id, uint16_t start_address, uint16_t data_length, uint32_t data, uint16_t input_length, uint16_t data_pos);
+WINDECLSPEC uint8_t groupBulkWriteChangeParam   (int group_num, uint8_t id, uint16_t start_address, uint16_t data_length, uint32_t data, uint16_t input_length, uint16_t data_pos);
 WINDECLSPEC void    groupBulkWriteClearParam    (int group_num);
 
 WINDECLSPEC void    groupBulkWriteTxPacket      (int group_num);

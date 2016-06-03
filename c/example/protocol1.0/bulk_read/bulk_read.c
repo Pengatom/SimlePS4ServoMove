@@ -118,8 +118,8 @@ int main()
 
   int index = 0;
   int dxl_comm_result = COMM_TX_FAIL;             // Communication result
-  bool dxl_addparam_result = false;               // AddParam result
-  bool dxl_getdata_result = false;                // GetParam result
+  uint8_t dxl_addparam_result = False;               // AddParam result
+  uint8_t dxl_getdata_result = False;                // GetParam result
   int dxl_goal_position[2] = { DXL_MINIMUM_POSITION_VALUE, DXL_MAXIMUM_POSITION_VALUE };         // Goal position
 
   uint8_t dxl_error = 0;                          // Dynamixel error
@@ -184,7 +184,7 @@ int main()
 
   // Add parameter storage for Dynamixel#1 present position value
   dxl_addparam_result = groupBulkReadAddParam(group_num, DXL1_ID, ADDR_MX_PRESENT_POSITION, LEN_MX_PRESENT_POSITION);
-  if (dxl_addparam_result != true)
+  if (dxl_addparam_result != True)
   {
     fprintf(stderr, "[ID:%03d] grouBulkRead addparam failed", DXL1_ID);
     return 0;
@@ -192,7 +192,7 @@ int main()
 
   // Add parameter storage for Dynamixel#2 present moving value
   dxl_addparam_result = groupBulkReadAddParam(group_num, DXL2_ID, ADDR_MX_MOVING, LEN_MX_MOVING);
-  if (dxl_addparam_result != true)
+  if (dxl_addparam_result != True)
   {
     fprintf(stderr, "[ID:%03d] grouBulkRead addparam failed", DXL2_ID);
     return 0;
@@ -234,14 +234,14 @@ int main()
         printTxRxResult(PROTOCOL_VERSION, dxl_comm_result);
 
       dxl_getdata_result = groupBulkReadIsAvailable(group_num, DXL1_ID, ADDR_MX_PRESENT_POSITION, LEN_MX_PRESENT_POSITION);
-      if (dxl_getdata_result != true)
+      if (dxl_getdata_result != True)
       {
         fprintf(stderr, "[ID:%03d] groupBulkRead getdata failed", DXL1_ID);
         return 0;
       }
 
       dxl_getdata_result = groupBulkReadIsAvailable(group_num, DXL2_ID, ADDR_MX_MOVING, LEN_MX_MOVING);
-      if (dxl_getdata_result != true)
+      if (dxl_getdata_result != True)
       {
         fprintf(stderr, "[ID:%03d] groupBulkRead getdata failed", DXL2_ID);
         return 0;

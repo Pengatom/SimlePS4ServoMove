@@ -46,22 +46,21 @@
 
 void packetHandler()
 {
-  int _port_num;
+  int port_num;
 
   if (packetData == NULL)
     packetData = (PacketData*)malloc(1 * sizeof(PacketData));
 
-   packetData = (PacketData*)realloc(packetData, used_port_num_ * sizeof(PacketData));
+  packetData = (PacketData*)realloc(packetData, g_used_port_num * sizeof(PacketData));
 
-
-  for (_port_num = 0; _port_num < used_port_num_; _port_num++)
+  for (port_num = 0; port_num < g_used_port_num; port_num++)
   {
-    packetData[_port_num].data_write_ = (uint8_t *)calloc(1, sizeof(uint8_t));
-    packetData[_port_num].data_read_ = (uint8_t *)calloc(1, sizeof(uint8_t));
-    packetData[_port_num].txpacket_ = (uint8_t *)calloc(1, sizeof(uint8_t));
-    packetData[_port_num].rxpacket_ = (uint8_t *)calloc(1, sizeof(uint8_t));
-    packetData[_port_num].error_ = 0;
-    packetData[_port_num].communication_result_ = 0;
+    packetData[port_num].data_write = (uint8_t *)calloc(1, sizeof(uint8_t));
+    packetData[port_num].data_read = (uint8_t *)calloc(1, sizeof(uint8_t));
+    packetData[port_num].tx_packet = (uint8_t *)calloc(1, sizeof(uint8_t));
+    packetData[port_num].rx_packet = (uint8_t *)calloc(1, sizeof(uint8_t));
+    packetData[port_num].error = 0;
+    packetData[port_num].communication_result = 0;
   }
 }
 
@@ -208,7 +207,7 @@ void broadcastPing(int port_num, int protocol_version)
   }
 };
 
-bool getBroadcastPingResult(int port_num, int protocol_version, int id)
+uint8_t getBroadcastPingResult(int port_num, int protocol_version, int id)
 {
   if (protocol_version == 1)
   {

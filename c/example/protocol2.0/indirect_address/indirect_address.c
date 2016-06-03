@@ -131,8 +131,8 @@ int main()
 
   int index = 0;
   int dxl_comm_result = COMM_TX_FAIL;             // Communication result
-  bool dxl_addparam_result = false;               // AddParam result
-  bool dxl_getdata_result = false;                // GetParam result
+  uint8_t dxl_addparam_result = False;               // AddParam result
+  uint8_t dxl_getdata_result = False;                // GetParam result
   int dxl_goal_position[2] = { DXL_MINIMUM_POSITION_VALUE, DXL_MAXIMUM_POSITION_VALUE };         // Goal position
 
   uint8_t dxl_error = 0;                          // Dynamixel error
@@ -296,7 +296,7 @@ int main()
 
   // Add parameter storage for the present position value
   dxl_addparam_result = groupSyncReadAddParam(groupread_num, DXL_ID);
-  if (dxl_addparam_result != true)
+  if (dxl_addparam_result != True)
   {
     fprintf(stderr, "[ID:%03d] groupSyncRead addparam failed\n", DXL_ID);
     return 0;
@@ -310,13 +310,13 @@ int main()
 
     // Add values to the Syncwrite storage
     dxl_addparam_result = groupSyncWriteAddParam(groupwrite_num, DXL_ID, dxl_goal_position[index], 4);
-    if (dxl_addparam_result != true)
+    if (dxl_addparam_result != True)
     {
       fprintf(stderr, "[ID:%03d] groupSyncWrite addparam failed\n", DXL_ID);
       return 0;
     }
     dxl_addparam_result = groupSyncWriteAddParam(groupwrite_num, DXL_ID, dxl_led_value[index], 1);
-    if (dxl_addparam_result != true)
+    if (dxl_addparam_result != True)
     {
       fprintf(stderr, "[ID:%03d] groupSyncWrite addparam failed\n", DXL_ID);
       return 0;
@@ -339,7 +339,7 @@ int main()
 
       // Check if groupsyncread data of Dyanamixel is available
       dxl_getdata_result = groupSyncReadIsAvailable(groupread_num, DXL_ID, ADDR_PRO_INDIRECTDATA_FOR_READ, LEN_PRO_PRESENT_POSITION);
-      if (dxl_getdata_result != true)
+      if (dxl_getdata_result != True)
       {
         fprintf(stderr, "[ID:%03d] groupSyncRead getdata failed", DXL_ID);
         return 0;
@@ -347,7 +347,7 @@ int main()
 
       // Check if groupsyncread data of Dyanamixel is available
       dxl_getdata_result = groupSyncReadIsAvailable(groupread_num, DXL_ID, ADDR_PRO_INDIRECTDATA_FOR_READ + LEN_PRO_PRESENT_POSITION, LEN_PRO_MOVING);
-      if (dxl_getdata_result != true)
+      if (dxl_getdata_result != True)
       {
         fprintf(stderr, "[ID:%03d] groupSyncRead getdata failed", DXL_ID);
         return 0;

@@ -117,7 +117,7 @@ int main()
 
   int index = 0;
   int dxl_comm_result = COMM_TX_FAIL;             // Communication result
-  bool dxl_addparam_result = false;                // AddParam result
+  uint8_t dxl_addparam_result = False;                // AddParam result
   int dxl_goal_position[2] = { DXL_MINIMUM_POSITION_VALUE, DXL_MAXIMUM_POSITION_VALUE };         // Goal position
 
   uint8_t dxl_error = 0;                          // Dynamixel error
@@ -187,7 +187,7 @@ int main()
 
     // Add Dynamixel#1 goal position value to the Syncwrite storage
     dxl_addparam_result = groupSyncWriteAddParam(group_num, DXL1_ID, dxl_goal_position[index], 2);
-    if (dxl_addparam_result != true)
+    if (dxl_addparam_result != True)
     {
       fprintf(stderr, "[ID:%03d] groupSyncWrite addparam failed", DXL1_ID);
       return 0;
@@ -195,7 +195,7 @@ int main()
 
     // Add Dynamixel#2 goal position value to the Syncwrite parameter storage
     dxl_addparam_result = groupSyncWriteAddParam(group_num, DXL2_ID, dxl_goal_position[index], 2);
-    if (dxl_addparam_result != true)
+    if (dxl_addparam_result != True)
     {
       fprintf(stderr, "[ID:%03d] groupSyncWrite addparam failed", DXL2_ID);
       return 0;

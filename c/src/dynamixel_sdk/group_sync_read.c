@@ -42,87 +42,85 @@
 #include <stdlib.h>
 #include "dynamixel_sdk/group_sync_read.h"
 
-#define NOT_USED_ID         255
 
 typedef struct
 {
-  uint8_t     id_;
-  uint8_t     *data_;
-}DataListSyncRead;
+  uint8_t     id;
+  uint8_t     *data;
+}DataList;
 
 typedef struct
 {
   int         port_num;
   int         protocol_version;
 
-  int         data_list_length_;
+  int         data_list_length;
 
-  bool        last_result_;
-  bool        is_param_changed_;
+  uint8_t     last_result;
+  uint8_t     is_param_changed;
 
-  uint16_t    start_address_;
-  uint16_t    data_length_;
+  uint16_t    start_address;
+  uint16_t    data_length;
 
-  DataListSyncRead   *data_list_;
-}GroupDataSyncRead;
+  DataList   *data_list;
+}GroupData;
 
-GroupDataSyncRead *groupDataSyncRead;
+static GroupData *groupData;
+static int g_used_group_num = 0;
 
-int used_group_num_syncread = 0;
-
-int groupSyncReadFind(int group_num, int id)
+static int size(int group_num)
 {
-  int _data_num;
+  int data_num;
+  int real_size = 0;
 
-  for (_data_num = 0; _data_num < groupDataSyncRead[group_num].data_list_length_; _data_num++)
+  for (data_num = 0; data_num < groupData[group_num].data_list_length; data_num++)
   {
-    if (groupDataSyncRead[group_num].data_list_[_data_num].id_ == id)
+    if (groupData[group_num].data_list[data_num].id != NOT_USED_ID)
+      real_size++;
+  }
+  return real_size;
+};
+
+static int find(int group_num, int id)
+{
+  int data_num;
+
+  for (data_num = 0; data_num < groupData[group_num].data_list_length; data_num++)
+  {
+    if (groupData[group_num].data_list[data_num].id == id)
       break;
   }
 
-  return _data_num;
+  return data_num;
 }
-
-int groupSyncReadSize(int group_num)
-{
-  int _data_num;
-  int size = 0;
-
-  for (_data_num = 0; _data_num < groupDataSyncRead[group_num].data_list_length_; _data_num++)
-  {
-    if (groupDataSyncRead[group_num].data_list_[_data_num].id_ != NOT_USED_ID)
-      size++;
-  }
-  return size;
-};
 
 int groupSyncRead(int port_num, int protocol_version, uint16_t start_address, uint16_t data_length)
 {
   int group_num = 0;
 
-  if (used_group_num_syncread != 0)
+  if (g_used_group_num != 0)
   {
-    for (group_num = 0; group_num < used_group_num_syncread; group_num++)
+    for (group_num = 0; group_num < g_used_group_num; group_num++)
     {
-      if (groupDataSyncRead[group_num].is_param_changed_ != true)
+      if (groupData[group_num].is_param_changed != True)
         break;
     }
   }
 
-  if (group_num == used_group_num_syncread)
+  if (group_num == g_used_group_num)
   {
-    used_group_num_syncread++;
-    groupDataSyncRead = (GroupDataSyncRead *)realloc(groupDataSyncRead, used_group_num_syncread * sizeof(GroupDataSyncRead));
+    g_used_group_num++;
+    groupData = (GroupData *)realloc(groupData, g_used_group_num * sizeof(GroupData));
   }
 
-  groupDataSyncRead[group_num].port_num = port_num;
-  groupDataSyncRead[group_num].protocol_version = protocol_version;
-  groupDataSyncRead[group_num].data_list_length_ = 0;
-  groupDataSyncRead[group_num].last_result_ = false;
-  groupDataSyncRead[group_num].is_param_changed_ = false;
-  groupDataSyncRead[group_num].start_address_ = start_address;
-  groupDataSyncRead[group_num].data_length_ = data_length;
-  groupDataSyncRead[group_num].data_list_ = 0;
+  groupData[group_num].port_num = port_num;
+  groupData[group_num].protocol_version = protocol_version;
+  groupData[group_num].data_list_length = 0;
+  groupData[group_num].last_result = False;
+  groupData[group_num].is_param_changed = False;
+  groupData[group_num].start_address = start_address;
+  groupData[group_num].data_length = data_length;
+  groupData[group_num].data_list = 0;
 
   groupSyncReadClearParam(group_num);
 
@@ -131,207 +129,207 @@ int groupSyncRead(int port_num, int protocol_version, uint16_t start_address, ui
 
 void groupSyncReadMakeParam(int group_num)
 {
-  int _data_num, _idx;
-  int _port_num = groupDataSyncRead[group_num].port_num;
+  int data_num, idx;
+  int port_num = groupData[group_num].port_num;
 
-  if (groupDataSyncRead[group_num].protocol_version == 1)
+  if (groupData[group_num].protocol_version == 1)
     return;
 
-  if (groupSyncReadSize(group_num) == 0)
+  if (size(group_num) == 0)
     return;
 
-  packetData[_port_num].data_write_ = (uint8_t*)realloc(packetData[_port_num].data_write_, groupSyncReadSize(group_num) * (1) * sizeof(uint8_t)); // ID(1)
+  packetData[port_num].data_write = (uint8_t*)realloc(packetData[port_num].data_write, size(group_num) * (1) * sizeof(uint8_t)); // ID(1)
 
-  _idx = 0;
-  for (_data_num = 0; _data_num < groupDataSyncRead[group_num].data_list_length_; _data_num++)
+  idx = 0;
+  for (data_num = 0; data_num < groupData[group_num].data_list_length; data_num++)
   {
-    if (groupDataSyncRead[group_num].data_list_[_data_num].id_ == NOT_USED_ID)
+    if (groupData[group_num].data_list[data_num].id == NOT_USED_ID)
       continue;
 
-    packetData[_port_num].data_write_[_idx++] = groupDataSyncRead[group_num].data_list_[_data_num].id_;
+    packetData[port_num].data_write[idx++] = groupData[group_num].data_list[data_num].id;
   }
 }
 
-bool groupSyncReadAddParam(int group_num, uint8_t id)
+uint8_t groupSyncReadAddParam(int group_num, uint8_t id)
 {
-  int _data_num = 0;
+  int data_num = 0;
 
-  if (groupDataSyncRead[group_num].protocol_version == 1)
-    return false;
+  if (groupData[group_num].protocol_version == 1)
+    return False;
 
   if (id == NOT_USED_ID)
-    return false;
+    return False;
 
-  if (groupDataSyncRead[group_num].data_list_length_ != 0)
-    _data_num = groupSyncReadFind(group_num, id);
+  if (groupData[group_num].data_list_length != 0)
+    data_num = find(group_num, id);
 
-  if (groupDataSyncRead[group_num].data_list_length_ == _data_num)
+  if (groupData[group_num].data_list_length == data_num)
   {
-    groupDataSyncRead[group_num].data_list_length_++;
-    groupDataSyncRead[group_num].data_list_ = (DataListSyncRead *)realloc(groupDataSyncRead[group_num].data_list_, groupDataSyncRead[group_num].data_list_length_ * sizeof(DataListSyncRead));
+    groupData[group_num].data_list_length++;
+    groupData[group_num].data_list = (DataList *)realloc(groupData[group_num].data_list, groupData[group_num].data_list_length * sizeof(DataList));
 
-    groupDataSyncRead[group_num].data_list_[_data_num].id_ = id;
-    groupDataSyncRead[group_num].data_list_[_data_num].data_ = (uint8_t *)calloc(groupDataSyncRead[group_num].data_length_, sizeof(uint8_t));
+    groupData[group_num].data_list[data_num].id = id;
+    groupData[group_num].data_list[data_num].data = (uint8_t *)calloc(groupData[group_num].data_length, sizeof(uint8_t));
   }
 
-  groupDataSyncRead[group_num].is_param_changed_ = true;
-  return true;
+  groupData[group_num].is_param_changed = True;
+  return True;
 }
 void groupSyncReadRemoveParam(int group_num, uint8_t id)
 {
-  int _data_num = groupSyncReadFind(group_num, id);
+  int data_num = find(group_num, id);
 
-  if (groupDataSyncRead[group_num].protocol_version == 1)
+  if (groupData[group_num].protocol_version == 1)
     return;
 
-  if (groupDataSyncRead[group_num].data_list_[_data_num].id_ == NOT_USED_ID)  // NOT exist
+  if (groupData[group_num].data_list[data_num].id == NOT_USED_ID)  // NOT exist
     return;
 
-  groupDataSyncRead[group_num].data_list_[_data_num].data_ = 0;
+  groupData[group_num].data_list[data_num].data = 0;
 
-  groupDataSyncRead[group_num].data_list_[_data_num].id_ = NOT_USED_ID;
+  groupData[group_num].data_list[data_num].id = NOT_USED_ID;
 
-  groupDataSyncRead[group_num].is_param_changed_ = true;
+  groupData[group_num].is_param_changed = True;
 }
 void groupSyncReadClearParam(int group_num)
 {
-  int _port_num = groupDataSyncRead[group_num].port_num;
+  int port_num = groupData[group_num].port_num;
 
-  if (groupDataSyncRead[group_num].protocol_version == 1)
+  if (groupData[group_num].protocol_version == 1)
     return;
 
-  if (groupSyncReadSize(group_num) == 0)
+  if (size(group_num) == 0)
     return;
 
-  groupDataSyncRead[group_num].data_list_ = 0;
+  groupData[group_num].data_list = 0;
 
-  packetData[_port_num].data_write_ = 0;
+  packetData[port_num].data_write = 0;
 
-  groupDataSyncRead[group_num].data_list_length_ = 0;
+  groupData[group_num].data_list_length = 0;
 }
 
 void groupSyncReadTxPacket(int group_num)
 {
-  int _port_num = groupDataSyncRead[group_num].port_num;
+  int port_num = groupData[group_num].port_num;
 
-  if (groupDataSyncRead[group_num].protocol_version == 1)
+  if (groupData[group_num].protocol_version == 1)
   {
-    packetData[_port_num].communication_result_ = COMM_NOT_AVAILABLE;
+    packetData[port_num].communication_result = COMM_NOT_AVAILABLE;
     return;
   }
 
-  if (groupSyncReadSize(group_num) == 0)
+  if (size(group_num) == 0)
   {
-    packetData[_port_num].communication_result_ = COMM_NOT_AVAILABLE;
+    packetData[port_num].communication_result = COMM_NOT_AVAILABLE;
     return;
   }
 
-  if (groupDataSyncRead[group_num].is_param_changed_ == true)
+  if (groupData[group_num].is_param_changed == True)
     groupSyncReadMakeParam(group_num);
 
-  syncReadTx(groupDataSyncRead[group_num].port_num
-    , groupDataSyncRead[group_num].protocol_version
-    , groupDataSyncRead[group_num].start_address_
-    , groupDataSyncRead[group_num].data_length_
-    , (groupSyncReadSize(group_num) * 1));
+  syncReadTx(groupData[group_num].port_num
+    , groupData[group_num].protocol_version
+    , groupData[group_num].start_address
+    , groupData[group_num].data_length
+    , (size(group_num) * 1));
 }
 
 void groupSyncReadRxPacket(int group_num)
 {
-  int _data_num, _c;
-  int _port_num = groupDataSyncRead[group_num].port_num;
+  int data_num, c;
+  int port_num = groupData[group_num].port_num;
 
-  groupDataSyncRead[group_num].last_result_ = false;
+  groupData[group_num].last_result = False;
 
-  if (groupDataSyncRead[group_num].protocol_version == 1)
+  if (groupData[group_num].protocol_version == 1)
   {
-    packetData[_port_num].communication_result_ = COMM_NOT_AVAILABLE;
+    packetData[port_num].communication_result = COMM_NOT_AVAILABLE;
     return;
   }
 
-  packetData[groupDataSyncRead[group_num].port_num].communication_result_ = COMM_RX_FAIL;
+  packetData[groupData[group_num].port_num].communication_result = COMM_RX_FAIL;
 
-  if (groupSyncReadSize(group_num) == 0)
+  if (size(group_num) == 0)
   {
-    packetData[groupDataSyncRead[group_num].port_num].communication_result_ = COMM_NOT_AVAILABLE;
+    packetData[groupData[group_num].port_num].communication_result = COMM_NOT_AVAILABLE;
     return;
   }
 
-  for (_data_num = 0; _data_num < groupDataSyncRead[group_num].data_list_length_; _data_num++)
+  for (data_num = 0; data_num < groupData[group_num].data_list_length; data_num++)
   {
-    if (groupDataSyncRead[group_num].data_list_[_data_num].id_ == NOT_USED_ID)
+    if (groupData[group_num].data_list[data_num].id == NOT_USED_ID)
       continue;
 
-      packetData[_port_num].data_read_
-        = (uint8_t *)realloc(packetData[_port_num].data_read_, groupDataSyncRead[group_num].data_length_ * sizeof(uint8_t));
+      packetData[port_num].data_read
+        = (uint8_t *)realloc(packetData[port_num].data_read, groupData[group_num].data_length * sizeof(uint8_t));
 
-      readRx(groupDataSyncRead[group_num].port_num, groupDataSyncRead[group_num].protocol_version, groupDataSyncRead[group_num].data_length_);
-      if (packetData[_port_num].communication_result_ != COMM_SUCCESS)
+      readRx(groupData[group_num].port_num, groupData[group_num].protocol_version, groupData[group_num].data_length);
+      if (packetData[port_num].communication_result != COMM_SUCCESS)
         return;
 
-      for (_c = 0; _c < groupDataSyncRead[group_num].data_length_; _c++)
-        groupDataSyncRead[group_num].data_list_[_data_num].data_[_c] = packetData[_port_num].data_read_[_c];
+      for (c = 0; c < groupData[group_num].data_length; c++)
+        groupData[group_num].data_list[data_num].data[c] = packetData[port_num].data_read[c];
   }
 
-  if (packetData[_port_num].communication_result_ == COMM_SUCCESS)
-    groupDataSyncRead[group_num].last_result_ = true;
+  if (packetData[port_num].communication_result == COMM_SUCCESS)
+    groupData[group_num].last_result = True;
 }
 
 void groupSyncReadTxRxPacket(int group_num)
 {
-  int _port_num = groupDataSyncRead[group_num].port_num;
+  int port_num = groupData[group_num].port_num;
 
-  if (groupDataSyncRead[group_num].protocol_version == 1)
+  if (groupData[group_num].protocol_version == 1)
   {
-    packetData[_port_num].communication_result_ = COMM_NOT_AVAILABLE;
+    packetData[port_num].communication_result = COMM_NOT_AVAILABLE;
     return;
   }
 
-  packetData[_port_num].communication_result_ = COMM_TX_FAIL;
+  packetData[port_num].communication_result = COMM_TX_FAIL;
 
   groupSyncReadTxPacket(group_num);
-  if (packetData[_port_num].communication_result_ != COMM_SUCCESS)
+  if (packetData[port_num].communication_result != COMM_SUCCESS)
     return;
 
   groupSyncReadRxPacket(group_num);
 }
 
-bool groupSyncReadIsAvailable(int group_num, uint8_t id, uint16_t address, uint16_t data_length)
+uint8_t groupSyncReadIsAvailable(int group_num, uint8_t id, uint16_t address, uint16_t data_length)
 {
-  int _data_num = groupSyncReadFind(group_num, id);
+  int data_num = find(group_num, id);
 
-  if (groupDataSyncRead[group_num].protocol_version == 1 || groupDataSyncRead[group_num].last_result_ == false || groupDataSyncRead[group_num].data_list_[_data_num].id_ == NOT_USED_ID)
-    return false;
+  if (groupData[group_num].protocol_version == 1 || groupData[group_num].last_result == False || groupData[group_num].data_list[data_num].id == NOT_USED_ID)
+    return False;
 
-  if (address < groupDataSyncRead[group_num].start_address_ || groupDataSyncRead[group_num].start_address_ + groupDataSyncRead[group_num].data_length_ - data_length < address) {
-    return false;
+  if (address < groupData[group_num].start_address || groupData[group_num].start_address + groupData[group_num].data_length - data_length < address) {
+    return False;
   }
-  return true;
+  return True;
 }
 
 uint32_t groupSyncReadGetData(int group_num, uint8_t id, uint16_t address, uint16_t data_length)
 {
-  int _data_num = groupSyncReadFind(group_num, id);
+  int data_num = find(group_num, id);
 
-  if (groupSyncReadIsAvailable(group_num, id, address, data_length) == false)
+  if (groupSyncReadIsAvailable(group_num, id, address, data_length) == False)
     return 0;
 
   switch (data_length)
   {
     case 1:
-      return groupDataSyncRead[group_num].data_list_[_data_num].data_[address - groupDataSyncRead[group_num].start_address_];
+      return groupData[group_num].data_list[data_num].data[address - groupData[group_num].start_address];
 
     case 2:
-      return DXL_MAKEWORD(groupDataSyncRead[group_num].data_list_[_data_num].data_[address - groupDataSyncRead[group_num].start_address_], groupDataSyncRead[group_num].data_list_[_data_num].data_[address - groupDataSyncRead[group_num].start_address_ + 1]);
+      return DXL_MAKEWORD(groupData[group_num].data_list[data_num].data[address - groupData[group_num].start_address], groupData[group_num].data_list[data_num].data[address - groupData[group_num].start_address + 1]);
 
     case 4:
       return DXL_MAKEDWORD(
         DXL_MAKEWORD(
-        groupDataSyncRead[group_num].data_list_[_data_num].data_[address - groupDataSyncRead[group_num].start_address_ + 0]
-        , groupDataSyncRead[group_num].data_list_[_data_num].data_[address - groupDataSyncRead[group_num].start_address_ + 1])
+        groupData[group_num].data_list[data_num].data[address - groupData[group_num].start_address + 0]
+        , groupData[group_num].data_list[data_num].data[address - groupData[group_num].start_address + 1])
         , DXL_MAKEWORD(
-          groupDataSyncRead[group_num].data_list_[_data_num].data_[address - groupDataSyncRead[group_num].start_address_ + 2]
-          , groupDataSyncRead[group_num].data_list_[_data_num].data_[address - groupDataSyncRead[group_num].start_address_ + 3])
+          groupData[group_num].data_list[data_num].data[address - groupData[group_num].start_address + 2]
+          , groupData[group_num].data_list[data_num].data[address - groupData[group_num].start_address + 3])
       );
 
     default:

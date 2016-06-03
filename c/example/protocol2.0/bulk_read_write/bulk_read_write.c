@@ -110,7 +110,7 @@ int main()
   // Set the port path
   // Get methods and members of PortHandlerLinux or PortHandlerWindows
   int port_num = portHandler(DEVICENAME);
-
+  
   // Initialize PacketHandler Structs
   packetHandler();
 
@@ -123,8 +123,8 @@ int main()
 
   int index = 0;
   int dxl_comm_result = COMM_TX_FAIL;             // Communication result
-  bool dxl_addparam_result = false;               // AddParam result
-  bool dxl_getdata_result = false;                // GetParam result
+  uint8_t dxl_addparam_result = False;               // AddParam result
+  uint8_t dxl_getdata_result = False;                // GetParam result
   int dxl_goal_position[2] = { DXL_MINIMUM_POSITION_VALUE, DXL_MAXIMUM_POSITION_VALUE };         // Goal position
 
   uint8_t dxl_error = 0;                          // Dynamixel error
@@ -190,7 +190,7 @@ int main()
 
   // Add parameter storage for Dynamixel#1 present position
   dxl_addparam_result = groupBulkReadAddParam(groupread_num, DXL1_ID, ADDR_PRO_PRESENT_POSITION, LEN_PRO_PRESENT_POSITION);
-  if (dxl_addparam_result != true)
+  if (dxl_addparam_result != True)
   {
     fprintf(stderr, "[ID:%03d] grouBulkRead addparam failed", DXL1_ID);
     return 0;
@@ -198,7 +198,7 @@ int main()
 
   // Add parameter storage for Dynamixel#2 LED value
   dxl_addparam_result = groupBulkReadAddParam(groupread_num, DXL2_ID, ADDR_PRO_LED_RED, LEN_PRO_LED_RED);
-  if (dxl_addparam_result != true)
+  if (dxl_addparam_result != True)
   {
     fprintf(stderr, "[ID:%03d] grouBulkRead addparam failed", DXL2_ID);
     return 0;
@@ -212,7 +212,7 @@ int main()
 
     // Add parameter storage for Dynamixel#1 goal position
     dxl_addparam_result = groupBulkWriteAddParam(groupwrite_num, DXL1_ID, ADDR_PRO_GOAL_POSITION, LEN_PRO_GOAL_POSITION, dxl_goal_position[index], 4);
-    if (dxl_addparam_result != true)
+    if (dxl_addparam_result != True)
     {
       fprintf(stderr, "[ID:%03d] groupBulkWrite addparam failed", DXL1_ID);
       return 0;
@@ -220,7 +220,7 @@ int main()
 
     // Add parameter storage for Dynamixel#2 LED value
     dxl_addparam_result = groupBulkWriteAddParam(groupwrite_num, DXL2_ID, ADDR_PRO_LED_RED, LEN_PRO_LED_RED, dxl_led_value[index], 1);
-    if (dxl_addparam_result != true)
+    if (dxl_addparam_result != True)
     {
       fprintf(stderr, "[ID:%03d] groupBulkWrite addparam failed", DXL2_ID);
       return 0;
@@ -243,7 +243,7 @@ int main()
 
       // Check if groupbulkread data of Dynamixel#1 is available
       dxl_getdata_result = groupBulkReadIsAvailable(groupread_num, DXL1_ID, ADDR_PRO_PRESENT_POSITION, LEN_PRO_PRESENT_POSITION);
-      if (dxl_getdata_result != true)
+      if (dxl_getdata_result != True)
       {
         fprintf(stderr, "[ID:%03d] groupBulkRead getdata failed", DXL1_ID);
         return 0;
@@ -251,7 +251,7 @@ int main()
 
       // Check if groupbulkread data of Dynamixel#2 is available
       dxl_getdata_result = groupBulkReadIsAvailable(groupread_num, DXL2_ID, ADDR_PRO_LED_RED, LEN_PRO_LED_RED);
-      if (dxl_getdata_result != true)
+      if (dxl_getdata_result != True)
       {
         fprintf(stderr, "[ID:%03d] groupBulkRead getdata failed", DXL2_ID);
         return 0;

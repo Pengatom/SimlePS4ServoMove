@@ -42,21 +42,21 @@
 #include <Windows.h>
 #include "dynamixel_sdk/port_handler.h"
 
-WINDECLSPEC bool    setupPortWindows            (int port_num, const int baudrate);
+WINDECLSPEC uint8_t setupPortWindows            (int port_num, const int baudrate);
 
 WINDECLSPEC double  getCurrentTimeWindows       (int port_num);
 WINDECLSPEC double  getTimeSinceStartWindows    (int port_num);
 
 WINDECLSPEC int     portHandlerWindows          (const char *port_name);
 
-WINDECLSPEC bool    openPortWindows             (int port_num);
+WINDECLSPEC uint8_t openPortWindows             (int port_num);
 WINDECLSPEC void    closePortWindows            (int port_num);
 WINDECLSPEC void    clearPortWindows            (int port_num);
 
 WINDECLSPEC void    setPortNameWindows          (int port_num, const char* port_name);
 WINDECLSPEC char   *getPortNameWindows          (int port_num);
 
-WINDECLSPEC bool    setBaudRateWindows          (int port_num, const int baudrate);
+WINDECLSPEC uint8_t setBaudRateWindows          (int port_num, const int baudrate);
 WINDECLSPEC int     getBaudRateWindows          (int port_num);
 
 WINDECLSPEC int     readPortWindows             (int port_num, uint8_t *packet, int length);
@@ -64,6 +64,6 @@ WINDECLSPEC int     writePortWindows            (int port_num, uint8_t *packet, 
 
 WINDECLSPEC void    setPacketTimeoutWindows     (int port_num, uint16_t packet_length);
 WINDECLSPEC void    setPacketTimeoutMSecWindows (int port_num, double msec);
-WINDECLSPEC bool    isPacketTimeoutWindows      (int port_num);
+WINDECLSPEC uint8_t isPacketTimeoutWindows      (int port_num);
 
 #endif /* DYNAMIXEL_SDK_INCLUDE_DYNAMIXEL_SDK_LINUX_PORTHANDLERWINDOWS_C_H_ */

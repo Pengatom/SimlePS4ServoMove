@@ -60,7 +60,7 @@ WINDECLSPEC uint16_t    pingGetModelNum1    (int port_num, uint8_t id);
 
 // broadcastPing
 WINDECLSPEC void        broadcastPing1      (int port_num);
-WINDECLSPEC bool        getBroadcastPingResult1 (int port_num, int id);
+WINDECLSPEC uint8_t     getBroadcastPingResult1 (int port_num, int id);
 
 WINDECLSPEC void        action1             (int port_num, uint8_t id);
 WINDECLSPEC void        reboot1             (int port_num, uint8_t id);

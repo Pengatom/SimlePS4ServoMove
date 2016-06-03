@@ -41,255 +41,255 @@
 #include <stdlib.h>
 #include "dynamixel_sdk/group_sync_write.h"
 
-#define NOT_USED_ID         255
 
 typedef struct
 {
-  uint8_t     id_;
-  uint16_t    data_end_;
-  uint8_t     *data_;
-}DataListSyncWrite;
+  uint8_t     id;
+  uint16_t    data_end;
+  uint8_t     *data;
+}DataList;
 
 typedef struct
 {
   int         port_num;
   int         protocol_version;
 
-  int         data_list_length_;
+  int         data_list_length;
 
-  bool        is_param_changed_;
+  uint8_t     is_param_changed;
 
-  uint16_t    start_address_;
-  uint16_t    data_length_;
+  uint16_t    start_address;
+  uint16_t    data_length;
 
-  DataListSyncWrite   *data_list_;
-}GroupDataSyncWrite;
+  DataList   *data_list;
+}GroupData;
 
-GroupDataSyncWrite *groupDataSyncWrite;
+static GroupData *groupData;
+static int g_used_group_num = 0;
 
-int used_group_num_syncwrite_ = 0;
-
-int groupSyncWriteSize(int group_num)
+int size(int group_num)
 {
-  int _data_num;
-  int size = 0;
+  int data_num;
+  int real_size = 0;
 
-  for (_data_num = 0; _data_num < groupDataSyncWrite[group_num].data_list_length_; _data_num++)
-    if (groupDataSyncWrite[group_num].data_list_[_data_num].id_ != NOT_USED_ID)
-      size++;
-  return size;
+  for (data_num = 0; data_num < groupData[group_num].data_list_length; data_num++)
+  {
+    if (groupData[group_num].data_list[data_num].id != NOT_USED_ID)
+      real_size++;
+  }
+  return real_size;
 }
 
-int groupSyncWriteFind(int group_num, int id)
+int find(int group_num, int id)
 {
-  int _data_num;
+  int data_num;
 
-  for (_data_num = 0; _data_num < groupDataSyncWrite[group_num].data_list_length_; _data_num++)
+  for (data_num = 0; data_num < groupData[group_num].data_list_length; data_num++)
   {
-    if (groupDataSyncWrite[group_num].data_list_[_data_num].id_ == id)
+    if (groupData[group_num].data_list[data_num].id == id)
       break;
   }
 
-  return _data_num;
+  return data_num;
 }
 
 int groupSyncWrite(int port_num, int protocol_version, uint16_t start_address, uint16_t data_length)
 {
-  int _group_num = 0;
+  int group_num = 0;
 
-  if (used_group_num_syncwrite_ != 0)
+  if (g_used_group_num != 0)
   {
-    for (_group_num = 0; _group_num < used_group_num_syncwrite_; _group_num++)
+    for (group_num = 0; group_num < g_used_group_num; group_num++)
     {
-      if (groupDataSyncWrite[_group_num].is_param_changed_ != true)
+      if (groupData[group_num].is_param_changed != True)
         break;
     }
   }
 
-  if (_group_num == used_group_num_syncwrite_)
+  if (group_num == g_used_group_num)
   {
-    used_group_num_syncwrite_++;
-    groupDataSyncWrite = (GroupDataSyncWrite *)realloc(groupDataSyncWrite, used_group_num_syncwrite_ * sizeof(GroupDataSyncWrite));
+    g_used_group_num++;
+    groupData = (GroupData *)realloc(groupData, g_used_group_num * sizeof(GroupData));
   }
 
-  groupDataSyncWrite[_group_num].port_num = port_num;
-  groupDataSyncWrite[_group_num].protocol_version = protocol_version;
-  groupDataSyncWrite[_group_num].data_list_length_ = 0;
-  groupDataSyncWrite[_group_num].is_param_changed_ = false;
-  groupDataSyncWrite[_group_num].start_address_ = start_address;
-  groupDataSyncWrite[_group_num].data_length_ = data_length;
-  groupDataSyncWrite[_group_num].data_list_ = 0;
+  groupData[group_num].port_num = port_num;
+  groupData[group_num].protocol_version = protocol_version;
+  groupData[group_num].data_list_length = 0;
+  groupData[group_num].is_param_changed = False;
+  groupData[group_num].start_address = start_address;
+  groupData[group_num].data_length = data_length;
+  groupData[group_num].data_list = 0;
 
-  groupSyncWriteClearParam(_group_num);
+  groupSyncWriteClearParam(group_num);
 
-  return _group_num;
+  return group_num;
 }
 
 void groupSyncWriteMakeParam(int group_num)
 {
-  int _data_num, _c, _idx;
-  int _port_num = groupDataSyncWrite[group_num].port_num;
+  int data_num, c, idx;
+  int port_num = groupData[group_num].port_num;
 
-  if (groupSyncWriteSize(group_num) == 0)
+  if (size(group_num) == 0)
     return;
 
-  packetData[_port_num].data_write_ = (uint8_t*)realloc(packetData[_port_num].data_write_, groupSyncWriteSize(group_num) * (1 + groupDataSyncWrite[group_num].data_length_) * sizeof(uint8_t)); // ID(1) + DATA(data_length)
+  packetData[port_num].data_write = (uint8_t*)realloc(packetData[port_num].data_write, size(group_num) * (1 + groupData[group_num].data_length) * sizeof(uint8_t)); // ID(1) + DATA(data_length)
 
-  _idx = 0;
-  for (_data_num = 0; _data_num < groupDataSyncWrite[group_num].data_list_length_; _data_num++)
+  idx = 0;
+  for (data_num = 0; data_num < groupData[group_num].data_list_length; data_num++)
   {
-    if (groupDataSyncWrite[group_num].data_list_[_data_num].id_ == NOT_USED_ID)
+    if (groupData[group_num].data_list[data_num].id == NOT_USED_ID)
       continue;
 
-    packetData[_port_num].data_write_[_idx++] = groupDataSyncWrite[group_num].data_list_[_data_num].id_;
-    for (_c = 0; _c < groupDataSyncWrite[group_num].data_length_; _c++)
+    packetData[port_num].data_write[idx++] = groupData[group_num].data_list[data_num].id;
+    for (c = 0; c < groupData[group_num].data_length; c++)
     {
-      packetData[_port_num].data_write_[_idx++] = groupDataSyncWrite[group_num].data_list_[_data_num].data_[_c];
+      packetData[port_num].data_write[idx++] = groupData[group_num].data_list[data_num].data[c];
     }
   }
 }
 
-bool groupSyncWriteAddParam(int group_num, uint8_t id, uint32_t data, uint16_t input_length)
+uint8_t groupSyncWriteAddParam(int group_num, uint8_t id, uint32_t data, uint16_t input_length)
 {
-  int _data_num = 0;
+  int data_num = 0;
 
   if (id == NOT_USED_ID)
-    return false;
+    return False;
 
-  if (groupDataSyncWrite[group_num].data_list_length_ != 0)
-    _data_num = groupSyncWriteFind(group_num, id);
+  if (groupData[group_num].data_list_length != 0)
+    data_num = find(group_num, id);
 
-  if (groupDataSyncWrite[group_num].data_list_length_ == _data_num)
+  if (groupData[group_num].data_list_length == data_num)
   {
-    groupDataSyncWrite[group_num].data_list_length_++;
-    groupDataSyncWrite[group_num].data_list_ = (DataListSyncWrite *)realloc(groupDataSyncWrite[group_num].data_list_, groupDataSyncWrite[group_num].data_list_length_ * sizeof(DataListSyncWrite));
+    groupData[group_num].data_list_length++;
+    groupData[group_num].data_list = (DataList *)realloc(groupData[group_num].data_list, groupData[group_num].data_list_length * sizeof(DataList));
 
-    groupDataSyncWrite[group_num].data_list_[_data_num].id_ = id;
-    groupDataSyncWrite[group_num].data_list_[_data_num].data_ = (uint8_t *)calloc(groupDataSyncWrite[group_num].data_length_, sizeof(uint8_t));
-    groupDataSyncWrite[group_num].data_list_[_data_num].data_end_ = 0;
+    groupData[group_num].data_list[data_num].id = id;
+    groupData[group_num].data_list[data_num].data = (uint8_t *)calloc(groupData[group_num].data_length, sizeof(uint8_t));
+    groupData[group_num].data_list[data_num].data_end = 0;
   }
   else
   {
-    if (groupDataSyncWrite[group_num].data_list_[_data_num].data_end_ + input_length > groupDataSyncWrite[group_num].data_length_)
-      return false;
+    if (groupData[group_num].data_list[data_num].data_end + input_length > groupData[group_num].data_length)
+      return False;
   }
 
   switch (input_length)
   {
     case 1:
-      groupDataSyncWrite[group_num].data_list_[_data_num].data_[groupDataSyncWrite[group_num].data_list_[_data_num].data_end_ + 0] = DXL_LOBYTE(DXL_LOWORD(data));
+      groupData[group_num].data_list[data_num].data[groupData[group_num].data_list[data_num].data_end + 0] = DXL_LOBYTE(DXL_LOWORD(data));
       break;
 
     case 2:
-      groupDataSyncWrite[group_num].data_list_[_data_num].data_[groupDataSyncWrite[group_num].data_list_[_data_num].data_end_ + 0] = DXL_LOBYTE(DXL_LOWORD(data));
-      groupDataSyncWrite[group_num].data_list_[_data_num].data_[groupDataSyncWrite[group_num].data_list_[_data_num].data_end_ + 1] = DXL_HIBYTE(DXL_LOWORD(data));
+      groupData[group_num].data_list[data_num].data[groupData[group_num].data_list[data_num].data_end + 0] = DXL_LOBYTE(DXL_LOWORD(data));
+      groupData[group_num].data_list[data_num].data[groupData[group_num].data_list[data_num].data_end + 1] = DXL_HIBYTE(DXL_LOWORD(data));
       break;
 
     case 4:
-      groupDataSyncWrite[group_num].data_list_[_data_num].data_[groupDataSyncWrite[group_num].data_list_[_data_num].data_end_ + 0] = DXL_LOBYTE(DXL_LOWORD(data));
-      groupDataSyncWrite[group_num].data_list_[_data_num].data_[groupDataSyncWrite[group_num].data_list_[_data_num].data_end_ + 1] = DXL_HIBYTE(DXL_LOWORD(data));
-      groupDataSyncWrite[group_num].data_list_[_data_num].data_[groupDataSyncWrite[group_num].data_list_[_data_num].data_end_ + 2] = DXL_LOBYTE(DXL_HIWORD(data));
-      groupDataSyncWrite[group_num].data_list_[_data_num].data_[groupDataSyncWrite[group_num].data_list_[_data_num].data_end_ + 3] = DXL_HIBYTE(DXL_HIWORD(data));
+      groupData[group_num].data_list[data_num].data[groupData[group_num].data_list[data_num].data_end + 0] = DXL_LOBYTE(DXL_LOWORD(data));
+      groupData[group_num].data_list[data_num].data[groupData[group_num].data_list[data_num].data_end + 1] = DXL_HIBYTE(DXL_LOWORD(data));
+      groupData[group_num].data_list[data_num].data[groupData[group_num].data_list[data_num].data_end + 2] = DXL_LOBYTE(DXL_HIWORD(data));
+      groupData[group_num].data_list[data_num].data[groupData[group_num].data_list[data_num].data_end + 3] = DXL_HIBYTE(DXL_HIWORD(data));
       break;
 
     default:
-      return false;
+      return False;
   }
-  groupDataSyncWrite[group_num].data_list_[_data_num].data_end_ = input_length;
+  groupData[group_num].data_list[data_num].data_end = input_length;
 
-  groupDataSyncWrite[group_num].is_param_changed_ = true;
-  return true;
+  groupData[group_num].is_param_changed = True;
+  return True;
 }
 
 void groupSyncWriteRemoveParam(int group_num, uint8_t id)
 {
-  int _data_num = groupSyncWriteFind(group_num, id);
+  int data_num = find(group_num, id);
 
-  if (_data_num == groupDataSyncWrite[group_num].data_list_length_)
+  if (data_num == groupData[group_num].data_list_length)
     return;
 
-  if (groupDataSyncWrite[group_num].data_list_[_data_num].id_ == NOT_USED_ID)  // NOT exist
+  if (groupData[group_num].data_list[data_num].id == NOT_USED_ID)  // NOT exist
     return;
 
-  groupDataSyncWrite[group_num].data_list_[_data_num].data_end_ = 0;
+  groupData[group_num].data_list[data_num].data_end = 0;
 
-  groupDataSyncWrite[group_num].data_list_[_data_num].data_ = 0;
+  groupData[group_num].data_list[data_num].data = 0;
 
-  groupDataSyncWrite[group_num].data_list_[_data_num].id_ = NOT_USED_ID;
+  groupData[group_num].data_list[data_num].id = NOT_USED_ID;
 
-  groupDataSyncWrite[group_num].is_param_changed_ = true;
+  groupData[group_num].is_param_changed = True;
 }
 
-bool groupSyncWriteChangeParam(int group_num, uint8_t id, uint32_t data, uint16_t input_length, uint16_t data_pos)
+uint8_t groupSyncWriteChangeParam(int group_num, uint8_t id, uint32_t data, uint16_t input_length, uint16_t data_pos)
 {
   if (id == NOT_USED_ID)  // NOT exist
-    return false;
+    return False;
 
-  int _data_num = groupSyncWriteFind(group_num, id);
+  int data_num = find(group_num, id);
 
-  if (_data_num == groupDataSyncWrite[group_num].data_list_length_)
-    return false;
+  if (data_num == groupData[group_num].data_list_length)
+    return False;
 
-  if (data_pos + input_length > groupDataSyncWrite[group_num].data_length_)
-    return false;
+  if (data_pos + input_length > groupData[group_num].data_length)
+    return False;
 
   switch (input_length)
   {
     case 1:
-      groupDataSyncWrite[group_num].data_list_[_data_num].data_[data_pos + 0] = DXL_LOBYTE(DXL_LOWORD(data));
+      groupData[group_num].data_list[data_num].data[data_pos + 0] = DXL_LOBYTE(DXL_LOWORD(data));
       break;
 
     case 2:
-      groupDataSyncWrite[group_num].data_list_[_data_num].data_[data_pos + 0] = DXL_LOBYTE(DXL_LOWORD(data));
-      groupDataSyncWrite[group_num].data_list_[_data_num].data_[data_pos + 1] = DXL_HIBYTE(DXL_LOWORD(data));
+      groupData[group_num].data_list[data_num].data[data_pos + 0] = DXL_LOBYTE(DXL_LOWORD(data));
+      groupData[group_num].data_list[data_num].data[data_pos + 1] = DXL_HIBYTE(DXL_LOWORD(data));
       break;
 
     case 4:
-      groupDataSyncWrite[group_num].data_list_[_data_num].data_[data_pos + 0] = DXL_LOBYTE(DXL_LOWORD(data));
-      groupDataSyncWrite[group_num].data_list_[_data_num].data_[data_pos + 1] = DXL_HIBYTE(DXL_LOWORD(data));
-      groupDataSyncWrite[group_num].data_list_[_data_num].data_[data_pos + 2] = DXL_LOBYTE(DXL_HIWORD(data));
-      groupDataSyncWrite[group_num].data_list_[_data_num].data_[data_pos + 3] = DXL_HIBYTE(DXL_HIWORD(data));
+      groupData[group_num].data_list[data_num].data[data_pos + 0] = DXL_LOBYTE(DXL_LOWORD(data));
+      groupData[group_num].data_list[data_num].data[data_pos + 1] = DXL_HIBYTE(DXL_LOWORD(data));
+      groupData[group_num].data_list[data_num].data[data_pos + 2] = DXL_LOBYTE(DXL_HIWORD(data));
+      groupData[group_num].data_list[data_num].data[data_pos + 3] = DXL_HIBYTE(DXL_HIWORD(data));
       break;
 
     default:
-      return false;
+      return False;
   }
 
-  groupDataSyncWrite[group_num].is_param_changed_ = true;
-  return true;
+  groupData[group_num].is_param_changed = True;
+  return True;
 }
 
 void groupSyncWriteClearParam(int group_num)
 {
-  int _port_num = groupDataSyncWrite[group_num].port_num;
+  int port_num = groupData[group_num].port_num;
 
-  if (groupSyncWriteSize(group_num) == 0)
+  if (size(group_num) == 0)
     return;
 
-  groupDataSyncWrite[group_num].data_list_ = 0;
+  groupData[group_num].data_list = 0;
 
-  packetData[_port_num].data_write_ = 0;
+  packetData[port_num].data_write = 0;
 
-  groupDataSyncWrite[group_num].data_list_length_ = 0;
+  groupData[group_num].data_list_length = 0;
 }
 
 void groupSyncWriteTxPacket(int group_num)
 {
-  int _port_num = groupDataSyncWrite[group_num].port_num;
+  int port_num = groupData[group_num].port_num;
 
-  if (groupSyncWriteSize(group_num) == 0)
+  if (size(group_num) == 0)
   {
-  	packetData[_port_num].communication_result_ = COMM_NOT_AVAILABLE;
+  	packetData[port_num].communication_result = COMM_NOT_AVAILABLE;
   	return;
   }
 
-  if (groupDataSyncWrite[group_num].is_param_changed_ == true)
+  if (groupData[group_num].is_param_changed == True)
     groupSyncWriteMakeParam(group_num);
 
 	syncWriteTxOnly(
-    groupDataSyncWrite[group_num].port_num
-    , groupDataSyncWrite[group_num].protocol_version
-    , groupDataSyncWrite[group_num].start_address_
-    , groupDataSyncWrite[group_num].data_length_
-    , groupSyncWriteSize(group_num) * (1 + groupDataSyncWrite[group_num].data_length_));
+    groupData[group_num].port_num
+    , groupData[group_num].protocol_version
+    , groupData[group_num].start_address
+    , groupData[group_num].data_length
+    , size(group_num) * (1 + groupData[group_num].data_length));
 }

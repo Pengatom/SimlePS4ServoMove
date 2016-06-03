@@ -33,8 +33,8 @@
 #define ADDR_PRO_PRESENT_POSITION       611
 
 // Data Byte Length
-#define LEN_PRO_GOAL_POSITION            4
-#define LEN_PRO_PRESENT_POSITION         4
+#define LEN_PRO_GOAL_POSITION           4
+#define LEN_PRO_PRESENT_POSITION        4
 
 // Protocol version
 #define PROTOCOL_VERSION                2.0                 // See which protocol version is used in the Dynamixel
@@ -120,8 +120,8 @@ int main()
 
   int index = 0;
   int dxl_comm_result = COMM_TX_FAIL;              // Communication result
-  bool dxl_addparam_result = false;                // AddParam result
-  bool dxl_getdata_result = false;                 // GetParam result
+  uint8_t dxl_addparam_result = False;                // AddParam result
+  uint8_t dxl_getdata_result = False;                 // GetParam result
   int dxl_goal_position[2] = { DXL_MINIMUM_POSITION_VALUE, DXL_MAXIMUM_POSITION_VALUE };         // Goal position
 
   uint8_t dxl_error = 0;                           // Dynamixel error
@@ -185,7 +185,7 @@ int main()
 
   // Add parameter storage for Dynamixel#1 present position value
   dxl_addparam_result = groupSyncReadAddParam(groupread_num, DXL1_ID);
-  if (dxl_addparam_result != true)
+  if (dxl_addparam_result != True)
   {
     fprintf(stderr, "[ID:%03d] groupSyncRead addparam failed", DXL1_ID);
     return 0;
@@ -193,7 +193,7 @@ int main()
 
   // Add parameter storage for Dynamixel#2 present position value
   dxl_addparam_result = groupSyncReadAddParam(groupread_num, DXL2_ID);
-  if (dxl_addparam_result != true)
+  if (dxl_addparam_result != True)
   {
     fprintf(stderr, "[ID:%03d] groupSyncRead addparam failed", DXL2_ID);
     return 0;
@@ -207,7 +207,7 @@ int main()
 
     // Add Dynamixel#1 goal position value to the Syncwrite storage
     dxl_addparam_result = groupSyncWriteAddParam(groupwrite_num, DXL1_ID, dxl_goal_position[index], 4);
-    if (dxl_addparam_result != true)
+    if (dxl_addparam_result != True)
     {
       fprintf(stderr, "[ID:%03d] groupSyncWrite addparam failed", DXL1_ID);
       return 0;
@@ -215,7 +215,7 @@ int main()
 
     // Add Dynamixel#2 goal position value to the Syncwrite parameter storage
     dxl_addparam_result = groupSyncWriteAddParam(groupwrite_num, DXL2_ID, dxl_goal_position[index], 4);
-    if (dxl_addparam_result != true)
+    if (dxl_addparam_result != True)
     {
       fprintf(stderr, "[ID:%03d] groupSyncWrite addparam failed", DXL2_ID);
       return 0;
@@ -238,7 +238,7 @@ int main()
 
       // Check if groupsyncread data of Dynamixel#1 is available
       dxl_getdata_result = groupSyncReadIsAvailable(groupread_num, DXL1_ID, ADDR_PRO_PRESENT_POSITION, LEN_PRO_PRESENT_POSITION);
-      if (dxl_getdata_result != true)
+      if (dxl_getdata_result != True)
       {
         fprintf(stderr, "[ID:%03d] groupSyncRead getdata failed", DXL1_ID);
         return 0;
@@ -246,7 +246,7 @@ int main()
 
       // Check if groupsyncread data of Dynamixel#2 is available
       dxl_getdata_result = groupSyncReadIsAvailable(groupread_num, DXL2_ID, ADDR_PRO_PRESENT_POSITION, LEN_PRO_PRESENT_POSITION);
-      if (dxl_getdata_result != true)
+      if (dxl_getdata_result != True)
       {
         fprintf(stderr, "[ID:%03d] groupSyncRead getdata failed", DXL2_ID);
         return 0;

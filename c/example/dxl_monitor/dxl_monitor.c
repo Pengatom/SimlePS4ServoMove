@@ -393,7 +393,7 @@ int main(int argc, char *argv[])
     {
       if (num_param == 1)
       {
-        if (setBaudRate(port_num, atoi(param[0])) == false)
+        if (setBaudRate(port_num, atoi(param[0])) == False)
         {
           fprintf(stderr, " Failed to change baudrate! \n");
         }

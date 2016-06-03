@@ -53,157 +53,157 @@
 
 typedef struct
 {
-  int     socket_fd_;
-  int     baudrate_;
-  char    port_name_[30];
+  int     socket_fd;
+  int     baudrate;
+  char    port_name[30];
 
-  double  packet_start_time_;
-  double  packet_timeout_;
+  double  packet_start_time;
+  double  packet_timeout;
   double  tx_time_per_byte;
-}PortDataLinux;
+}PortData;
 
-PortDataLinux *portDataLinux;
+static PortData *portData;
 
 int portHandlerLinux(const char *port_name)
 {
-  int _port_num;
+  int port_num;
 
-  if (portDataLinux == NULL)
+  if (portData == NULL)
   {
-    _port_num = 0;
-    used_port_num_ = 1;
-    portDataLinux = (PortDataLinux *)calloc(1, sizeof(PortDataLinux));
-    is_using_ = (bool*)calloc(1, sizeof(bool));
+    port_num = 0;
+    g_used_port_num = 1;
+    portData = (PortData *)calloc(1, sizeof(PortData));
+    g_is_using = (uint8_t*)calloc(1, sizeof(uint8_t));
   }
   else
   {
-    for (_port_num = 0; _port_num < used_port_num_; _port_num++)
+    for (port_num = 0; port_num < g_used_port_num; port_num++)
     {
-      if (!strcmp(portDataLinux[_port_num].port_name_, port_name))
+      if (!strcmp(portData[port_num].port_name, port_name))
         break;
     }
 
-    if (_port_num == used_port_num_)
+    if (port_num == g_used_port_num)
     {
-      for (_port_num = 0; _port_num < used_port_num_; _port_num++)
+      for (port_num = 0; port_num < g_used_port_num; port_num++)
       {
-        if (portDataLinux[_port_num].socket_fd_ != -1)
+        if (portData[port_num].socket_fd != -1)
           break;
       }
 
-      if (_port_num == used_port_num_)
+      if (port_num == g_used_port_num)
       {
-        used_port_num_++;
-        portDataLinux = (PortDataLinux*)realloc(portDataLinux, used_port_num_ * sizeof(PortDataLinux));
-        is_using_ = (bool*)realloc(is_using_, used_port_num_ * sizeof(bool));
+        g_used_port_num++;
+        portData = (PortData*)realloc(portData, g_used_port_num * sizeof(PortData));
+        g_is_using = (uint8_t*)realloc(g_is_using, g_used_port_num * sizeof(uint8_t));
       }
     }
     else
     {
-      printf("[PortHandler setup] The port number %d has same device name... reinitialize port number %d!!\n", _port_num, _port_num);
+      printf("[PortHandler setup] The port number %d has same device name... reinitialize port number %d!!\n", port_num, port_num);
     }
   }
 
-  portDataLinux[_port_num].socket_fd_ = -1;
-  portDataLinux[_port_num].baudrate_ = DEFAULT_BAUDRATE;
-  portDataLinux[_port_num].packet_start_time_ = 0.0;
-  portDataLinux[_port_num].packet_timeout_ = 0.0;
-  portDataLinux[_port_num].tx_time_per_byte = 0.0;
+  portData[port_num].socket_fd = -1;
+  portData[port_num].baudrate = DEFAULT_BAUDRATE;
+  portData[port_num].packet_start_time = 0.0;
+  portData[port_num].packet_timeout = 0.0;
+  portData[port_num].tx_time_per_byte = 0.0;
 
-  is_using_[_port_num] = false;
+  g_is_using[port_num] = false;
 
-  setPortNameLinux(_port_num, port_name);
+  setPortNameLinux(port_num, port_name);
 
-  return _port_num;
+  return port_num;
 }
 
-bool openPortLinux(int port_num)
+uint8_t openPortLinux(int port_num)
 {
-  return setBaudRateLinux(port_num, portDataLinux[port_num].baudrate_);
+  return setBaudRateLinux(port_num, portData[port_num].baudrate);
 }
 
 void closePortLinux(int port_num)
 {
-  if (portDataLinux[port_num].socket_fd_ != -1)
+  if (portData[port_num].socket_fd != -1)
   {
-    close(portDataLinux[port_num].socket_fd_);
-    portDataLinux[port_num].socket_fd_ = -1;
+    close(portData[port_num].socket_fd);
+    portData[port_num].socket_fd = -1;
   }
 }
 
 void clearPortLinux(int port_num)
 {
-  tcflush(portDataLinux[port_num].socket_fd_, TCIOFLUSH);
+  tcflush(portData[port_num].socket_fd, TCIOFLUSH);
 }
 
 void setPortNameLinux(int port_num, const char *port_name)
 {
-  strcpy(portDataLinux[port_num].port_name_, port_name);
+  strcpy(portData[port_num].port_name, port_name);
 }
 
 char *getPortNameLinux(int port_num)
 {
-  return portDataLinux[port_num].port_name_;
+  return portData[port_num].port_name;
 }
 
-bool setBaudRateLinux(int port_num, const int baudrate)
+uint8_t setBaudRateLinux(int port_num, const int baudrate)
 {
-  int _baud = getCFlagBaud(baudrate);
+  int baud = getCFlagBaud(baudrate);
 
   closePortLinux(port_num);
 
-  if (_baud <= 0)   // custom baudrate
+  if (baud <= 0)   // custom baudrate
   {
     setupPortLinux(port_num, B38400);
-    portDataLinux[port_num].baudrate_ = baudrate;
+    portData[port_num].baudrate = baudrate;
     return setCustomBaudrateLinux(port_num, baudrate);
   }
   else
   {
-    portDataLinux[port_num].baudrate_ = baudrate;
-    return setupPortLinux(port_num, _baud);
+    portData[port_num].baudrate = baudrate;
+    return setupPortLinux(port_num, baud);
   }
 }
 
 int getBaudRateLinux(int port_num)
 {
-  return portDataLinux[port_num].baudrate_;
+  return portData[port_num].baudrate;
 }
 
 int getBytesAvailableLinux(int port_num)
 {
-  int _bytes_available;
-  ioctl(portDataLinux[port_num].socket_fd_, FIONREAD, &_bytes_available);
-  return _bytes_available;
+  int bytes_available;
+  ioctl(portData[port_num].socket_fd, FIONREAD, &bytes_available);
+  return bytes_available;
 }
 
 int readPortLinux(int port_num, uint8_t *packet, int length)
 {
-  return read(portDataLinux[port_num].socket_fd_, packet, length);
+  return read(portData[port_num].socket_fd, packet, length);
 }
 
 int writePortLinux(int port_num, uint8_t *packet, int length)
 {
-  return write(portDataLinux[port_num].socket_fd_, packet, length);
+  return write(portData[port_num].socket_fd, packet, length);
 }
 
 void setPacketTimeoutLinux(int port_num, uint16_t packet_length)
 {
-  portDataLinux[port_num].packet_start_time_ = getCurrentTimeLinux();
-  portDataLinux[port_num].packet_timeout_ = (portDataLinux[port_num].tx_time_per_byte * (double)packet_length) + (LATENCY_TIMER * 2.0) + 2.0;
+  portData[port_num].packet_start_time = getCurrentTimeLinux();
+  portData[port_num].packet_timeout = (portData[port_num].tx_time_per_byte * (double)packet_length) + (LATENCY_TIMER * 2.0) + 2.0;
 }
 
 void setPacketTimeoutMSecLinux(int port_num, double msec)
 {
-  portDataLinux[port_num].packet_start_time_ = getCurrentTimeLinux();
-  portDataLinux[port_num].packet_timeout_ = msec;
+  portData[port_num].packet_start_time = getCurrentTimeLinux();
+  portData[port_num].packet_timeout = msec;
 }
 
-bool isPacketTimeoutLinux(int port_num)
+uint8_t isPacketTimeoutLinux(int port_num)
 {
-  if (getTimeSinceStartLinux(port_num) > portDataLinux[port_num].packet_timeout_)
+  if (getTimeSinceStartLinux(port_num) > portData[port_num].packet_timeout)
   {
-    portDataLinux[port_num].packet_timeout_ = 0;
+    portData[port_num].packet_timeout = 0;
     return true;
   }
   return false;
@@ -211,29 +211,29 @@ bool isPacketTimeoutLinux(int port_num)
 
 double getCurrentTimeLinux()
 {
-  struct timespec _tv;
-  clock_gettime(CLOCK_REALTIME, &_tv);
-  return ((double)_tv.tv_sec*1000.0 + (double)_tv.tv_nsec*0.001*0.001);
+  struct timespec tv;
+  clock_gettime(CLOCK_REALTIME, &tv);
+  return ((double)tv.tv_sec*1000.0 + (double)tv.tv_nsec*0.001*0.001);
 }
 
 double getTimeSinceStartLinux(int port_num)
 {
-  double _time;
+  double time_since_start;
 
-  _time = getCurrentTimeLinux() - portDataLinux[port_num].packet_start_time_;
-  if (_time < 0.0)
-    portDataLinux[port_num].packet_start_time_ = getCurrentTimeLinux();
+  time_since_start = getCurrentTimeLinux() - portData[port_num].packet_start_time;
+  if (time_since_start < 0.0)
+    portData[port_num].packet_start_time = getCurrentTimeLinux();
 
-  return _time;
+  return time_since_start;
 }
 
-bool setupPortLinux(int port_num, int cflag_baud)
+uint8_t setupPortLinux(int port_num, int cflag_baud)
 {
   struct termios newtio;
 
-  portDataLinux[port_num].socket_fd_ = open(portDataLinux[port_num].port_name_, O_RDWR | O_NOCTTY | O_NONBLOCK);
+  portData[port_num].socket_fd = open(portData[port_num].port_name, O_RDWR | O_NOCTTY | O_NONBLOCK);
 
-  if (portDataLinux[port_num].socket_fd_ < 0)
+  if (portData[port_num].socket_fd < 0)
   {
     printf("[PortHandlerLinux::SetupPort] Error opening serial port!\n");
     return false;
@@ -249,18 +249,18 @@ bool setupPortLinux(int port_num, int cflag_baud)
   newtio.c_cc[VMIN] = 0;
 
   // clean the buffer and activate the settings for the port
-  tcflush(portDataLinux[port_num].socket_fd_, TCIFLUSH);
-  tcsetattr(portDataLinux[port_num].socket_fd_, TCSANOW, &newtio);
+  tcflush(portData[port_num].socket_fd, TCIFLUSH);
+  tcsetattr(portData[port_num].socket_fd, TCSANOW, &newtio);
 
-  portDataLinux[port_num].tx_time_per_byte = (1000.0 / (double)portDataLinux[port_num].baudrate_) * 10.0;
+  portData[port_num].tx_time_per_byte = (1000.0 / (double)portData[port_num].baudrate) * 10.0;
   return true;
 }
 
-bool setCustomBaudrateLinux(int port_num, int speed)
+uint8_t setCustomBaudrateLinux(int port_num, int speed)
 {
   // try to set a custom divisor
   struct serial_struct ss;
-  if (ioctl(portDataLinux[port_num].socket_fd_, TIOCGSERIAL, &ss) != 0)
+  if (ioctl(portData[port_num].socket_fd, TIOCGSERIAL, &ss) != 0)
   {
     printf("[PortHandlerLinux::SetCustomBaudrate] TIOCGSERIAL failed!\n");
     return false;
@@ -276,13 +276,13 @@ bool setCustomBaudrateLinux(int port_num, int speed)
     return false;
   }
 
-  if (ioctl(portDataLinux[port_num].socket_fd_, TIOCSSERIAL, &ss) < 0)
+  if (ioctl(portData[port_num].socket_fd, TIOCSSERIAL, &ss) < 0)
   {
     printf("[PortHandlerLinux::setCustomBaudrate] TIOCSSERIAL failed!\n");
     return false;
   }
 
-  portDataLinux[port_num].tx_time_per_byte = (1000.0 / (double)speed) * 10.0;
+  portData[port_num].tx_time_per_byte = (1000.0 / (double)speed) * 10.0;
   return true;
 }
 

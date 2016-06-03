@@ -121,9 +121,9 @@ void printRxPacketError2(uint8_t error)
   if (error & ERRBIT_ALERT)
     printf("[RxPacketError] Hardware error occurred. Check the error at Control Table (Hardware Error Status)!\n");
 
-  int _error = error & ~ERRBIT_ALERT;
+  int not_alert_error = error & ~ERRBIT_ALERT;
 
-  switch (_error)
+  switch (not_alert_error)
   {
     case 0:
       break;
@@ -164,33 +164,33 @@ void printRxPacketError2(uint8_t error)
 
 int getLastTxRxResult2(int port_num)
 {
-  return packetData[port_num].communication_result_;
+  return packetData[port_num].communication_result;
 }
 uint8_t getLastRxPacketError2(int port_num)
 {
-  return packetData[port_num].error_;
+  return packetData[port_num].error;
 }
 
 void setDataWrite2(int port_num, uint16_t data_length, uint16_t data_pos, uint32_t data)
 {
-  packetData[port_num].data_write_ = (uint8_t *)realloc(packetData[port_num].data_write_, (data_pos + data_length) * sizeof(uint8_t));
+  packetData[port_num].data_write = (uint8_t *)realloc(packetData[port_num].data_write, (data_pos + data_length) * sizeof(uint8_t));
 
   switch (data_length)
   {
     case 1:
-      packetData[port_num].data_write_[data_pos + 0] = DXL_LOBYTE(DXL_LOWORD(data));
+      packetData[port_num].data_write[data_pos + 0] = DXL_LOBYTE(DXL_LOWORD(data));
       break;
 
     case 2:
-      packetData[port_num].data_write_[data_pos + 0] = DXL_LOBYTE(DXL_LOWORD(data));
-      packetData[port_num].data_write_[data_pos + 1] = DXL_HIBYTE(DXL_LOWORD(data));
+      packetData[port_num].data_write[data_pos + 0] = DXL_LOBYTE(DXL_LOWORD(data));
+      packetData[port_num].data_write[data_pos + 1] = DXL_HIBYTE(DXL_LOWORD(data));
       break;
 
     case 4:
-      packetData[port_num].data_write_[data_pos + 0] = DXL_LOBYTE(DXL_LOWORD(data));
-      packetData[port_num].data_write_[data_pos + 1] = DXL_HIBYTE(DXL_LOWORD(data));
-      packetData[port_num].data_write_[data_pos + 2] = DXL_LOBYTE(DXL_HIWORD(data));
-      packetData[port_num].data_write_[data_pos + 3] = DXL_HIBYTE(DXL_HIWORD(data));
+      packetData[port_num].data_write[data_pos + 0] = DXL_LOBYTE(DXL_LOWORD(data));
+      packetData[port_num].data_write[data_pos + 1] = DXL_HIBYTE(DXL_LOWORD(data));
+      packetData[port_num].data_write[data_pos + 2] = DXL_LOBYTE(DXL_HIWORD(data));
+      packetData[port_num].data_write[data_pos + 3] = DXL_HIBYTE(DXL_HIWORD(data));
       break;
 
     default:
@@ -203,14 +203,14 @@ uint32_t getDataRead2(int port_num, uint16_t data_length, uint16_t data_pos)
   switch (data_length)
   {
   case 1:
-    return packetData[port_num].data_read_[data_pos + 0];
+    return packetData[port_num].data_read[data_pos + 0];
 
   case 2:
-    return DXL_MAKEWORD(packetData[port_num].data_read_[data_pos + 0], packetData[port_num].data_read_[data_pos + 1]);
+    return DXL_MAKEWORD(packetData[port_num].data_read[data_pos + 0], packetData[port_num].data_read[data_pos + 1]);
 
   case 4:
-    return DXL_MAKEDWORD(DXL_MAKEWORD(packetData[port_num].data_read_[data_pos + 0], packetData[port_num].data_read_[data_pos + 1])
-      , DXL_MAKEWORD(packetData[port_num].data_read_[data_pos + 2], packetData[port_num].data_read_[data_pos + 3]));
+    return DXL_MAKEDWORD(DXL_MAKEWORD(packetData[port_num].data_read[data_pos + 0], packetData[port_num].data_read[data_pos + 1])
+      , DXL_MAKEWORD(packetData[port_num].data_read[data_pos + 2], packetData[port_num].data_read[data_pos + 3]));
 
   default:
     printf("[Set Data Read] failed... ");
@@ -271,16 +271,16 @@ unsigned short updateCRC(uint16_t crc_accum, uint8_t *data_blk_ptr, uint16_t dat
 
 void addStuffing(uint8_t *packet)
 {
-  uint8_t _s;
+  uint8_t s;
 
   int i = 0, index = 0;
   int packet_length_in = DXL_MAKEWORD(packet[PKT_LENGTH_L], packet[PKT_LENGTH_H]);
   int packet_length_out = packet_length_in;
   uint8_t temp[TXPACKET_MAX_LEN] = { 0 };
 
-  for (_s = PKT_HEADER0; _s <= PKT_LENGTH_H; _s++)
+  for (s = PKT_HEADER0; s <= PKT_LENGTH_H; s++)
   {
-    temp[_s] = packet[_s]; // FF FF FD XX ID LEN_L LEN_H
+    temp[s] = packet[s]; // FF FF FD XX ID LEN_L LEN_H
   }
 
   index = PKT_INSTRUCTION;
@@ -299,9 +299,9 @@ void addStuffing(uint8_t *packet)
   if (packet_length_in != packet_length_out)
     packet = (uint8_t *)realloc(packet, index * sizeof(uint8_t));
 
-  for (_s = 0; _s < index; _s++)
+  for (s = 0; s < index; s++)
   {
-    packet[_s] = temp[_s];
+    packet[s] = temp[s];
   }
 
   packet[PKT_LENGTH_L] = DXL_LOBYTE(packet_length_out);
@@ -333,114 +333,114 @@ void removeStuffing(uint8_t *packet)
 
 void txPacket2(int port_num)
 {
-  uint16_t _total_packet_length = 0;
-  uint16_t _written_packet_length = 0;
+  uint16_t total_packet_length = 0;
+  uint16_t written_packet_length = 0;
 
-  if (is_using_[port_num])
+  if (g_is_using[port_num])
   {
-    packetData[port_num].communication_result_ = COMM_PORT_BUSY;
+    packetData[port_num].communication_result = COMM_PORT_BUSY;
     return;
   }
-  is_using_[port_num] = true;
+  g_is_using[port_num] = True;
 
   // byte stuffing for header
-  addStuffing(packetData[port_num].txpacket_);
+  addStuffing(packetData[port_num].tx_packet);
 
   // check max packet length
-  _total_packet_length = DXL_MAKEWORD(packetData[port_num].txpacket_[PKT_LENGTH_L], packetData[port_num].txpacket_[PKT_LENGTH_H]) + 7;
+  total_packet_length = DXL_MAKEWORD(packetData[port_num].tx_packet[PKT_LENGTH_L], packetData[port_num].tx_packet[PKT_LENGTH_H]) + 7;
   // 7: HEADER0 HEADER1 HEADER2 RESERVED ID LENGTH_L LENGTH_H
-  if (_total_packet_length > TXPACKET_MAX_LEN)
+  if (total_packet_length > TXPACKET_MAX_LEN)
   {
-    is_using_[port_num] = false;
-    packetData[port_num].communication_result_ = COMM_TX_ERROR;
+    g_is_using[port_num] = False;
+    packetData[port_num].communication_result = COMM_TX_ERROR;
     return;
   }
 
   // make packet header
-  packetData[port_num].txpacket_[PKT_HEADER0] = 0xFF;
-  packetData[port_num].txpacket_[PKT_HEADER1] = 0xFF;
-  packetData[port_num].txpacket_[PKT_HEADER2] = 0xFD;
-  packetData[port_num].txpacket_[PKT_RESERVED] = 0x00;
+  packetData[port_num].tx_packet[PKT_HEADER0] = 0xFF;
+  packetData[port_num].tx_packet[PKT_HEADER1] = 0xFF;
+  packetData[port_num].tx_packet[PKT_HEADER2] = 0xFD;
+  packetData[port_num].tx_packet[PKT_RESERVED] = 0x00;
 
   // add CRC16
-  uint16_t crc = updateCRC(0, packetData[port_num].txpacket_, _total_packet_length - 2);    // 2: CRC16
-  packetData[port_num].txpacket_[_total_packet_length - 2] = DXL_LOBYTE(crc);
-  packetData[port_num].txpacket_[_total_packet_length - 1] = DXL_HIBYTE(crc);
+  uint16_t crc = updateCRC(0, packetData[port_num].tx_packet, total_packet_length - 2);    // 2: CRC16
+  packetData[port_num].tx_packet[total_packet_length - 2] = DXL_LOBYTE(crc);
+  packetData[port_num].tx_packet[total_packet_length - 1] = DXL_HIBYTE(crc);
 
   // tx packet
   clearPort(port_num);
-  _written_packet_length = writePort(port_num, packetData[port_num].txpacket_, _total_packet_length);
-  if (_total_packet_length != _written_packet_length)
+  written_packet_length = writePort(port_num, packetData[port_num].tx_packet, total_packet_length);
+  if (total_packet_length != written_packet_length)
   {
-    is_using_[port_num] = false;
-    packetData[port_num].communication_result_ = COMM_TX_FAIL;
+    g_is_using[port_num] = False;
+    packetData[port_num].communication_result = COMM_TX_FAIL;
     return;
   }
 
-  packetData[port_num].communication_result_ = COMM_SUCCESS;
+  packetData[port_num].communication_result = COMM_SUCCESS;
 }
 
 void rxPacket2(int port_num)
 {
-  uint8_t _s;
-  uint16_t _idx;
+  uint8_t s;
+  uint16_t idx;
 
-  packetData[port_num].communication_result_ = COMM_TX_FAIL;
+  packetData[port_num].communication_result = COMM_TX_FAIL;
 
-  uint16_t _rx_length = 0;
-  uint16_t _wait_length = 11;
+  uint16_t rx_length = 0;
+  uint16_t wait_length = 11;
   // minimum length ( HEADER0 HEADER1 HEADER2 RESERVED ID LENGTH_L LENGTH_H INST ERROR CRC16_L CRC16_H )
 
-  while (true)
+  while (True)
   {
-    _rx_length += readPort(port_num, &packetData[port_num].rxpacket_[_rx_length], _wait_length - _rx_length);
-    if (_rx_length >= _wait_length)
+    rx_length += readPort(port_num, &packetData[port_num].rx_packet[rx_length], wait_length - rx_length);
+    if (rx_length >= wait_length)
     {
-      _idx = 0;
+      idx = 0;
 
       // find packet header
-      for (_idx = 0; _idx < (_rx_length - 3); _idx++)
+      for (idx = 0; idx < (rx_length - 3); idx++)
       {
-        if ((packetData[port_num].rxpacket_[_idx] == 0xFF) && (packetData[port_num].rxpacket_[_idx + 1] == 0xFF) && (packetData[port_num].rxpacket_[_idx + 2] == 0xFD) && (packetData[port_num].rxpacket_[_idx + 3] != 0xFD))
+        if ((packetData[port_num].rx_packet[idx] == 0xFF) && (packetData[port_num].rx_packet[idx + 1] == 0xFF) && (packetData[port_num].rx_packet[idx + 2] == 0xFD) && (packetData[port_num].rx_packet[idx + 3] != 0xFD))
           break;
       }
 
-      if (_idx == 0)   // found at the beginning of the packet
+      if (idx == 0)   // found at the beginning of the packet
       {
-        if (packetData[port_num].rxpacket_[PKT_RESERVED] != 0x00 ||
-          packetData[port_num].rxpacket_[PKT_ID] > 0xFC ||
-          DXL_MAKEWORD(packetData[port_num].rxpacket_[PKT_LENGTH_L], packetData[port_num].rxpacket_[PKT_LENGTH_H]) > RXPACKET_MAX_LEN ||
-          packetData[port_num].rxpacket_[PKT_INSTRUCTION] != 0x55)
+        if (packetData[port_num].rx_packet[PKT_RESERVED] != 0x00 ||
+          packetData[port_num].rx_packet[PKT_ID] > 0xFC ||
+          DXL_MAKEWORD(packetData[port_num].rx_packet[PKT_LENGTH_L], packetData[port_num].rx_packet[PKT_LENGTH_H]) > RXPACKET_MAX_LEN ||
+          packetData[port_num].rx_packet[PKT_INSTRUCTION] != 0x55)
         {
           // remove the first byte in the packet
-          for (_s = 0; _s < _rx_length - 1; _s++)
+          for (s = 0; s < rx_length - 1; s++)
           {
-            packetData[port_num].rxpacket_[_s] = packetData[port_num].rxpacket_[1 + _s];
+            packetData[port_num].rx_packet[s] = packetData[port_num].rx_packet[1 + s];
           }
 
-          _rx_length -= 1;
+          rx_length -= 1;
           continue;
         }
 
         // re-calculate the exact length of the rx packet
-        if (_wait_length != DXL_MAKEWORD(packetData[port_num].rxpacket_[PKT_LENGTH_L], packetData[port_num].rxpacket_[PKT_LENGTH_H]) + PKT_LENGTH_H + 1)
+        if (wait_length != DXL_MAKEWORD(packetData[port_num].rx_packet[PKT_LENGTH_L], packetData[port_num].rx_packet[PKT_LENGTH_H]) + PKT_LENGTH_H + 1)
         {
-          _wait_length = DXL_MAKEWORD(packetData[port_num].rxpacket_[PKT_LENGTH_L], packetData[port_num].rxpacket_[PKT_LENGTH_H]) + PKT_LENGTH_H + 1;
+          wait_length = DXL_MAKEWORD(packetData[port_num].rx_packet[PKT_LENGTH_L], packetData[port_num].rx_packet[PKT_LENGTH_H]) + PKT_LENGTH_H + 1;
           continue;
         }
 
-        if (_rx_length < _wait_length)
+        if (rx_length < wait_length)
         {
           // check timeout
-          if (isPacketTimeout(port_num) == true)
+          if (isPacketTimeout(port_num) == True)
           {
-            if (_rx_length == 0)
+            if (rx_length == 0)
             {
-              packetData[port_num].communication_result_ = COMM_RX_TIMEOUT;
+              packetData[port_num].communication_result = COMM_RX_TIMEOUT;
             }
             else
             {
-              packetData[port_num].communication_result_ = COMM_RX_CORRUPT;
+              packetData[port_num].communication_result = COMM_RX_CORRUPT;
             }
             break;
           }
@@ -451,75 +451,75 @@ void rxPacket2(int port_num)
         }
 
         // verify CRC16
-        uint16_t crc = DXL_MAKEWORD(packetData[port_num].rxpacket_[_wait_length - 2], packetData[port_num].rxpacket_[_wait_length - 1]);
-        if (updateCRC(0, packetData[port_num].rxpacket_, _wait_length - 2) == crc)
+        uint16_t crc = DXL_MAKEWORD(packetData[port_num].rx_packet[wait_length - 2], packetData[port_num].rx_packet[wait_length - 1]);
+        if (updateCRC(0, packetData[port_num].rx_packet, wait_length - 2) == crc)
         {
-          packetData[port_num].communication_result_ = COMM_SUCCESS;
+          packetData[port_num].communication_result = COMM_SUCCESS;
         }
         else
         {
-          packetData[port_num].communication_result_ = COMM_RX_CORRUPT;
+          packetData[port_num].communication_result = COMM_RX_CORRUPT;
         }
         break;
       }
       else
       {
         // remove unnecessary packets
-        for (_s = 0; _s < _rx_length - _idx; _s++)
+        for (s = 0; s < rx_length - idx; s++)
         {
-          packetData[port_num].rxpacket_[_s] = packetData[port_num].rxpacket_[_idx + _s];
+          packetData[port_num].rx_packet[s] = packetData[port_num].rx_packet[idx + s];
         }
 
-        _rx_length -= _idx;
+        rx_length -= idx;
       }
     }
     else
     {
       // check timeout
-      if (isPacketTimeout(port_num) == true)
+      if (isPacketTimeout(port_num) == True)
       {
-        if (_rx_length == 0)
+        if (rx_length == 0)
         {
-          packetData[port_num].communication_result_ = COMM_RX_TIMEOUT;
+          packetData[port_num].communication_result = COMM_RX_TIMEOUT;
         }
         else
         {
-          packetData[port_num].communication_result_ = COMM_RX_CORRUPT;
+          packetData[port_num].communication_result = COMM_RX_CORRUPT;
         }
         break;
       }
     }
   }
-  is_using_[port_num] = false;
+  g_is_using[port_num] = False;
 
-  if (packetData[port_num].communication_result_ == COMM_SUCCESS)
-    removeStuffing(packetData[port_num].rxpacket_);
+  if (packetData[port_num].communication_result == COMM_SUCCESS)
+    removeStuffing(packetData[port_num].rx_packet);
 }
 
 // NOT for BulkRead / SyncRead instruction
 void txRxPacket2(int port_num)
 {
-  packetData[port_num].communication_result_ = COMM_TX_FAIL;
+  packetData[port_num].communication_result = COMM_TX_FAIL;
 
   // tx packet
   txPacket2(port_num);
-  if (packetData[port_num].communication_result_ != COMM_SUCCESS)
+  if (packetData[port_num].communication_result != COMM_SUCCESS)
     return;
 
   // (ID == Broadcast ID && NOT BulkRead) == no need to wait for status packet
   // (Instruction == Action) == no need to wait for status packet
-  if ((packetData[port_num].txpacket_[PKT_ID] == BROADCAST_ID && packetData[port_num].txpacket_[PKT_INSTRUCTION] != INST_BULK_READ) ||
-    (packetData[port_num].txpacket_[PKT_ID] == BROADCAST_ID && packetData[port_num].txpacket_[PKT_INSTRUCTION] != INST_SYNC_READ) ||
-    (packetData[port_num].txpacket_[PKT_INSTRUCTION] == INST_ACTION))
+  if ((packetData[port_num].tx_packet[PKT_ID] == BROADCAST_ID && packetData[port_num].tx_packet[PKT_INSTRUCTION] != INST_BULK_READ) ||
+    (packetData[port_num].tx_packet[PKT_ID] == BROADCAST_ID && packetData[port_num].tx_packet[PKT_INSTRUCTION] != INST_SYNC_READ) ||
+    (packetData[port_num].tx_packet[PKT_INSTRUCTION] == INST_ACTION))
   {
-    is_using_[port_num] = false;
+    g_is_using[port_num] = False;
     return;
   }
 
   // set packet timeout
-  if (packetData[port_num].txpacket_[PKT_INSTRUCTION] == INST_READ)
+  if (packetData[port_num].tx_packet[PKT_INSTRUCTION] == INST_READ)
   {
-    setPacketTimeout(port_num, (uint16_t)(DXL_MAKEWORD(packetData[port_num].txpacket_[PKT_PARAMETER0 + 2], packetData[port_num].txpacket_[PKT_PARAMETER0 + 3]) + 11));
+    setPacketTimeout(port_num, (uint16_t)(DXL_MAKEWORD(packetData[port_num].tx_packet[PKT_PARAMETER0 + 2], packetData[port_num].tx_packet[PKT_PARAMETER0 + 3]) + 11));
   }
   else
   {
@@ -529,12 +529,12 @@ void txRxPacket2(int port_num)
   // rx packet
   rxPacket2(port_num);
   // check txpacket ID == rxpacket ID
-  if (packetData[port_num].txpacket_[PKT_ID] != packetData[port_num].rxpacket_[PKT_ID])
+  if (packetData[port_num].tx_packet[PKT_ID] != packetData[port_num].rx_packet[PKT_ID])
     rxPacket2(port_num);
 
-  if (packetData[port_num].communication_result_ == COMM_SUCCESS && packetData[port_num].txpacket_[PKT_ID] != BROADCAST_ID)
+  if (packetData[port_num].communication_result == COMM_SUCCESS && packetData[port_num].tx_packet[PKT_ID] != BROADCAST_ID)
   {
-    packetData[port_num].error_ = (uint8_t)packetData[port_num].rxpacket_[PKT_ERROR];
+    packetData[port_num].error = (uint8_t)packetData[port_num].rx_packet[PKT_ERROR];
   }
 }
 
@@ -545,273 +545,273 @@ void ping2(int port_num, uint8_t id)
 
 uint16_t pingGetModelNum2(int port_num, uint8_t id)
 {
-  packetData[port_num].communication_result_ = COMM_TX_FAIL;
+  packetData[port_num].communication_result = COMM_TX_FAIL;
 
-  packetData[port_num].txpacket_ = (uint8_t *)realloc(packetData[port_num].txpacket_, 10);
-  packetData[port_num].rxpacket_ = (uint8_t *)realloc(packetData[port_num].rxpacket_, 14);
+  packetData[port_num].tx_packet = (uint8_t *)realloc(packetData[port_num].tx_packet, 10);
+  packetData[port_num].rx_packet = (uint8_t *)realloc(packetData[port_num].rx_packet, 14);
 
   if (id >= BROADCAST_ID)
   {
-    packetData[port_num].communication_result_ = COMM_NOT_AVAILABLE;
+    packetData[port_num].communication_result = COMM_NOT_AVAILABLE;
     return 0;
   }
 
-  packetData[port_num].txpacket_[PKT_ID] = id;
-  packetData[port_num].txpacket_[PKT_LENGTH_L] = 3;
-  packetData[port_num].txpacket_[PKT_LENGTH_H] = 0;
-  packetData[port_num].txpacket_[PKT_INSTRUCTION] = INST_PING;
+  packetData[port_num].tx_packet[PKT_ID] = id;
+  packetData[port_num].tx_packet[PKT_LENGTH_L] = 3;
+  packetData[port_num].tx_packet[PKT_LENGTH_H] = 0;
+  packetData[port_num].tx_packet[PKT_INSTRUCTION] = INST_PING;
 
   txRxPacket2(port_num);
-  if (packetData[port_num].communication_result_ == COMM_SUCCESS)
-    return DXL_MAKEWORD(packetData[port_num].rxpacket_[PKT_PARAMETER0 + 1], packetData[port_num].rxpacket_[PKT_PARAMETER0 + 2]);
+  if (packetData[port_num].communication_result == COMM_SUCCESS)
+    return DXL_MAKEWORD(packetData[port_num].rx_packet[PKT_PARAMETER0 + 1], packetData[port_num].rx_packet[PKT_PARAMETER0 + 2]);
   return 0;
 }
 
 void broadcastPing2(int port_num)
 {
-  uint8_t _s;
-  int _id;
-  uint16_t _idx;
+  uint8_t s;
+  int id;
+  uint16_t idx;
 
-  packetData[port_num].broadcastping_id_list = (uint8_t *)calloc(255, sizeof(uint8_t));
+  packetData[port_num].broadcast_ping_id_list = (uint8_t *)calloc(255, sizeof(uint8_t));
 
-const int STATUS_LENGTH     = 14;
-  int _result = COMM_TX_FAIL;
+  const int STATUS_LENGTH     = 14;
+  int result = COMM_TX_FAIL;
 
-  for (_id = 0; _id < 255; _id++)
+  for (id = 0; id < 255; id++)
   {
-    packetData[port_num].broadcastping_id_list[_id] = 255;
+    packetData[port_num].broadcast_ping_id_list[id] = 255;
   }
 
-  uint16_t _rx_length = 0;
-  uint16_t _wait_length = STATUS_LENGTH * MAX_ID;
+  uint16_t rx_length = 0;
+  uint16_t wait_length = STATUS_LENGTH * MAX_ID;
 
-  packetData[port_num].txpacket_ = (uint8_t *)realloc(packetData[port_num].txpacket_, 10 * sizeof(uint8_t));
-  packetData[port_num].rxpacket_ = (uint8_t *)realloc(packetData[port_num].rxpacket_, STATUS_LENGTH * MAX_ID * sizeof(uint8_t));
+  packetData[port_num].tx_packet = (uint8_t *)realloc(packetData[port_num].tx_packet, 10 * sizeof(uint8_t));
+  packetData[port_num].rx_packet = (uint8_t *)realloc(packetData[port_num].rx_packet, STATUS_LENGTH * MAX_ID * sizeof(uint8_t));
 
-  packetData[port_num].txpacket_[PKT_ID] = BROADCAST_ID;
-  packetData[port_num].txpacket_[PKT_LENGTH_L] = 3;
-  packetData[port_num].txpacket_[PKT_LENGTH_H] = 0;
-  packetData[port_num].txpacket_[PKT_INSTRUCTION] = INST_PING;
+  packetData[port_num].tx_packet[PKT_ID] = BROADCAST_ID;
+  packetData[port_num].tx_packet[PKT_LENGTH_L] = 3;
+  packetData[port_num].tx_packet[PKT_LENGTH_H] = 0;
+  packetData[port_num].tx_packet[PKT_INSTRUCTION] = INST_PING;
 
   txPacket2(port_num);
-  if (packetData[port_num].communication_result_ != COMM_SUCCESS)
+  if (packetData[port_num].communication_result != COMM_SUCCESS)
   {
-    is_using_[port_num] = false;
+    g_is_using[port_num] = False;
     return;
   }
 
   // set rx timeout
-  setPacketTimeout(port_num, (uint16_t)(_wait_length * 30));
+  setPacketTimeout(port_num, (uint16_t)(wait_length * 30));
 
   while (1)
   {
-    _rx_length += readPort(port_num, &packetData[port_num].rxpacket_[_rx_length], _wait_length - _rx_length);
-    if (isPacketTimeout(port_num) == true)// || _rx_length >= _wait_length)
+    rx_length += readPort(port_num, &packetData[port_num].rx_packet[rx_length], wait_length - rx_length);
+    if (isPacketTimeout(port_num) == True)// || rx_length >= wait_length)
       break;
   }
 
-  is_using_[port_num] = false;
+  g_is_using[port_num] = False;
 
-  if (_rx_length == 0)
+  if (rx_length == 0)
   {
-    packetData[port_num].communication_result_ = COMM_RX_TIMEOUT;
+    packetData[port_num].communication_result = COMM_RX_TIMEOUT;
     return;
   }
 
   while (1)
   {
-    if (_rx_length < STATUS_LENGTH)
+    if (rx_length < STATUS_LENGTH)
     {
-      packetData[port_num].communication_result_ = COMM_RX_CORRUPT;
+      packetData[port_num].communication_result = COMM_RX_CORRUPT;
     }
 
-    _idx = 0;
+    idx = 0;
 
     // find packet header
-    for (_idx = 0; _idx < (_rx_length - 2); _idx++)
+    for (idx = 0; idx < (rx_length - 2); idx++)
     {
-      if (packetData[port_num].rxpacket_[_idx] == 0xFF && packetData[port_num].rxpacket_[_idx + 1] == 0xFF && packetData[port_num].rxpacket_[_idx + 2] == 0xFD)
+      if (packetData[port_num].rx_packet[idx] == 0xFF && packetData[port_num].rx_packet[idx + 1] == 0xFF && packetData[port_num].rx_packet[idx + 2] == 0xFD)
         break;
     }
 
-    if (_idx == 0)   // found at the beginning of the packet
+    if (idx == 0)   // found at the beginning of the packet
     {
       // verify CRC16
-      uint16_t crc = DXL_MAKEWORD(packetData[port_num].rxpacket_[STATUS_LENGTH - 2], packetData[port_num].rxpacket_[STATUS_LENGTH - 1]);
+      uint16_t crc = DXL_MAKEWORD(packetData[port_num].rx_packet[STATUS_LENGTH - 2], packetData[port_num].rx_packet[STATUS_LENGTH - 1]);
 
-      if (updateCRC(0, packetData[port_num].rxpacket_, STATUS_LENGTH - 2) == crc)
+      if (updateCRC(0, packetData[port_num].rx_packet, STATUS_LENGTH - 2) == crc)
       {
-        packetData[port_num].communication_result_ = COMM_SUCCESS;
+        packetData[port_num].communication_result = COMM_SUCCESS;
 
-        packetData[port_num].broadcastping_id_list[packetData[port_num].rxpacket_[PKT_ID]] = packetData[port_num].rxpacket_[PKT_ID];
+        packetData[port_num].broadcast_ping_id_list[packetData[port_num].rx_packet[PKT_ID]] = packetData[port_num].rx_packet[PKT_ID];
 
-        for (_s = 0; _s < _rx_length - STATUS_LENGTH; _s++)
+        for (s = 0; s < rx_length - STATUS_LENGTH; s++)
         {
-          packetData[port_num].rxpacket_[_s] = packetData[port_num].rxpacket_[STATUS_LENGTH + _s];
+          packetData[port_num].rx_packet[s] = packetData[port_num].rx_packet[STATUS_LENGTH + s];
         }
-        _rx_length -= STATUS_LENGTH;
+        rx_length -= STATUS_LENGTH;
 
-        if (_rx_length == 0)
+        if (rx_length == 0)
           return;
       }
       else
       {
-        _result = COMM_RX_CORRUPT;
+        result = COMM_RX_CORRUPT;
 
         // remove header (0xFF 0xFF 0xFD)
-        for (_s = 0; _s < _rx_length - 3; _s++)
+        for (s = 0; s < rx_length - 3; s++)
         {
-          packetData[port_num].rxpacket_[_s] = packetData[port_num].rxpacket_[3 + _s];
+          packetData[port_num].rx_packet[s] = packetData[port_num].rx_packet[3 + s];
         }
-        _rx_length -= 3;
+        rx_length -= 3;
       }
     }
     else
     {
       // remove unnecessary packets
-      for (_s = 0; _s < _rx_length - _idx; _s++)
+      for (s = 0; s < rx_length - idx; s++)
       {
-        packetData[port_num].rxpacket_[_s] = packetData[port_num].rxpacket_[_idx + _s];
+        packetData[port_num].rx_packet[s] = packetData[port_num].rx_packet[idx + s];
       }
-      _rx_length -= _idx;
+      rx_length -= idx;
     }
   }
 
-  packetData[port_num].communication_result_ = _result;
+  packetData[port_num].communication_result = result;
   return;
 }
 
-bool getBroadcastPingResult2(int port_num, int id)
+uint8_t getBroadcastPingResult2(int port_num, int id)
 {
-  if (packetData[port_num].broadcastping_id_list[id] == id)
+  if (packetData[port_num].broadcast_ping_id_list[id] == id)
   {
-    return true;
+    return True;
   }
   else
   {
-    return false;
+    return False;
   }
 }
 
 void action2(int port_num, uint8_t id)
 {
-  packetData[port_num].txpacket_ = (uint8_t *)realloc(packetData[port_num].txpacket_, 10);
+  packetData[port_num].tx_packet = (uint8_t *)realloc(packetData[port_num].tx_packet, 10);
 
-  packetData[port_num].txpacket_[PKT_ID] = id;
-  packetData[port_num].txpacket_[PKT_LENGTH_L] = 3;
-  packetData[port_num].txpacket_[PKT_LENGTH_H] = 0;
-  packetData[port_num].txpacket_[PKT_INSTRUCTION] = INST_ACTION;
+  packetData[port_num].tx_packet[PKT_ID] = id;
+  packetData[port_num].tx_packet[PKT_LENGTH_L] = 3;
+  packetData[port_num].tx_packet[PKT_LENGTH_H] = 0;
+  packetData[port_num].tx_packet[PKT_INSTRUCTION] = INST_ACTION;
 
   txRxPacket2(port_num);
 }
 
 void reboot2(int port_num, uint8_t id)
 {
-  packetData[port_num].txpacket_ = (uint8_t *)realloc(packetData[port_num].txpacket_, 10);
-  packetData[port_num].rxpacket_ = (uint8_t *)realloc(packetData[port_num].rxpacket_, 11);
+  packetData[port_num].tx_packet = (uint8_t *)realloc(packetData[port_num].tx_packet, 10);
+  packetData[port_num].rx_packet = (uint8_t *)realloc(packetData[port_num].rx_packet, 11);
 
-  packetData[port_num].txpacket_[PKT_ID] = id;
-  packetData[port_num].txpacket_[PKT_LENGTH_L] = 3;
-  packetData[port_num].txpacket_[PKT_LENGTH_H] = 0;
-  packetData[port_num].txpacket_[PKT_INSTRUCTION] = INST_REBOOT;
+  packetData[port_num].tx_packet[PKT_ID] = id;
+  packetData[port_num].tx_packet[PKT_LENGTH_L] = 3;
+  packetData[port_num].tx_packet[PKT_LENGTH_H] = 0;
+  packetData[port_num].tx_packet[PKT_INSTRUCTION] = INST_REBOOT;
 
   txRxPacket2(port_num);
 }
 
 void factoryReset2(int port_num, uint8_t id, uint8_t option)
 {
-  packetData[port_num].txpacket_ = (uint8_t *)realloc(packetData[port_num].txpacket_, 11);
-  packetData[port_num].rxpacket_ = (uint8_t *)realloc(packetData[port_num].rxpacket_, 11);
+  packetData[port_num].tx_packet = (uint8_t *)realloc(packetData[port_num].tx_packet, 11);
+  packetData[port_num].rx_packet = (uint8_t *)realloc(packetData[port_num].rx_packet, 11);
 
-  packetData[port_num].txpacket_[PKT_ID] = id;
-  packetData[port_num].txpacket_[PKT_LENGTH_L] = 4;
-  packetData[port_num].txpacket_[PKT_LENGTH_H] = 0;
-  packetData[port_num].txpacket_[PKT_INSTRUCTION] = INST_FACTORY_RESET;
-  packetData[port_num].txpacket_[PKT_PARAMETER0] = option;
+  packetData[port_num].tx_packet[PKT_ID] = id;
+  packetData[port_num].tx_packet[PKT_LENGTH_L] = 4;
+  packetData[port_num].tx_packet[PKT_LENGTH_H] = 0;
+  packetData[port_num].tx_packet[PKT_INSTRUCTION] = INST_FACTORY_RESET;
+  packetData[port_num].tx_packet[PKT_PARAMETER0] = option;
 
   txRxPacket2(port_num);
 }
 
 void readTx2(int port_num, uint8_t id, uint16_t address, uint16_t length)
 {
-  packetData[port_num].communication_result_ = COMM_TX_FAIL;
+  packetData[port_num].communication_result = COMM_TX_FAIL;
 
-  packetData[port_num].txpacket_ = (uint8_t *)malloc(14);
+  packetData[port_num].tx_packet = (uint8_t *)malloc(14);
 
   if (id >= BROADCAST_ID)
   {
-    packetData[port_num].communication_result_ = COMM_NOT_AVAILABLE;
+    packetData[port_num].communication_result = COMM_NOT_AVAILABLE;
     return;
   }
 
-  packetData[port_num].txpacket_[PKT_ID] = id;
-  packetData[port_num].txpacket_[PKT_LENGTH_L] = 7;
-  packetData[port_num].txpacket_[PKT_LENGTH_H] = 0;
-  packetData[port_num].txpacket_[PKT_INSTRUCTION] = INST_READ;
-  packetData[port_num].txpacket_[PKT_PARAMETER0 + 0] = (uint8_t)DXL_LOBYTE(address);
-  packetData[port_num].txpacket_[PKT_PARAMETER0 + 1] = (uint8_t)DXL_HIBYTE(address);
-  packetData[port_num].txpacket_[PKT_PARAMETER0 + 2] = (uint8_t)DXL_LOBYTE(length);
-  packetData[port_num].txpacket_[PKT_PARAMETER0 + 3] = (uint8_t)DXL_HIBYTE(length);
+  packetData[port_num].tx_packet[PKT_ID] = id;
+  packetData[port_num].tx_packet[PKT_LENGTH_L] = 7;
+  packetData[port_num].tx_packet[PKT_LENGTH_H] = 0;
+  packetData[port_num].tx_packet[PKT_INSTRUCTION] = INST_READ;
+  packetData[port_num].tx_packet[PKT_PARAMETER0 + 0] = (uint8_t)DXL_LOBYTE(address);
+  packetData[port_num].tx_packet[PKT_PARAMETER0 + 1] = (uint8_t)DXL_HIBYTE(address);
+  packetData[port_num].tx_packet[PKT_PARAMETER0 + 2] = (uint8_t)DXL_LOBYTE(length);
+  packetData[port_num].tx_packet[PKT_PARAMETER0 + 3] = (uint8_t)DXL_HIBYTE(length);
 
   txPacket2(port_num);
 
   // set packet timeout
-  if (packetData[port_num].communication_result_ == COMM_SUCCESS)
+  if (packetData[port_num].communication_result == COMM_SUCCESS)
     setPacketTimeout(port_num, (uint16_t)(length + 11));
 }
 
 void readRx2(int port_num, uint16_t length)
 {
-  uint8_t _s;
+  uint8_t s;
 
-  packetData[port_num].communication_result_ = COMM_TX_FAIL;
-  packetData[port_num].rxpacket_ = (uint8_t *)realloc(packetData[port_num].rxpacket_, RXPACKET_MAX_LEN);  //(length + 11 + (length/3));  // (length/3): consider stuffing
+  packetData[port_num].communication_result = COMM_TX_FAIL;
+  packetData[port_num].rx_packet = (uint8_t *)realloc(packetData[port_num].rx_packet, RXPACKET_MAX_LEN);  //(length + 11 + (length/3));  // (length/3): consider stuffing
 
   rxPacket2(port_num);
-  if (packetData[port_num].communication_result_ == COMM_SUCCESS)
+  if (packetData[port_num].communication_result == COMM_SUCCESS)
   {
-    if (packetData[port_num].error_ != 0)
-      packetData[port_num].error_ = (uint8_t)packetData[port_num].rxpacket_[PKT_ERROR];
-    for (_s = 0; _s < length; _s++)
+    if (packetData[port_num].error != 0)
+      packetData[port_num].error = (uint8_t)packetData[port_num].rx_packet[PKT_ERROR];
+    for (s = 0; s < length; s++)
     {
-      packetData[port_num].data_read_[_s] = packetData[port_num].rxpacket_[PKT_PARAMETER0 + 1 + _s];
+      packetData[port_num].data_read[s] = packetData[port_num].rx_packet[PKT_PARAMETER0 + 1 + s];
     }
   }
 }
 
 void readTxRx2(int port_num, uint8_t id, uint16_t address, uint16_t length)
 {
-  uint8_t _s;
+  uint8_t s;
 
-  packetData[port_num].communication_result_ = COMM_TX_FAIL;
+  packetData[port_num].communication_result = COMM_TX_FAIL;
 
-  packetData[port_num].txpacket_ = (uint8_t *)realloc(packetData[port_num].txpacket_, 14);
-  packetData[port_num].rxpacket_ = (uint8_t *)realloc(packetData[port_num].rxpacket_, RXPACKET_MAX_LEN);  //(length + 11 + (length/3));  // (length/3): consider stuffing
+  packetData[port_num].tx_packet = (uint8_t *)realloc(packetData[port_num].tx_packet, 14);
+  packetData[port_num].rx_packet = (uint8_t *)realloc(packetData[port_num].rx_packet, RXPACKET_MAX_LEN);  //(length + 11 + (length/3));  // (length/3): consider stuffing
 
   if (id >= BROADCAST_ID)
   {
-    packetData[port_num].communication_result_ = COMM_NOT_AVAILABLE;
+    packetData[port_num].communication_result = COMM_NOT_AVAILABLE;
     return;
   }
 
-  packetData[port_num].txpacket_[PKT_ID] = id;
-  packetData[port_num].txpacket_[PKT_LENGTH_L] = 7;
-  packetData[port_num].txpacket_[PKT_LENGTH_H] = 0;
-  packetData[port_num].txpacket_[PKT_INSTRUCTION] = INST_READ;
-  packetData[port_num].txpacket_[PKT_PARAMETER0 + 0] = (uint8_t)DXL_LOBYTE(address);
-  packetData[port_num].txpacket_[PKT_PARAMETER0 + 1] = (uint8_t)DXL_HIBYTE(address);
-  packetData[port_num].txpacket_[PKT_PARAMETER0 + 2] = (uint8_t)DXL_LOBYTE(length);
-  packetData[port_num].txpacket_[PKT_PARAMETER0 + 3] = (uint8_t)DXL_HIBYTE(length);
+  packetData[port_num].tx_packet[PKT_ID] = id;
+  packetData[port_num].tx_packet[PKT_LENGTH_L] = 7;
+  packetData[port_num].tx_packet[PKT_LENGTH_H] = 0;
+  packetData[port_num].tx_packet[PKT_INSTRUCTION] = INST_READ;
+  packetData[port_num].tx_packet[PKT_PARAMETER0 + 0] = (uint8_t)DXL_LOBYTE(address);
+  packetData[port_num].tx_packet[PKT_PARAMETER0 + 1] = (uint8_t)DXL_HIBYTE(address);
+  packetData[port_num].tx_packet[PKT_PARAMETER0 + 2] = (uint8_t)DXL_LOBYTE(length);
+  packetData[port_num].tx_packet[PKT_PARAMETER0 + 3] = (uint8_t)DXL_HIBYTE(length);
 
   txRxPacket2(port_num);
-  if (packetData[port_num].communication_result_ == COMM_SUCCESS)
+  if (packetData[port_num].communication_result == COMM_SUCCESS)
   {
-    if (packetData[port_num].error_ != 0)
-      packetData[port_num].error_ = (uint8_t)packetData[port_num].rxpacket_[PKT_ERROR];
-    for (_s = 0; _s < length; _s++)
+    if (packetData[port_num].error != 0)
+      packetData[port_num].error = (uint8_t)packetData[port_num].rx_packet[PKT_ERROR];
+    for (s = 0; s < length; s++)
     {
-      packetData[port_num].data_read_[_s] = packetData[port_num].rxpacket_[PKT_PARAMETER0 + 1 + _s];
+      packetData[port_num].data_read[s] = packetData[port_num].rx_packet[PKT_PARAMETER0 + 1 + s];
     }
   }
 }
@@ -822,20 +822,20 @@ void read1ByteTx2(int port_num, uint8_t id, uint16_t address)
 }
 uint8_t read1ByteRx2(int port_num)
 {
-  packetData[port_num].data_read_ = (uint8_t *)realloc(packetData[port_num].data_read_, 1 * sizeof(uint8_t));
-  packetData[port_num].data_read_[0] = 0;
+  packetData[port_num].data_read = (uint8_t *)realloc(packetData[port_num].data_read, 1 * sizeof(uint8_t));
+  packetData[port_num].data_read[0] = 0;
   readRx2(port_num, 1);
-  if (packetData[port_num].communication_result_ == COMM_SUCCESS)
-    return packetData[port_num].data_read_[0];
+  if (packetData[port_num].communication_result == COMM_SUCCESS)
+    return packetData[port_num].data_read[0];
   return 0;
 }
 uint8_t read1ByteTxRx2(int port_num, uint8_t id, uint16_t address)
 {
-  packetData[port_num].data_read_ = (uint8_t *)realloc(packetData[port_num].data_read_, 1 * sizeof(uint8_t));
-  packetData[port_num].data_read_[0] = 0;
+  packetData[port_num].data_read = (uint8_t *)realloc(packetData[port_num].data_read, 1 * sizeof(uint8_t));
+  packetData[port_num].data_read[0] = 0;
   readTxRx2(port_num, id, address, 1);
-  if (packetData[port_num].communication_result_ == COMM_SUCCESS)
-    return packetData[port_num].data_read_[0];
+  if (packetData[port_num].communication_result == COMM_SUCCESS)
+    return packetData[port_num].data_read[0];
   return 0;
 }
 
@@ -845,22 +845,22 @@ void read2ByteTx2(int port_num, uint8_t id, uint16_t address)
 }
 uint16_t read2ByteRx2(int port_num)
 {
-  packetData[port_num].data_read_ = (uint8_t *)realloc(packetData[port_num].data_read_, 2 * sizeof(uint8_t));
-  packetData[port_num].data_read_[0] = 0;
-  packetData[port_num].data_read_[1] = 0;
+  packetData[port_num].data_read = (uint8_t *)realloc(packetData[port_num].data_read, 2 * sizeof(uint8_t));
+  packetData[port_num].data_read[0] = 0;
+  packetData[port_num].data_read[1] = 0;
   readRx2(port_num, 2);
-  if (packetData[port_num].communication_result_ == COMM_SUCCESS)
-    return DXL_MAKEWORD(packetData[port_num].data_read_[0], packetData[port_num].data_read_[1]);
+  if (packetData[port_num].communication_result == COMM_SUCCESS)
+    return DXL_MAKEWORD(packetData[port_num].data_read[0], packetData[port_num].data_read[1]);
   return 0;
 }
 uint16_t read2ByteTxRx2(int port_num, uint8_t id, uint16_t address)
 {
-  packetData[port_num].data_read_ = (uint8_t *)realloc(packetData[port_num].data_read_, 2 * sizeof(uint8_t));
-  packetData[port_num].data_read_[0] = 0;
-  packetData[port_num].data_read_[1] = 0;
+  packetData[port_num].data_read = (uint8_t *)realloc(packetData[port_num].data_read, 2 * sizeof(uint8_t));
+  packetData[port_num].data_read[0] = 0;
+  packetData[port_num].data_read[1] = 0;
   readTxRx2(port_num, id, address, 2);
-  if (packetData[port_num].communication_result_ == COMM_SUCCESS)
-    return DXL_MAKEWORD(packetData[port_num].data_read_[0], packetData[port_num].data_read_[1]);
+  if (packetData[port_num].communication_result == COMM_SUCCESS)
+    return DXL_MAKEWORD(packetData[port_num].data_read[0], packetData[port_num].data_read[1]);
   return 0;
 }
 
@@ -870,73 +870,73 @@ void read4ByteTx2(int port_num, uint8_t id, uint16_t address)
 }
 uint32_t read4ByteRx2(int port_num)
 {
-  packetData[port_num].data_read_ = (uint8_t *)realloc(packetData[port_num].data_read_, 4 * sizeof(uint8_t));
-  packetData[port_num].data_read_[0] = 0;
-  packetData[port_num].data_read_[1] = 0;
-  packetData[port_num].data_read_[2] = 0;
-  packetData[port_num].data_read_[3] = 0;
+  packetData[port_num].data_read = (uint8_t *)realloc(packetData[port_num].data_read, 4 * sizeof(uint8_t));
+  packetData[port_num].data_read[0] = 0;
+  packetData[port_num].data_read[1] = 0;
+  packetData[port_num].data_read[2] = 0;
+  packetData[port_num].data_read[3] = 0;
   readRx2(port_num, 4);
-  if (packetData[port_num].communication_result_ == COMM_SUCCESS)
-    return DXL_MAKEDWORD(DXL_MAKEWORD(packetData[port_num].data_read_[0], packetData[port_num].data_read_[1]), DXL_MAKEWORD(packetData[port_num].data_read_[2], packetData[port_num].data_read_[3]));
+  if (packetData[port_num].communication_result == COMM_SUCCESS)
+    return DXL_MAKEDWORD(DXL_MAKEWORD(packetData[port_num].data_read[0], packetData[port_num].data_read[1]), DXL_MAKEWORD(packetData[port_num].data_read[2], packetData[port_num].data_read[3]));
   return 0;
 }
 uint32_t read4ByteTxRx2(int port_num, uint8_t id, uint16_t address)
 {
-  packetData[port_num].data_read_ = (uint8_t *)realloc(packetData[port_num].data_read_, 4 * sizeof(uint8_t));
-  packetData[port_num].data_read_[0] = 0;
-  packetData[port_num].data_read_[1] = 0;
-  packetData[port_num].data_read_[2] = 0;
-  packetData[port_num].data_read_[3] = 0;
+  packetData[port_num].data_read = (uint8_t *)realloc(packetData[port_num].data_read, 4 * sizeof(uint8_t));
+  packetData[port_num].data_read[0] = 0;
+  packetData[port_num].data_read[1] = 0;
+  packetData[port_num].data_read[2] = 0;
+  packetData[port_num].data_read[3] = 0;
   readTxRx2(port_num, id, address, 4);
-  if (packetData[port_num].communication_result_ == COMM_SUCCESS)
-    return DXL_MAKEDWORD(DXL_MAKEWORD(packetData[port_num].data_read_[0], packetData[port_num].data_read_[1]), DXL_MAKEWORD(packetData[port_num].data_read_[2], packetData[port_num].data_read_[3]));
+  if (packetData[port_num].communication_result == COMM_SUCCESS)
+    return DXL_MAKEDWORD(DXL_MAKEWORD(packetData[port_num].data_read[0], packetData[port_num].data_read[1]), DXL_MAKEWORD(packetData[port_num].data_read[2], packetData[port_num].data_read[3]));
   return 0;
 }
 
 
 void writeTxOnly2(int port_num, uint8_t id, uint16_t address, uint16_t length)
 {
-  uint8_t _s;
+  uint8_t s;
 
-  packetData[port_num].communication_result_ = COMM_TX_FAIL;
+  packetData[port_num].communication_result = COMM_TX_FAIL;
 
-  packetData[port_num].txpacket_ = (uint8_t *)realloc(packetData[port_num].txpacket_, length + 12);
+  packetData[port_num].tx_packet = (uint8_t *)realloc(packetData[port_num].tx_packet, length + 12);
 
-  packetData[port_num].txpacket_[PKT_ID] = id;
-  packetData[port_num].txpacket_[PKT_LENGTH_L] = DXL_LOBYTE(length + 5);
-  packetData[port_num].txpacket_[PKT_LENGTH_H] = DXL_HIBYTE(length + 5);
-  packetData[port_num].txpacket_[PKT_INSTRUCTION] = INST_WRITE;
-  packetData[port_num].txpacket_[PKT_PARAMETER0 + 0] = (uint8_t)DXL_LOBYTE(address);
-  packetData[port_num].txpacket_[PKT_PARAMETER0 + 1] = (uint8_t)DXL_HIBYTE(address);
+  packetData[port_num].tx_packet[PKT_ID] = id;
+  packetData[port_num].tx_packet[PKT_LENGTH_L] = DXL_LOBYTE(length + 5);
+  packetData[port_num].tx_packet[PKT_LENGTH_H] = DXL_HIBYTE(length + 5);
+  packetData[port_num].tx_packet[PKT_INSTRUCTION] = INST_WRITE;
+  packetData[port_num].tx_packet[PKT_PARAMETER0 + 0] = (uint8_t)DXL_LOBYTE(address);
+  packetData[port_num].tx_packet[PKT_PARAMETER0 + 1] = (uint8_t)DXL_HIBYTE(address);
 
-  for (_s = 0; _s < length; _s++)
+  for (s = 0; s < length; s++)
   {
-    packetData[port_num].txpacket_[PKT_PARAMETER0 + 2 + _s] = packetData[port_num].data_write_[_s];
+    packetData[port_num].tx_packet[PKT_PARAMETER0 + 2 + s] = packetData[port_num].data_write[s];
   }
 
   txPacket2(port_num);
-  is_using_[port_num] = false;
+  g_is_using[port_num] = False;
 }
 
 void writeTxRx2(int port_num, uint8_t id, uint16_t address, uint16_t length)
 {
-  uint8_t _s;
+  uint8_t s;
 
-  packetData[port_num].communication_result_ = COMM_TX_FAIL;
+  packetData[port_num].communication_result = COMM_TX_FAIL;
 
-  packetData[port_num].txpacket_ = (uint8_t *)realloc(packetData[port_num].txpacket_, length + 12);
-  packetData[port_num].rxpacket_ = (uint8_t *)realloc(packetData[port_num].rxpacket_, 11);
+  packetData[port_num].tx_packet = (uint8_t *)realloc(packetData[port_num].tx_packet, length + 12);
+  packetData[port_num].rx_packet = (uint8_t *)realloc(packetData[port_num].rx_packet, 11);
 
-  packetData[port_num].txpacket_[PKT_ID] = id;
-  packetData[port_num].txpacket_[PKT_LENGTH_L] = DXL_LOBYTE(length + 5);
-  packetData[port_num].txpacket_[PKT_LENGTH_H] = DXL_HIBYTE(length + 5);
-  packetData[port_num].txpacket_[PKT_INSTRUCTION] = INST_WRITE;
-  packetData[port_num].txpacket_[PKT_PARAMETER0 + 0] = (uint8_t)DXL_LOBYTE(address);
-  packetData[port_num].txpacket_[PKT_PARAMETER0 + 1] = (uint8_t)DXL_HIBYTE(address);
+  packetData[port_num].tx_packet[PKT_ID] = id;
+  packetData[port_num].tx_packet[PKT_LENGTH_L] = DXL_LOBYTE(length + 5);
+  packetData[port_num].tx_packet[PKT_LENGTH_H] = DXL_HIBYTE(length + 5);
+  packetData[port_num].tx_packet[PKT_INSTRUCTION] = INST_WRITE;
+  packetData[port_num].tx_packet[PKT_PARAMETER0 + 0] = (uint8_t)DXL_LOBYTE(address);
+  packetData[port_num].tx_packet[PKT_PARAMETER0 + 1] = (uint8_t)DXL_HIBYTE(address);
 
-  for (_s = 0; _s < length; _s++)
+  for (s = 0; s < length; s++)
   {
-    packetData[port_num].txpacket_[PKT_PARAMETER0 + 2 + _s] = packetData[port_num].data_write_[_s];
+    packetData[port_num].tx_packet[PKT_PARAMETER0 + 2 + s] = packetData[port_num].data_write[s];
   }
 
   txRxPacket2(port_num);
@@ -944,94 +944,94 @@ void writeTxRx2(int port_num, uint8_t id, uint16_t address, uint16_t length)
 
 void write1ByteTxOnly2(int port_num, uint8_t id, uint16_t address, uint8_t data)
 {
-  packetData[port_num].data_write_ = (uint8_t *)realloc(packetData[port_num].data_write_, 1 * sizeof(uint8_t));
-  packetData[port_num].data_write_[0] = data;
+  packetData[port_num].data_write = (uint8_t *)realloc(packetData[port_num].data_write, 1 * sizeof(uint8_t));
+  packetData[port_num].data_write[0] = data;
   writeTxOnly2(port_num, id, address, 1);
 }
 void write1ByteTxRx2(int port_num, uint8_t id, uint16_t address, uint8_t data)
 {
-  packetData[port_num].data_write_ = (uint8_t *)realloc(packetData[port_num].data_write_, 1 * sizeof(uint8_t));
-  packetData[port_num].data_write_[0] = data;
+  packetData[port_num].data_write = (uint8_t *)realloc(packetData[port_num].data_write, 1 * sizeof(uint8_t));
+  packetData[port_num].data_write[0] = data;
   writeTxRx2(port_num, id, address, 1);
 }
 
 void write2ByteTxOnly2(int port_num, uint8_t id, uint16_t address, uint16_t data)
 {
-  packetData[port_num].data_write_ = (uint8_t *)realloc(packetData[port_num].data_write_, 2 * sizeof(uint8_t));
-  packetData[port_num].data_write_[0] = DXL_LOBYTE(data);
-  packetData[port_num].data_write_[1] = DXL_HIBYTE(data);
+  packetData[port_num].data_write = (uint8_t *)realloc(packetData[port_num].data_write, 2 * sizeof(uint8_t));
+  packetData[port_num].data_write[0] = DXL_LOBYTE(data);
+  packetData[port_num].data_write[1] = DXL_HIBYTE(data);
   writeTxOnly2(port_num, id, address, 2);
 }
 void write2ByteTxRx2(int port_num, uint8_t id, uint16_t address, uint16_t data)
 {
-  packetData[port_num].data_write_ = (uint8_t *)realloc(packetData[port_num].data_write_, 2 * sizeof(uint8_t));
-  packetData[port_num].data_write_[0] = DXL_LOBYTE(data);
-  packetData[port_num].data_write_[1] = DXL_HIBYTE(data);
+  packetData[port_num].data_write = (uint8_t *)realloc(packetData[port_num].data_write, 2 * sizeof(uint8_t));
+  packetData[port_num].data_write[0] = DXL_LOBYTE(data);
+  packetData[port_num].data_write[1] = DXL_HIBYTE(data);
   writeTxRx2(port_num, id, address, 2);
 }
 
 void write4ByteTxOnly2(int port_num, uint8_t id, uint16_t address, uint32_t data)
 {
-  packetData[port_num].data_write_ = (uint8_t *)realloc(packetData[port_num].data_write_, 4 * sizeof(uint8_t));
-  packetData[port_num].data_write_[0] = DXL_LOBYTE(DXL_LOWORD(data));
-  packetData[port_num].data_write_[1] = DXL_HIBYTE(DXL_LOWORD(data));
-  packetData[port_num].data_write_[2] = DXL_LOBYTE(DXL_HIWORD(data));
-  packetData[port_num].data_write_[3] = DXL_HIBYTE(DXL_HIWORD(data));
+  packetData[port_num].data_write = (uint8_t *)realloc(packetData[port_num].data_write, 4 * sizeof(uint8_t));
+  packetData[port_num].data_write[0] = DXL_LOBYTE(DXL_LOWORD(data));
+  packetData[port_num].data_write[1] = DXL_HIBYTE(DXL_LOWORD(data));
+  packetData[port_num].data_write[2] = DXL_LOBYTE(DXL_HIWORD(data));
+  packetData[port_num].data_write[3] = DXL_HIBYTE(DXL_HIWORD(data));
   writeTxOnly2(port_num, id, address, 4);
 }
 void write4ByteTxRx2(int port_num, uint8_t id, uint16_t address, uint32_t data)
 {
-  packetData[port_num].data_write_ = (uint8_t *)realloc(packetData[port_num].data_write_, 4 * sizeof(uint8_t));
-  packetData[port_num].data_write_[0] = DXL_LOBYTE(DXL_LOWORD(data));
-  packetData[port_num].data_write_[1] = DXL_HIBYTE(DXL_LOWORD(data));
-  packetData[port_num].data_write_[2] = DXL_LOBYTE(DXL_HIWORD(data));
-  packetData[port_num].data_write_[3] = DXL_HIBYTE(DXL_HIWORD(data));
+  packetData[port_num].data_write = (uint8_t *)realloc(packetData[port_num].data_write, 4 * sizeof(uint8_t));
+  packetData[port_num].data_write[0] = DXL_LOBYTE(DXL_LOWORD(data));
+  packetData[port_num].data_write[1] = DXL_HIBYTE(DXL_LOWORD(data));
+  packetData[port_num].data_write[2] = DXL_LOBYTE(DXL_HIWORD(data));
+  packetData[port_num].data_write[3] = DXL_HIBYTE(DXL_HIWORD(data));
   writeTxRx2(port_num, id, address, 4);
 }
 
 void regWriteTxOnly2(int port_num, uint8_t id, uint16_t address, uint16_t length)
 {
-  uint8_t _s;
+  uint8_t s;
 
-  packetData[port_num].communication_result_ = COMM_TX_FAIL;
+  packetData[port_num].communication_result = COMM_TX_FAIL;
 
-  packetData[port_num].txpacket_ = (uint8_t *)realloc(packetData[port_num].txpacket_, length + 12);
+  packetData[port_num].tx_packet = (uint8_t *)realloc(packetData[port_num].tx_packet, length + 12);
 
-  packetData[port_num].txpacket_[PKT_ID] = id;
-  packetData[port_num].txpacket_[PKT_LENGTH_L] = DXL_LOBYTE(length + 5);
-  packetData[port_num].txpacket_[PKT_LENGTH_H] = DXL_HIBYTE(length + 5);
-  packetData[port_num].txpacket_[PKT_INSTRUCTION] = INST_REG_WRITE;
-  packetData[port_num].txpacket_[PKT_PARAMETER0 + 0] = (uint8_t)DXL_LOBYTE(address);
-  packetData[port_num].txpacket_[PKT_PARAMETER0 + 1] = (uint8_t)DXL_HIBYTE(address);
+  packetData[port_num].tx_packet[PKT_ID] = id;
+  packetData[port_num].tx_packet[PKT_LENGTH_L] = DXL_LOBYTE(length + 5);
+  packetData[port_num].tx_packet[PKT_LENGTH_H] = DXL_HIBYTE(length + 5);
+  packetData[port_num].tx_packet[PKT_INSTRUCTION] = INST_REG_WRITE;
+  packetData[port_num].tx_packet[PKT_PARAMETER0 + 0] = (uint8_t)DXL_LOBYTE(address);
+  packetData[port_num].tx_packet[PKT_PARAMETER0 + 1] = (uint8_t)DXL_HIBYTE(address);
 
-  for (_s = 0; _s < length; _s++)
+  for (s = 0; s < length; s++)
   {
-    packetData[port_num].txpacket_[PKT_PARAMETER0 + 2 + _s] = packetData[port_num].data_write_[_s];
+    packetData[port_num].tx_packet[PKT_PARAMETER0 + 2 + s] = packetData[port_num].data_write[s];
   }
 
   txPacket2(port_num);
-  is_using_[port_num] = false;
+  g_is_using[port_num] = False;
 }
 
 void regWriteTxRx2(int port_num, uint8_t id, uint16_t address, uint16_t length)
 {
-  uint8_t _s;
+  uint8_t s;
 
-  packetData[port_num].communication_result_ = COMM_TX_FAIL;
+  packetData[port_num].communication_result = COMM_TX_FAIL;
 
-  packetData[port_num].txpacket_ = (uint8_t *)realloc(packetData[port_num].txpacket_, length + 12);
-  packetData[port_num].rxpacket_ = (uint8_t *)realloc(packetData[port_num].rxpacket_, 11);
+  packetData[port_num].tx_packet = (uint8_t *)realloc(packetData[port_num].tx_packet, length + 12);
+  packetData[port_num].rx_packet = (uint8_t *)realloc(packetData[port_num].rx_packet, 11);
 
-  packetData[port_num].txpacket_[PKT_ID] = id;
-  packetData[port_num].txpacket_[PKT_LENGTH_L] = DXL_LOBYTE(length + 5);
-  packetData[port_num].txpacket_[PKT_LENGTH_H] = DXL_HIBYTE(length + 5);
-  packetData[port_num].txpacket_[PKT_INSTRUCTION] = INST_REG_WRITE;
-  packetData[port_num].txpacket_[PKT_PARAMETER0 + 0] = (uint8_t)DXL_LOBYTE(address);
-  packetData[port_num].txpacket_[PKT_PARAMETER0 + 1] = (uint8_t)DXL_HIBYTE(address);
+  packetData[port_num].tx_packet[PKT_ID] = id;
+  packetData[port_num].tx_packet[PKT_LENGTH_L] = DXL_LOBYTE(length + 5);
+  packetData[port_num].tx_packet[PKT_LENGTH_H] = DXL_HIBYTE(length + 5);
+  packetData[port_num].tx_packet[PKT_INSTRUCTION] = INST_REG_WRITE;
+  packetData[port_num].tx_packet[PKT_PARAMETER0 + 0] = (uint8_t)DXL_LOBYTE(address);
+  packetData[port_num].tx_packet[PKT_PARAMETER0 + 1] = (uint8_t)DXL_HIBYTE(address);
 
-  for (_s = 0; _s < length; _s++)
+  for (s = 0; s < length; s++)
   {
-    packetData[port_num].txpacket_[PKT_PARAMETER0 + 2 + _s] = packetData[port_num].data_write_[_s];
+    packetData[port_num].tx_packet[PKT_PARAMETER0 + 2 + s] = packetData[port_num].data_write[s];
   }
 
   txRxPacket2(port_num);
@@ -1039,54 +1039,54 @@ void regWriteTxRx2(int port_num, uint8_t id, uint16_t address, uint16_t length)
 
 void syncReadTx2(int port_num, uint16_t start_address, uint16_t data_length, uint16_t param_length)
 {
-  uint8_t _s;
+  uint8_t s;
 
-  packetData[port_num].communication_result_ = COMM_TX_FAIL;
+  packetData[port_num].communication_result = COMM_TX_FAIL;
 
-  packetData[port_num].txpacket_ = (uint8_t *)realloc(packetData[port_num].txpacket_, param_length + 14);
+  packetData[port_num].tx_packet = (uint8_t *)realloc(packetData[port_num].tx_packet, param_length + 14);
   // 14: HEADER0 HEADER1 HEADER2 RESERVED ID LEN_L LEN_H INST START_ADDR_L START_ADDR_H DATA_LEN_L DATA_LEN_H CRC16_L CRC16_H
 
-  packetData[port_num].txpacket_[PKT_ID] = BROADCAST_ID;
-  packetData[port_num].txpacket_[PKT_LENGTH_L] = DXL_LOBYTE(param_length + 7); // 7: INST START_ADDR_L START_ADDR_H DATA_LEN_L DATA_LEN_H CRC16_L CRC16_H
-  packetData[port_num].txpacket_[PKT_LENGTH_H] = DXL_HIBYTE(param_length + 7); // 7: INST START_ADDR_L START_ADDR_H DATA_LEN_L DATA_LEN_H CRC16_L CRC16_H
-  packetData[port_num].txpacket_[PKT_INSTRUCTION] = INST_SYNC_READ;
-  packetData[port_num].txpacket_[PKT_PARAMETER0 + 0] = DXL_LOBYTE(start_address);
-  packetData[port_num].txpacket_[PKT_PARAMETER0 + 1] = DXL_HIBYTE(start_address);
-  packetData[port_num].txpacket_[PKT_PARAMETER0 + 2] = DXL_LOBYTE(data_length);
-  packetData[port_num].txpacket_[PKT_PARAMETER0 + 3] = DXL_HIBYTE(data_length);
+  packetData[port_num].tx_packet[PKT_ID] = BROADCAST_ID;
+  packetData[port_num].tx_packet[PKT_LENGTH_L] = DXL_LOBYTE(param_length + 7); // 7: INST START_ADDR_L START_ADDR_H DATA_LEN_L DATA_LEN_H CRC16_L CRC16_H
+  packetData[port_num].tx_packet[PKT_LENGTH_H] = DXL_HIBYTE(param_length + 7); // 7: INST START_ADDR_L START_ADDR_H DATA_LEN_L DATA_LEN_H CRC16_L CRC16_H
+  packetData[port_num].tx_packet[PKT_INSTRUCTION] = INST_SYNC_READ;
+  packetData[port_num].tx_packet[PKT_PARAMETER0 + 0] = DXL_LOBYTE(start_address);
+  packetData[port_num].tx_packet[PKT_PARAMETER0 + 1] = DXL_HIBYTE(start_address);
+  packetData[port_num].tx_packet[PKT_PARAMETER0 + 2] = DXL_LOBYTE(data_length);
+  packetData[port_num].tx_packet[PKT_PARAMETER0 + 3] = DXL_HIBYTE(data_length);
 
-  for (_s = 0; _s < param_length; _s++)
+  for (s = 0; s < param_length; s++)
   {
-    packetData[port_num].txpacket_[PKT_PARAMETER0 + 4 + _s] = packetData[port_num].data_write_[_s];
+    packetData[port_num].tx_packet[PKT_PARAMETER0 + 4 + s] = packetData[port_num].data_write[s];
   }
 
   txPacket2(port_num);
 
-  if (packetData[port_num].communication_result_ == COMM_SUCCESS)
+  if (packetData[port_num].communication_result == COMM_SUCCESS)
     setPacketTimeout(port_num, (uint16_t)((11 + data_length) * param_length));
 }
 
 void syncWriteTxOnly2(int port_num, uint16_t start_address, uint16_t data_length, uint16_t param_length)
 {
-  uint8_t _s;
+  uint8_t s;
 
-  packetData[port_num].communication_result_ = COMM_TX_FAIL;
+  packetData[port_num].communication_result = COMM_TX_FAIL;
 
-  packetData[port_num].txpacket_ = (uint8_t *)realloc(packetData[port_num].txpacket_, param_length + 14);
+  packetData[port_num].tx_packet = (uint8_t *)realloc(packetData[port_num].tx_packet, param_length + 14);
   // 14: HEADER0 HEADER1 HEADER2 RESERVED ID LEN_L LEN_H INST START_ADDR_L START_ADDR_H DATA_LEN_L DATA_LEN_H CRC16_L CRC16_H
 
-  packetData[port_num].txpacket_[PKT_ID] = BROADCAST_ID;
-  packetData[port_num].txpacket_[PKT_LENGTH_L] = DXL_LOBYTE(param_length + 7); // 7: INST START_ADDR_L START_ADDR_H DATA_LEN_L DATA_LEN_H CRC16_L CRC16_H
-  packetData[port_num].txpacket_[PKT_LENGTH_H] = DXL_HIBYTE(param_length + 7); // 7: INST START_ADDR_L START_ADDR_H DATA_LEN_L DATA_LEN_H CRC16_L CRC16_H
-  packetData[port_num].txpacket_[PKT_INSTRUCTION] = INST_SYNC_WRITE;
-  packetData[port_num].txpacket_[PKT_PARAMETER0 + 0] = DXL_LOBYTE(start_address);
-  packetData[port_num].txpacket_[PKT_PARAMETER0 + 1] = DXL_HIBYTE(start_address);
-  packetData[port_num].txpacket_[PKT_PARAMETER0 + 2] = DXL_LOBYTE(data_length);
-  packetData[port_num].txpacket_[PKT_PARAMETER0 + 3] = DXL_HIBYTE(data_length);
+  packetData[port_num].tx_packet[PKT_ID] = BROADCAST_ID;
+  packetData[port_num].tx_packet[PKT_LENGTH_L] = DXL_LOBYTE(param_length + 7); // 7: INST START_ADDR_L START_ADDR_H DATA_LEN_L DATA_LEN_H CRC16_L CRC16_H
+  packetData[port_num].tx_packet[PKT_LENGTH_H] = DXL_HIBYTE(param_length + 7); // 7: INST START_ADDR_L START_ADDR_H DATA_LEN_L DATA_LEN_H CRC16_L CRC16_H
+  packetData[port_num].tx_packet[PKT_INSTRUCTION] = INST_SYNC_WRITE;
+  packetData[port_num].tx_packet[PKT_PARAMETER0 + 0] = DXL_LOBYTE(start_address);
+  packetData[port_num].tx_packet[PKT_PARAMETER0 + 1] = DXL_HIBYTE(start_address);
+  packetData[port_num].tx_packet[PKT_PARAMETER0 + 2] = DXL_LOBYTE(data_length);
+  packetData[port_num].tx_packet[PKT_PARAMETER0 + 3] = DXL_HIBYTE(data_length);
 
-  for (_s = 0; _s < param_length; _s++)
+  for (s = 0; s < param_length; s++)
   {
-    packetData[port_num].txpacket_[PKT_PARAMETER0 + 4 + _s] = packetData[port_num].data_write_[_s];
+    packetData[port_num].tx_packet[PKT_PARAMETER0 + 4 + s] = packetData[port_num].data_write[s];
   }
 
   txRxPacket2(port_num);
@@ -1094,53 +1094,53 @@ void syncWriteTxOnly2(int port_num, uint16_t start_address, uint16_t data_length
 
 void bulkReadTx2(int port_num, uint16_t param_length)
 {
-  uint8_t _s;
-  int _i;
+  uint8_t s;
+  int i;
 
-  packetData[port_num].communication_result_ = COMM_TX_FAIL;
+  packetData[port_num].communication_result = COMM_TX_FAIL;
 
-  packetData[port_num].txpacket_ = (uint8_t *)realloc(packetData[port_num].txpacket_, param_length + 10);
+  packetData[port_num].tx_packet = (uint8_t *)realloc(packetData[port_num].tx_packet, param_length + 10);
   // 10: HEADER0 HEADER1 HEADER2 RESERVED ID LEN_L LEN_H INST CRC16_L CRC16_H
 
-  packetData[port_num].txpacket_[PKT_ID] = BROADCAST_ID;
-  packetData[port_num].txpacket_[PKT_LENGTH_L] = DXL_LOBYTE(param_length + 3); // 3: INST CRC16_L CRC16_H
-  packetData[port_num].txpacket_[PKT_LENGTH_H] = DXL_HIBYTE(param_length + 3); // 3: INST CRC16_L CRC16_H
-  packetData[port_num].txpacket_[PKT_INSTRUCTION] = INST_BULK_READ;
+  packetData[port_num].tx_packet[PKT_ID] = BROADCAST_ID;
+  packetData[port_num].tx_packet[PKT_LENGTH_L] = DXL_LOBYTE(param_length + 3); // 3: INST CRC16_L CRC16_H
+  packetData[port_num].tx_packet[PKT_LENGTH_H] = DXL_HIBYTE(param_length + 3); // 3: INST CRC16_L CRC16_H
+  packetData[port_num].tx_packet[PKT_INSTRUCTION] = INST_BULK_READ;
 
-  for (_s = 0; _s < param_length; _s++)
+  for (s = 0; s < param_length; s++)
   {
-    packetData[port_num].txpacket_[PKT_PARAMETER0 + _s] = packetData[port_num].data_write_[_s];
+    packetData[port_num].tx_packet[PKT_PARAMETER0 + s] = packetData[port_num].data_write[s];
   }
 
   txPacket2(port_num);
-  if (packetData[port_num].communication_result_ == COMM_SUCCESS)
+  if (packetData[port_num].communication_result == COMM_SUCCESS)
   {
-    int _wait_length = 0;
-    for (_i = 0; _i < param_length; _i += 5)
+    int wait_length = 0;
+    for (i = 0; i < param_length; i += 5)
     {
-      _wait_length += DXL_MAKEWORD(packetData[port_num].data_write_[_i + 3], packetData[port_num].data_write_[_i + 4]) + 10;
+      wait_length += DXL_MAKEWORD(packetData[port_num].data_write[i + 3], packetData[port_num].data_write[i + 4]) + 10;
     }
-    setPacketTimeout(port_num, (uint16_t)_wait_length);
+    setPacketTimeout(port_num, (uint16_t)wait_length);
   }
 }
 
 void bulkWriteTxOnly2(int port_num, uint16_t param_length)
 {
-  uint8_t _s;
+  uint8_t s;
 
-  packetData[port_num].communication_result_ = COMM_TX_FAIL;
+  packetData[port_num].communication_result = COMM_TX_FAIL;
 
-  packetData[port_num].txpacket_ = (uint8_t *)realloc(packetData[port_num].txpacket_, param_length + 10);
+  packetData[port_num].tx_packet = (uint8_t *)realloc(packetData[port_num].tx_packet, param_length + 10);
   // 10: HEADER0 HEADER1 HEADER2 RESERVED ID LEN_L LEN_H INST CRC16_L CRC16_H
 
-  packetData[port_num].txpacket_[PKT_ID] = BROADCAST_ID;
-  packetData[port_num].txpacket_[PKT_LENGTH_L] = DXL_LOBYTE(param_length + 3); // 3: INST CRC16_L CRC16_H
-  packetData[port_num].txpacket_[PKT_LENGTH_H] = DXL_HIBYTE(param_length + 3); // 3: INST CRC16_L CRC16_H
-  packetData[port_num].txpacket_[PKT_INSTRUCTION] = INST_BULK_WRITE;
+  packetData[port_num].tx_packet[PKT_ID] = BROADCAST_ID;
+  packetData[port_num].tx_packet[PKT_LENGTH_L] = DXL_LOBYTE(param_length + 3); // 3: INST CRC16_L CRC16_H
+  packetData[port_num].tx_packet[PKT_LENGTH_H] = DXL_HIBYTE(param_length + 3); // 3: INST CRC16_L CRC16_H
+  packetData[port_num].tx_packet[PKT_INSTRUCTION] = INST_BULK_WRITE;
 
-  for (_s = 0; _s < param_length; _s++)
+  for (s = 0; s < param_length; s++)
   {
-    packetData[port_num].txpacket_[PKT_PARAMETER0 + _s] = packetData[port_num].data_write_[_s];
+    packetData[port_num].tx_packet[PKT_PARAMETER0 + s] = packetData[port_num].data_write[s];
   }
 
   txRxPacket2(port_num);

@@ -155,7 +155,7 @@ void scan(int port_num, int protocol_version1, int protocol_version2)
       fprintf(stderr, ".");
     }
 
-    if (_kbhit())
+    if (kbhit())
     {
       char c = getch();
       if (c == 0x1b)
@@ -178,7 +178,7 @@ void scan(int port_num, int protocol_version1, int protocol_version2)
       fprintf(stderr, ".");
     }
 
-    if (_kbhit())
+    if (kbhit())
     {
       char c = getch();
       if (c == 0x1b)
@@ -188,7 +188,7 @@ void scan(int port_num, int protocol_version1, int protocol_version2)
   fprintf(stderr, "\n\n");
 }
 
-void write(int port_num, int protocol_version, uint8_t id, uint16_t addr, uint16_t length, uint32_t value)
+void writeNByteTxRx(int port_num, int protocol_version, uint8_t id, uint16_t addr, uint16_t length, uint32_t value)
 {
   uint8_t dxl_error = 0;
   int dxl_comm_result = COMM_TX_FAIL;
@@ -218,7 +218,7 @@ void write(int port_num, int protocol_version, uint8_t id, uint16_t addr, uint16
   }
 }
 
-void read(int port_num, int protocol_version, uint8_t id, uint16_t addr, uint16_t length)
+void readNByteTxRx(int port_num, int protocol_version, uint8_t id, uint16_t addr, uint16_t length)
 {
   uint8_t dxl_error = 0;
   int     dxl_comm_result = COMM_TX_FAIL;
@@ -493,7 +493,7 @@ int main(int argc, char *argv[])
     {
       if (num_param == 3)
       {
-        write(port_num, PROTOCOL_VERSION1, atoi(param[0]), atoi(param[1]), 1, atoi(param[2]));
+        writeNByteTxRx(port_num, PROTOCOL_VERSION1, atoi(param[0]), atoi(param[1]), 1, atoi(param[2]));
       }
       else
       {
@@ -504,7 +504,7 @@ int main(int argc, char *argv[])
     {
       if (num_param == 3)
       {
-        write(port_num, PROTOCOL_VERSION2, atoi(param[0]), atoi(param[1]), 1, atoi(param[2]));
+        writeNByteTxRx(port_num, PROTOCOL_VERSION2, atoi(param[0]), atoi(param[1]), 1, atoi(param[2]));
       }
       else
       {
@@ -515,7 +515,7 @@ int main(int argc, char *argv[])
     {
       if (num_param == 3)
       {
-        write(port_num, PROTOCOL_VERSION1, atoi(param[0]), atoi(param[1]), 2, atoi(param[2]));
+        writeNByteTxRx(port_num, PROTOCOL_VERSION1, atoi(param[0]), atoi(param[1]), 2, atoi(param[2]));
       }
       else
       {
@@ -526,7 +526,7 @@ int main(int argc, char *argv[])
     {
       if (num_param == 3)
       {
-        write(port_num, PROTOCOL_VERSION2, atoi(param[0]), atoi(param[1]), 2, atoi(param[2]));
+        writeNByteTxRx(port_num, PROTOCOL_VERSION2, atoi(param[0]), atoi(param[1]), 2, atoi(param[2]));
       }
       else
       {
@@ -537,7 +537,7 @@ int main(int argc, char *argv[])
     {
       if (num_param == 3)
       {
-        write(port_num, PROTOCOL_VERSION2, atoi(param[0]), atoi(param[1]), 4, atoi(param[2]));
+        writeNByteTxRx(port_num, PROTOCOL_VERSION2, atoi(param[0]), atoi(param[1]), 4, atoi(param[2]));
       }
       else
       {
@@ -548,7 +548,7 @@ int main(int argc, char *argv[])
     {
       if (num_param == 2)
       {
-        read(port_num, PROTOCOL_VERSION1, atoi(param[0]), atoi(param[1]), 1);
+        readNByteTxRx(port_num, PROTOCOL_VERSION1, atoi(param[0]), atoi(param[1]), 1);
       }
       else
       {
@@ -559,7 +559,7 @@ int main(int argc, char *argv[])
     {
       if (num_param == 2)
       {
-        read(port_num, PROTOCOL_VERSION2, atoi(param[0]), atoi(param[1]), 1);
+        readNByteTxRx(port_num, PROTOCOL_VERSION2, atoi(param[0]), atoi(param[1]), 1);
       }
       else
       {
@@ -570,28 +570,34 @@ int main(int argc, char *argv[])
     {
       if (num_param == 2)
       {
-        read(port_num, PROTOCOL_VERSION1, atoi(param[0]), atoi(param[1]), 2);
+        readNByteTxRx(port_num, PROTOCOL_VERSION1, atoi(param[0]), atoi(param[1]), 2);
       }
       else
-      {  fprintf(stderr, " Invalid parameters! \n");}
+      {
+        fprintf(stderr, " Invalid parameters! \n");
+      }
     }
     else if (strcmp(cmd, "rdw2") == 0)
     {
       if (num_param == 2)
       {
-        read(port_num, PROTOCOL_VERSION2, atoi(param[0]), atoi(param[1]), 2);
+        readNByteTxRx(port_num, PROTOCOL_VERSION2, atoi(param[0]), atoi(param[1]), 2);
       }
       else
-      {  fprintf(stderr, " Invalid parameters! \n");}
+      {
+        fprintf(stderr, " Invalid parameters! \n");
+      }
     }
     else if (strcmp(cmd, "rdd2") == 0)
     {
       if (num_param == 2)
       {
-        read(port_num, PROTOCOL_VERSION2, atoi(param[0]), atoi(param[1]), 4);
+        readNByteTxRx(port_num, PROTOCOL_VERSION2, atoi(param[0]), atoi(param[1]), 4);
       }
       else
-      {  fprintf(stderr, " Invalid parameters! \n");}
+      {
+        fprintf(stderr, " Invalid parameters! \n");
+      }
     }
     else if (strcmp(cmd, "reboot2") == 0 || strcmp(cmd, "rbt2") == 0)
     {
@@ -603,7 +609,7 @@ int main(int argc, char *argv[])
         {
           if ((dxl_error = getLastRxPacketError(port_num, PROTOCOL_VERSION2)) != 0)
             printRxPacketError(PROTOCOL_VERSION2, dxl_error);
-            fprintf(stderr, "\n Success to reboot! \n\n");
+          fprintf(stderr, "\n Success to reboot! \n\n");
         }
         else
         {
@@ -626,7 +632,7 @@ int main(int argc, char *argv[])
         {
           if ((dxl_error = getLastRxPacketError(port_num, PROTOCOL_VERSION1)) != 0)
             printRxPacketError(PROTOCOL_VERSION1, dxl_error);
-            fprintf(stderr, "\n Success to reset! \n\n");
+          fprintf(stderr, "\n Success to reset! \n\n");
         }
         else
         {
@@ -649,7 +655,7 @@ int main(int argc, char *argv[])
         {
           if ((dxl_error = getLastRxPacketError(port_num, PROTOCOL_VERSION2)) != 0)
             printRxPacketError(PROTOCOL_VERSION2, dxl_error);
-            fprintf(stderr, "\n Success to reset! \n\n");
+          fprintf(stderr, "\n Success to reset! \n\n");
         }
         else
         {

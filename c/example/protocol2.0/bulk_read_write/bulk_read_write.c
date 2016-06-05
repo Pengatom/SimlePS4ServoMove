@@ -116,7 +116,6 @@ int main()
 
   // Initialize groupBulkWrite Struct
   int groupwrite_num = groupBulkWrite(port_num, PROTOCOL_VERSION);
-  //groupBulkWrite groupBulkWrite(portHandler, packetHandler);
 
   // Initialize Groupbulkread Struct
   int groupread_num = groupBulkRead(port_num, PROTOCOL_VERSION);

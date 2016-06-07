@@ -31,27 +31,25 @@
 /* Author: Leon Ryu Woon Jung */
 
 /*
-* GroupSyncWrite.h
-*
-*  Created on: 2016. 5. 4.
-*/
+ * robotis_def.h
+ *
+ *  Created on: 2016. 5. 4.
+ */
 
-#ifndef DYNAMIXEL_SDK_INCLUDE_DYNAMIXEL_SDK_GROUPSYNCWRITE_C_H_
-#define DYNAMIXEL_SDK_INCLUDE_DYNAMIXEL_SDK_GROUPSYNCWRITE_C_H_
+#ifndef DYNAMIXEL_SDK_INCLUDE_DYNAMIXEL_SDK_ROBOTISDEF_C_H_
+#define DYNAMIXEL_SDK_INCLUDE_DYNAMIXEL_SDK_ROBOTISDEF_C_H_
 
-#include "RobotisDef.h"
-#include "PortHandler.h"
-#include "PacketHandler.h"
+typedef char                int8_t;
+typedef short int           int16_t;
+typedef int                 int32_t;
 
-WINDECLSPEC int     GroupSyncWrite              (int port_num, int protocol_version, UINT16_T start_address, UINT16_T data_length);
+typedef unsigned char       uint8_t;
+typedef unsigned short int  uint16_t;
+typedef unsigned int        uint32_t;
 
-WINDECLSPEC void    GroupSyncWrite_MakeParam    (int group_num);
-WINDECLSPEC bool    GroupSyncWrite_AddParam     (int group_num, UINT8_T id, UINT32_T data, UINT16_T data_length);
-WINDECLSPEC void    GroupSyncWrite_RemoveParam  (int group_num, UINT8_T id);
-WINDECLSPEC bool    GroupSyncWrite_ChangeParam  (int group_num, UINT8_T id, UINT32_T data, UINT16_T data_length, UINT16_T data_pos);
-WINDECLSPEC void    GroupSyncWrite_ClearParam   (int group_num);
+#define True                1
+#define False               0
 
-WINDECLSPEC void    GroupSyncWrite_TxPacket     (int group_num);
+#define NOT_USED_ID         255
 
-
-#endif /* DYNAMIXEL_SDK_INCLUDE_DYNAMIXEL_SDK_GROUPSYNCWRITE_C_H_ */
+#endif /* DYNAMIXEL_SDK_INCLUDE_DYNAMIXEL_SDK_ROBOTISDEF_C_H_ */

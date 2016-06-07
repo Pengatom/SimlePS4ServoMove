@@ -31,31 +31,26 @@
 /* Author: Leon Ryu Woon Jung */
 
 /*
-* GroupSyncRead.h
+* group_sync_write.h
 *
 *  Created on: 2016. 5. 4.
 */
 
-#ifndef DYNAMIXEL_SDK_INCLUDE_DYNAMIXEL_SDK_GROUPSYNCREAD_C_H_
-#define DYNAMIXEL_SDK_INCLUDE_DYNAMIXEL_SDK_GROUPSYNCREAD_C_H_
+#ifndef DYNAMIXEL_SDK_INCLUDE_DYNAMIXEL_SDK_GROUPSYNCWRITE_C_H_
+#define DYNAMIXEL_SDK_INCLUDE_DYNAMIXEL_SDK_GROUPSYNCWRITE_C_H_
 
-#include "RobotisDef.h"
-#include "PortHandler.h"
-#include "PacketHandler.h"
+#include "robotis_def.h"
+#include "port_handler.h"
+#include "packet_handler.h"
 
-WINDECLSPEC int         GroupSyncRead               (int port_num, int protocol_version, UINT16_T start_address, UINT16_T data_length);
+WINDECLSPEC int     groupSyncWrite              (int port_num, int protocol_version, uint16_t start_address, uint16_t data_length);
 
-WINDECLSPEC void        GroupSyncRead_MakeParam     (int group_num);
-WINDECLSPEC bool        GroupSyncRead_AddParam      (int group_num, UINT8_T id);
-WINDECLSPEC void        GroupSyncRead_RemoveParam   (int group_num, UINT8_T id);
-WINDECLSPEC void        GroupSyncRead_ClearParam    (int group_num);
+WINDECLSPEC uint8_t groupSyncWriteAddParam      (int group_num, uint8_t id, uint32_t data, uint16_t data_length);
+WINDECLSPEC void    groupSyncWriteRemoveParam   (int group_num, uint8_t id);
+WINDECLSPEC uint8_t groupSyncWriteChangeParam   (int group_num, uint8_t id, uint32_t data, uint16_t data_length, uint16_t data_pos);
+WINDECLSPEC void    groupSyncWriteClearParam    (int group_num);
 
-WINDECLSPEC void        GroupSyncRead_TxPacket      (int group_num);
-WINDECLSPEC void        GroupSyncRead_RxPacket      (int group_num);
-WINDECLSPEC void        GroupSyncRead_TxRxPacket    (int group_num);
-
-WINDECLSPEC bool        GroupSyncRead_IsAvailable   (int group_num, UINT8_T id, UINT16_T address, UINT16_T data_length);
-WINDECLSPEC UINT32_T    GroupSyncRead_GetData       (int group_num, UINT8_T id, UINT16_T address, UINT16_T data_length);
+WINDECLSPEC void    groupSyncWriteTxPacket      (int group_num);
 
 
-#endif /* DYNAMIXEL_SDK_INCLUDE_DYNAMIXEL_SDK_GROUPSYNCREAD_C_H_ */
+#endif /* DYNAMIXEL_SDK_INCLUDE_DYNAMIXEL_SDK_GROUPSYNCWRITE_C_H_ */

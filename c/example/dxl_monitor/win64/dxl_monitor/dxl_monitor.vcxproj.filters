@@ -15,7 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\DXLMonitor.c">
+    <ClCompile Include="..\..\dxl_monitor.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

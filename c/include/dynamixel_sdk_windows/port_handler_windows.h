@@ -31,53 +31,39 @@
 /* Author: Leon Ryu Woon Jung */
 
 /*
-* PortHandler.h
+* port_handler_windows.h
 *
 *  Created on: 2016. 5. 4.
 */
 
-#ifndef DYNAMIXEL_SDK_INCLUDE_DYNAMIXEL_SDK_PORTHANDLER_C_H_
-#define DYNAMIXEL_SDK_INCLUDE_DYNAMIXEL_SDK_PORTHANDLER_C_H_
+#ifndef DYNAMIXEL_SDK_INCLUDE_DYNAMIXEL_SDK_WINDOWS_PORTHANDLERWINDOWS_C_H_
+#define DYNAMIXEL_SDK_INCLUDE_DYNAMIXEL_SDK_WINDOWS_PORTHANDLERWINDOWS_C_H_
 
-#ifdef __linux__
-#define WINDECLSPEC
-#elif defined(_WIN32) || defined(_WIN64)
-#ifdef WINDLLEXPORT
-#define WINDECLSPEC __declspec(dllexport)
-#else
-#define WINDECLSPEC __declspec(dllimport)
-#endif
-#endif
+#include <Windows.h>
+#include "dynamixel_sdk/port_handler.h"
 
-#include "RobotisDef.h"
+WINDECLSPEC uint8_t setupPortWindows            (int port_num, const int baudrate);
 
-static const int DEFAULT_BAUDRATE = 1000000;
+WINDECLSPEC double  getCurrentTimeWindows       (int port_num);
+WINDECLSPEC double  getTimeSinceStartWindows    (int port_num);
 
-int     used_port_num_;
-bool    *is_using_;
+WINDECLSPEC int     portHandlerWindows          (const char *port_name);
 
-WINDECLSPEC int     PortHandler             (const char *port_name);
+WINDECLSPEC uint8_t openPortWindows             (int port_num);
+WINDECLSPEC void    closePortWindows            (int port_num);
+WINDECLSPEC void    clearPortWindows            (int port_num);
 
-WINDECLSPEC bool    OpenPort                (int port_num);
-WINDECLSPEC void    ClosePort               (int port_num);
-WINDECLSPEC void    ClearPort               (int port_num);
+WINDECLSPEC void    setPortNameWindows          (int port_num, const char* port_name);
+WINDECLSPEC char   *getPortNameWindows          (int port_num);
 
-WINDECLSPEC void    SetPortName             (int port_num, const char* port_name);
-WINDECLSPEC char   *GetPortName             (int port_num);
+WINDECLSPEC uint8_t setBaudRateWindows          (int port_num, const int baudrate);
+WINDECLSPEC int     getBaudRateWindows          (int port_num);
 
-WINDECLSPEC bool    SetBaudRate             (int port_num, const int baudrate);
-WINDECLSPEC int     GetBaudRate             (int port_num);
+WINDECLSPEC int     readPortWindows             (int port_num, uint8_t *packet, int length);
+WINDECLSPEC int     writePortWindows            (int port_num, uint8_t *packet, int length);
 
-#ifdef __linux__
-WINDECLSPEC int     GetBytesAvailable       (int port_num);
-#endif
+WINDECLSPEC void    setPacketTimeoutWindows     (int port_num, uint16_t packet_length);
+WINDECLSPEC void    setPacketTimeoutMSecWindows (int port_num, double msec);
+WINDECLSPEC uint8_t isPacketTimeoutWindows      (int port_num);
 
-WINDECLSPEC int     ReadPort                (int port_num, UINT8_T *packet, int length);
-WINDECLSPEC int     WritePort               (int port_num, UINT8_T *packet, int length);
-
-WINDECLSPEC void    SetPacketTimeout        (int port_num, UINT16_T packet_length);
-WINDECLSPEC void    SetPacketTimeoutMSec    (int port_num, double msec);
-WINDECLSPEC bool    IsPacketTimeout         (int port_num);
-
-
-#endif /* DYNAMIXEL_SDK_INCLUDE_DYNAMIXEL_SDK_PORTHANDLER_C_H_ */
+#endif /* DYNAMIXEL_SDK_INCLUDE_DYNAMIXEL_SDK_LINUX_PORTHANDLERWINDOWS_C_H_ */

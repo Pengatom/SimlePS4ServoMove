@@ -31,23 +31,25 @@
 /* Author: Leon Ryu Woon Jung */
 
 /*
- * RobotisDef.h
- *
- *  Created on: 2016. 5. 4.
- */
+* group_bulk_write.h
+*
+*  Created on: 2016. 5. 4.
+*/
 
-#ifndef DYNAMIXEL_SDK_INCLUDE_DYNAMIXEL_SDK_ROBOTISDEF_C_H_
-#define DYNAMIXEL_SDK_INCLUDE_DYNAMIXEL_SDK_ROBOTISDEF_C_H_
+#ifndef DYNAMIXEL_SDK_INCLUDE_DYNAMIXEL_SDK_GROUPBULKWRITE_C_H_
+#define DYNAMIXEL_SDK_INCLUDE_DYNAMIXEL_SDK_GROUPBULKWRITE_C_H_
 
+#include "robotis_def.h"
+#include "port_handler.h"
+#include "packet_handler.h"
 
-typedef char                INT8_T;
-typedef short int           INT16_T;
-typedef int                 INT32_T;
+WINDECLSPEC int     groupBulkWrite              (int port_num, int protocol_version);
 
-typedef unsigned char       UINT8_T;
-typedef unsigned short int  UINT16_T;
-typedef unsigned int        UINT32_T;
+WINDECLSPEC uint8_t groupBulkWriteAddParam      (int group_num, uint8_t id, uint16_t start_address, uint16_t data_length, uint32_t data, uint16_t input_length);
+WINDECLSPEC void    groupBulkWriteRemoveParam   (int group_num, uint8_t id);
+WINDECLSPEC uint8_t groupBulkWriteChangeParam   (int group_num, uint8_t id, uint16_t start_address, uint16_t data_length, uint32_t data, uint16_t input_length, uint16_t data_pos);
+WINDECLSPEC void    groupBulkWriteClearParam    (int group_num);
 
-typedef enum { false, true } bool;
+WINDECLSPEC void    groupBulkWriteTxPacket      (int group_num);
 
-#endif /* DYNAMIXEL_SDK_INCLUDE_DYNAMIXEL_SDK_ROBOTISDEF_C_H_ */
+#endif /* DYNAMIXEL_SDK_INCLUDE_DYNAMIXEL_SDK_GROUPBULKWRITE_C_H_ */

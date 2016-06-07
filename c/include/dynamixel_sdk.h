@@ -31,40 +31,30 @@
 /* Author: Leon Ryu Woon Jung */
 
 /*
-* PortHandlerWindows.h
+* dynamixel_sdk.h
 *
 *  Created on: 2016. 5. 4.
 */
 
-#ifndef DYNAMIXEL_SDK_INCLUDE_DYNAMIXEL_SDK_WINDOWS_PORTHANDLERWINDOWS_C_H_
-#define DYNAMIXEL_SDK_INCLUDE_DYNAMIXEL_SDK_WINDOWS_PORTHANDLERWINDOWS_C_H_
+#ifndef DYNAMIXEL_SDK_INCLUDE_DYNAMIXEL_SDK_DYNAMIXELSDK_C_H_
+#define DYNAMIXEL_SDK_INCLUDE_DYNAMIXEL_SDK_DYNAMIXELSDK_C_H_
 
-#include <Windows.h>
-#include "dynamixel_sdk/PortHandler.h"
 
-WINDECLSPEC bool    SetupPortWindows            (int port_num, const int baudrate);
+#include "dynamixel_sdk/robotis_def.h"
+#include "dynamixel_sdk/group_bulk_read.h"
+#include "dynamixel_sdk/group_bulk_write.h"
+#include "dynamixel_sdk/group_sync_read.h"
+#include "dynamixel_sdk/group_sync_write.h"
+#include "dynamixel_sdk/protocol1_packet_handler.h"
+#include "dynamixel_sdk/protocol2_packet_handler.h"
 
-#undef GetCurrentTime
-WINDECLSPEC double  GetCurrentTimeWindows       (int port_num);
-WINDECLSPEC double  GetTimeSinceStartWindows    (int port_num);
+#ifdef __linux__
+#include "dynamixel_sdk_linux/port_handler_linux.h"
+#endif
 
-WINDECLSPEC int     PortHandlerWindows          (const char *port_name);
+#if defined(_WIN32) || defined(_WIN64)
+#include "dynamixel_sdk_windows/port_handler_windows.h"
+#endif
 
-WINDECLSPEC bool    OpenPortWindows             (int port_num);
-WINDECLSPEC void    ClosePortWindows            (int port_num);
-WINDECLSPEC void    ClearPortWindows            (int port_num);
 
-WINDECLSPEC void    SetPortNameWindows          (int port_num, const char* port_name);
-WINDECLSPEC char   *GetPortNameWindows          (int port_num);
-
-WINDECLSPEC bool    SetBaudRateWindows          (int port_num, const int baudrate);
-WINDECLSPEC int     GetBaudRateWindows          (int port_num);
-
-WINDECLSPEC int     ReadPortWindows             (int port_num, UINT8_T *packet, int length);
-WINDECLSPEC int     WritePortWindows            (int port_num, UINT8_T *packet, int length);
-
-WINDECLSPEC void    SetPacketTimeoutWindows     (int port_num, UINT16_T packet_length);
-WINDECLSPEC void    SetPacketTimeoutMSecWindows (int port_num, double msec);
-WINDECLSPEC bool    IsPacketTimeoutWindows      (int port_num);
-
-#endif /* DYNAMIXEL_SDK_INCLUDE_DYNAMIXEL_SDK_LINUX_PORTHANDLERWINDOWS_C_H_ */
+#endif /* DYNAMIXEL_SDK_INCLUDE_DYNAMIXEL_SDK_DYNAMIXELSDK_C_H_ */

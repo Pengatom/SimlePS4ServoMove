@@ -31,43 +31,30 @@
 /* Author: Leon Ryu Woon Jung */
 
 /*
-* PortHandlerLinux.h
+* group_bulk_read.h
 *
-*  Created on: 2016. 5. 17.
+*  Created on: 2016. 5. 4.
 */
 
-#ifndef DYNAMIXEL_SDK_INCLUDE_DYNAMIXEL_SDK_LINUX_PORTHANDLERLINUX_C_H_
-#define DYNAMIXEL_SDK_INCLUDE_DYNAMIXEL_SDK_LINUX_PORTHANDLERLINUX_C_H_
+#ifndef DYNAMIXEL_SDK_INCLUDE_DYNAMIXEL_SDK_GROUPBULKREAD_C_H_
+#define DYNAMIXEL_SDK_INCLUDE_DYNAMIXEL_SDK_GROUPBULKREAD_C_H_
 
 
-#include "dynamixel_sdk/PortHandler.h"
+#include "robotis_def.h"
+#include "port_handler.h"
+#include "packet_handler.h"
 
-int PortHandlerLinux(const char *port_name);
+WINDECLSPEC int         groupBulkRead               (int port_num, int protocol_version);
 
-bool    SetupPortLinux(int port_num, const int cflag_baud);
-bool    SetCustomBaudrateLinux(int port_num, int speed);
-int     GetCFlagBaud(const int baudrate);
+WINDECLSPEC uint8_t     groupBulkReadAddParam       (int group_num, uint8_t id, uint16_t start_address, uint16_t data_length);
+WINDECLSPEC void        groupBulkReadRemoveParam    (int group_num, uint8_t id);
+WINDECLSPEC void        groupBulkReadClearParam     (int group_num);
 
-double  GetCurrentTimeLinux();
-double  GetTimeSinceStartLinux(int port_num);
+WINDECLSPEC void        groupBulkReadTxPacket       (int group_num);
+WINDECLSPEC void        groupBulkReadRxPacket       (int group_num);
+WINDECLSPEC void        groupBulkReadTxRxPacket     (int group_num);
 
-bool    OpenPortLinux(int port_num);
-void    ClosePortLinux(int port_num);
-void    ClearPortLinux(int port_num);
+WINDECLSPEC uint8_t     groupBulkReadIsAvailable    (int group_num, uint8_t id, uint16_t address, uint16_t data_length);
+WINDECLSPEC uint32_t    groupBulkReadGetData        (int group_num, uint8_t id, uint16_t address, uint16_t data_length);
 
-void    SetPortNameLinux(int port_num, const char *port_name);
-char   *GetPortNameLinux(int port_num);
-
-bool    SetBaudRateLinux(int port_num, const int baudrate);
-int     GetBaudRateLinux(int port_num);
-
-int     GetBytesAvailableLinux(int port_num);
-
-int     ReadPortLinux(int port_num, UINT8_T *packet, int length);
-int     WritePortLinux(int port_num, UINT8_T *packet, int length);
-
-void    SetPacketTimeoutLinux(int port_num, UINT16_T packet_length);
-void    SetPacketTimeoutMSecLinux(int port_num, double msec);
-bool    IsPacketTimeoutLinux(int port_num);
-
-#endif /* DYNAMIXEL_SDK_INCLUDE_DYNAMIXEL_SDK_LINUX_PORTHANDLERLINUX_C_H_ */
+#endif /* DYNAMIXEL_SDK_INCLUDE_DYNAMIXEL_SDK_GROUPBULKREAD_C_H_ */

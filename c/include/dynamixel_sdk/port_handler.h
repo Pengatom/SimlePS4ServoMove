@@ -31,30 +31,53 @@
 /* Author: Leon Ryu Woon Jung */
 
 /*
-* DynamixelSDK.h
+* port_handler.h
 *
 *  Created on: 2016. 5. 4.
 */
 
-#ifndef DYNAMIXEL_SDK_INCLUDE_DYNAMIXEL_SDK_DYNAMIXELSDK_C_H_
-#define DYNAMIXEL_SDK_INCLUDE_DYNAMIXEL_SDK_DYNAMIXELSDK_C_H_
-
-
-#include "dynamixel_sdk/RobotisDef.h"
-#include "dynamixel_sdk/GroupBulkRead.h"
-#include "dynamixel_sdk/GroupBulkWrite.h"
-#include "dynamixel_sdk/GroupSyncRead.h"
-#include "dynamixel_sdk/GroupSyncWrite.h"
-#include "dynamixel_sdk/Protocol1PacketHandler.h"
-#include "dynamixel_sdk/Protocol2PacketHandler.h"
+#ifndef DYNAMIXEL_SDK_INCLUDE_DYNAMIXEL_SDK_PORTHANDLER_C_H_
+#define DYNAMIXEL_SDK_INCLUDE_DYNAMIXEL_SDK_PORTHANDLER_C_H_
 
 #ifdef __linux__
-#include "dynamixel_sdk_linux/PortHandlerLinux.h"
+#define WINDECLSPEC
+#elif defined(_WIN32) || defined(_WIN64)
+#ifdef WINDLLEXPORT
+#define WINDECLSPEC __declspec(dllexport)
+#else
+#define WINDECLSPEC __declspec(dllimport)
+#endif
 #endif
 
-#if defined(_WIN32) || defined(_WIN64)
-#include "dynamixel_sdk_windows/PortHandlerWindows.h"
+#include "robotis_def.h"
+
+static const int DEFAULT_BAUDRATE = 1000000;
+
+int     g_used_port_num;
+uint8_t    *g_is_using;
+
+WINDECLSPEC int     portHandler             (const char *port_name);
+
+WINDECLSPEC uint8_t openPort                (int port_num);
+WINDECLSPEC void    closePort               (int port_num);
+WINDECLSPEC void    clearPort               (int port_num);
+
+WINDECLSPEC void    setPortName             (int port_num, const char* port_name);
+WINDECLSPEC char   *getPortName             (int port_num);
+
+WINDECLSPEC uint8_t setBaudRate             (int port_num, const int baudrate);
+WINDECLSPEC int     getBaudRate             (int port_num);
+
+#ifdef __linux__
+WINDECLSPEC int     getBytesAvailable       (int port_num);
 #endif
 
+WINDECLSPEC int     readPort                (int port_num, uint8_t *packet, int length);
+WINDECLSPEC int     writePort               (int port_num, uint8_t *packet, int length);
 
-#endif /* DYNAMIXEL_SDK_INCLUDE_DYNAMIXEL_SDK_DYNAMIXELSDK_C_H_ */
+WINDECLSPEC void    setPacketTimeout        (int port_num, uint16_t packet_length);
+WINDECLSPEC void    setPacketTimeoutMSec    (int port_num, double msec);
+WINDECLSPEC uint8_t isPacketTimeout         (int port_num);
+
+
+#endif /* DYNAMIXEL_SDK_INCLUDE_DYNAMIXEL_SDK_PORTHANDLER_C_H_ */

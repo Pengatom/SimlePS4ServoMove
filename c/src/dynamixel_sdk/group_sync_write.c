@@ -271,6 +271,8 @@ void groupSyncWriteClearParam(int group_num)
   packetData[port_num].data_write = 0;
 
   groupData[group_num].data_list_length = 0;
+
+  groupData[group_num].is_param_changed = False;
 }
 
 void groupSyncWriteTxPacket(int group_num)

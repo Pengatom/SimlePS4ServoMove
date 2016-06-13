@@ -46,9 +46,6 @@
 #define NEW_BAUDNUM                     1                   // New baudnum to recover Dynamixel baudrate as it was
 #define OPERATION_MODE                  0x00                // Mode is unavailable in Protocol 1.0 Reset
 
-#define TORQUE_ENABLE                   1                   // Value for enabling the torque
-#define TORQUE_DISABLE                  0                   // Value for disabling the torque
-
 int getch()
 {
 #ifdef __linux__

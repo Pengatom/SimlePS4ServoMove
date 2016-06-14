@@ -86,7 +86,7 @@ int kbhit(void)
 #endif
 }
 
-void Usage(char *progname)
+void usage(char *progname)
 {
   printf("-----------------------------------------------------------------------\n");
   printf("Usage: %s\n");
@@ -95,7 +95,7 @@ void Usage(char *progname)
   printf("-----------------------------------------------------------------------\n");
 }
 
-void Help()
+void help()
 {
   printf("\n");
   printf("                    .----------------------------.\n");
@@ -139,7 +139,7 @@ void Help()
   printf("\n");
 }
 
-void Scan(dynamixel::PortHandler *portHandler, dynamixel::PacketHandler *packetHandler1, dynamixel::PacketHandler *packetHandler2)
+void scan(dynamixel::PortHandler *portHandler, dynamixel::PacketHandler *packetHandler1, dynamixel::PacketHandler *packetHandler2)
 {
   uint8_t dxl_error;
   uint16_t dxl_model_num;
@@ -187,7 +187,7 @@ void Scan(dynamixel::PortHandler *portHandler, dynamixel::PacketHandler *packetH
   fprintf(stderr, "\n\n");
 }
 
-void Write(dynamixel::PortHandler *portHandler, dynamixel::PacketHandler *packetHandler, uint8_t id, uint16_t addr, uint16_t length, uint32_t value)
+void write(dynamixel::PortHandler *portHandler, dynamixel::PacketHandler *packetHandler, uint8_t id, uint16_t addr, uint16_t length, uint32_t value)
 {
   uint8_t dxl_error = 0;
   int dxl_comm_result = COMM_TX_FAIL;
@@ -217,7 +217,7 @@ void Write(dynamixel::PortHandler *portHandler, dynamixel::PacketHandler *packet
   }
 }
 
-void Read(dynamixel::PortHandler *portHandler, dynamixel::PacketHandler *packetHandler, uint8_t id, uint16_t addr, uint16_t length)
+void read(dynamixel::PortHandler *portHandler, dynamixel::PacketHandler *packetHandler, uint8_t id, uint16_t addr, uint16_t length)
 {
   uint8_t dxl_error = 0;
   int     dxl_comm_result = COMM_TX_FAIL;
@@ -264,7 +264,7 @@ void Read(dynamixel::PortHandler *portHandler, dynamixel::PacketHandler *packetH
   }
 }
 
-void Dump(dynamixel::PortHandler *portHandler, dynamixel::PacketHandler *packetHandler, uint8_t id, uint16_t addr, uint16_t len)
+void dump(dynamixel::PortHandler *portHandler, dynamixel::PacketHandler *packetHandler, uint8_t id, uint16_t addr, uint16_t len)
 {
   uint8_t  dxl_error       = 0;
   int      dxl_comm_result = COMM_TX_FAIL;
@@ -328,7 +328,7 @@ int main(int argc, char *argv[])
 
     // unrecognized option
     if (c == '?') {
-      Usage(argv[0]);
+      usage(argv[0]);
       return 0;
     }
 
@@ -337,7 +337,7 @@ int main(int argc, char *argv[])
     // h, help
     case 0:
     case 1:
-      Usage(argv[0]);
+      usage(argv[0]);
       return 0;
       break;
 
@@ -355,7 +355,7 @@ int main(int argc, char *argv[])
       break;
 
     default:
-      Usage(argv[0]);
+      usage(argv[0]);
       return 0;
     }
   }
@@ -413,7 +413,7 @@ int main(int argc, char *argv[])
 
     if (strcmp(cmd, "help") == 0 || strcmp(cmd, "h") == 0 || strcmp(cmd, "?") == 0)
     {
-      Help();
+      help();
     }
     else if (strcmp(cmd, "baud") == 0)
     {
@@ -437,7 +437,7 @@ int main(int argc, char *argv[])
     }
     else if (strcmp(cmd, "scan") == 0)
     {
-      Scan(portHandler, packetHandler1, packetHandler2);
+      scan(portHandler, packetHandler1, packetHandler2);
     }
     else if (strcmp(cmd, "ping") == 0)
     {
@@ -508,7 +508,7 @@ int main(int argc, char *argv[])
     {
       if (num_param == 3)
       {
-        Write(portHandler, packetHandler1, atoi(param[0]), atoi(param[1]), 1, atoi(param[2]));
+        write(portHandler, packetHandler1, atoi(param[0]), atoi(param[1]), 1, atoi(param[2]));
       }
       else
       {
@@ -519,7 +519,7 @@ int main(int argc, char *argv[])
     {
       if (num_param == 3)
       {
-        Write(portHandler, packetHandler2, atoi(param[0]), atoi(param[1]), 1, atoi(param[2]));
+        write(portHandler, packetHandler2, atoi(param[0]), atoi(param[1]), 1, atoi(param[2]));
       }
       else
       {
@@ -530,7 +530,7 @@ int main(int argc, char *argv[])
     {
       if (num_param == 3)
       {
-        Write(portHandler, packetHandler1, atoi(param[0]), atoi(param[1]), 2, atoi(param[2]));
+        write(portHandler, packetHandler1, atoi(param[0]), atoi(param[1]), 2, atoi(param[2]));
       }
       else
       {
@@ -541,7 +541,7 @@ int main(int argc, char *argv[])
     {
       if (num_param == 3)
       {
-        Write(portHandler, packetHandler2, atoi(param[0]), atoi(param[1]), 2, atoi(param[2]));
+        write(portHandler, packetHandler2, atoi(param[0]), atoi(param[1]), 2, atoi(param[2]));
       }
       else
       {
@@ -552,7 +552,7 @@ int main(int argc, char *argv[])
     {
       if (num_param == 3)
       {
-        Write(portHandler, packetHandler2, atoi(param[0]), atoi(param[1]), 4, atoi(param[2]));
+        write(portHandler, packetHandler2, atoi(param[0]), atoi(param[1]), 4, atoi(param[2]));
       }
       else
       {
@@ -563,7 +563,7 @@ int main(int argc, char *argv[])
     {
       if (num_param == 2)
       {
-        Read(portHandler, packetHandler1, atoi(param[0]), atoi(param[1]), 1);
+        read(portHandler, packetHandler1, atoi(param[0]), atoi(param[1]), 1);
       }
       else
       {
@@ -574,7 +574,7 @@ int main(int argc, char *argv[])
     {
       if (num_param == 2)
       {
-        Read(portHandler, packetHandler2, atoi(param[0]), atoi(param[1]), 1);
+        read(portHandler, packetHandler2, atoi(param[0]), atoi(param[1]), 1);
       }
       else
       {
@@ -585,7 +585,7 @@ int main(int argc, char *argv[])
     {
       if (num_param == 2)
       {
-        Read(portHandler, packetHandler1, atoi(param[0]), atoi(param[1]), 2);
+        read(portHandler, packetHandler1, atoi(param[0]), atoi(param[1]), 2);
       }
       else
       {
@@ -596,7 +596,7 @@ int main(int argc, char *argv[])
     {
       if (num_param == 2)
       {
-        Read(portHandler, packetHandler2, atoi(param[0]), atoi(param[1]), 2);
+        read(portHandler, packetHandler2, atoi(param[0]), atoi(param[1]), 2);
       }
       else
       {
@@ -607,7 +607,7 @@ int main(int argc, char *argv[])
     {
       if (num_param == 2)
       {
-        Read(portHandler, packetHandler2, atoi(param[0]), atoi(param[1]), 4);
+        read(portHandler, packetHandler2, atoi(param[0]), atoi(param[1]), 4);
       }
       else
       {
@@ -618,7 +618,7 @@ int main(int argc, char *argv[])
     {
       if (num_param == 3)
       {
-        Dump(portHandler, packetHandler1, atoi(param[0]), atoi(param[1]), atoi(param[2]));
+        dump(portHandler, packetHandler1, atoi(param[0]), atoi(param[1]), atoi(param[2]));
       }
       else{
         fprintf(stderr, " Invalid parameters! \n");}
@@ -627,7 +627,7 @@ int main(int argc, char *argv[])
     {
       if (num_param == 3)
       {
-        Dump(portHandler, packetHandler2, atoi(param[0]), atoi(param[1]), atoi(param[2]));
+        dump(portHandler, packetHandler2, atoi(param[0]), atoi(param[1]), atoi(param[2]));
       }
       else
       {

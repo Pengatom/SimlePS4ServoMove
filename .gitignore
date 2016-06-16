@@ -28,6 +28,9 @@
 # Fortran module files
 *.mod
 
+# Python cache files
+*.pyc
+
 # Compiled Static libraries
 *.lai
 *.la

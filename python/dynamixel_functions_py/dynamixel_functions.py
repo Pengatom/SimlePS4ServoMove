@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from ctypes import cdll
-dxl_lib = cdll.LoadLibrary("../../c/build/win64/output/dxl_x64_c.dll")
+dxl_lib = cdll.LoadLibrary("../../c/build/win64/output/dxl_x32_c.dll")
 
 
 # port_handler

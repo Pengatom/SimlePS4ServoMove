@@ -36,15 +36,12 @@ PROTOCOL_VERSION                = 1.0;          % See which protocol version is 
 % Default setting
 DXL_ID                          = 1;            % Dynamixel ID: 1
 BAUDRATE                        = 1000000;
-DEVICENAME                      = 'COM8';       % Check which port is being used on your controller
+DEVICENAME                      = 'COM1';       % Check which port is being used on your controller
                                                 % ex) Windows: "COM1"   Linux: "/dev/ttyUSB0"
 
 FACTORYRST_DEFAULTBAUDRATE      = 57600;        % Dynamixel baudrate set by factoryreset
 NEW_BAUDNUM                     = 1;            % New baudnum to recover Dynamixel baudrate as it was
 OPERATION_MODE                  = 0;            % Mode is unavailable in Protocol 1.0 Reset
-
-TORQUE_ENABLE                   = 1;            % Value for enabling the torque
-TORQUE_DISABLE                  = 0;            % Value for disabling the torque
 
 COMM_SUCCESS                    = 0;            % Communication Success result value
 COMM_TX_FAIL                    = -1001;        % Communication Tx Failed

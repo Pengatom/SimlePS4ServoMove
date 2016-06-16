@@ -29,7 +29,7 @@ PROTOCOL_VERSION                = 2.0;          % See which protocol version is 
 % Default setting
 DXL_ID                          = 1;            % Dynamixel ID: 1
 BAUDRATE                        = 1000000;
-DEVICENAME                      = 'COM8';       % Check which port is being used on your controller
+DEVICENAME                      = 'COM1';       % Check which port is being used on your controller
                                                 % ex) Windows: 'COM1'   Linux: '/dev/ttyUSB0'
 
 COMM_SUCCESS                    = 0;            % Communication Success result value

@@ -44,7 +44,7 @@ PROTOCOL_VERSION2               = 2.0;
 DXL1_ID                         = 1;                  % Dynamixel#1 ID: 1
 DXL2_ID                         = 2;                  % Dynamixel#2 ID: 2
 BAUDRATE                        = 1000000;
-DEVICENAME                      = 'COM8';             % Check which port is being used on your controller
+DEVICENAME                      = 'COM1';             % Check which port is being used on your controller
                                                       % ex) Windows: 'COM1'   Linux: '/dev/ttyUSB0'
 
 TORQUE_ENABLE                   = 1;                  % Value for enabling the torque
@@ -67,7 +67,7 @@ COMM_TX_FAIL                = -1001;        % Communication Tx Failed
 % Get methods and members of PortHandlerLinux or PortHandlerWindows
 port_num = portHandler(DEVICENAME);
 
-% Initialize PacketHandler Structs 
+% Initialize PacketHandler Structs
 packetHandler();
 
 index = 1;
@@ -163,7 +163,7 @@ while 1
           break;
       end
     end
-    
+
     % Change goal position
     if index == 1
         index = 2;

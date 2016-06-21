@@ -27,6 +27,23 @@ namespace dynamixel_sdk
     public static extern bool setBaudRate(int port_num, int baudrate);
     [DllImport(dll_path)]
     public static extern int getBaudRate(int port_num);
+
+    #ifdef __linux__
+    [DllImport(dll_path)]
+    public static extern int getBytesAvailable(int port_num);
+    #endif
+
+    [DllImport(dll_path)]
+    public static extern int readPort(int port_num, uint8_t *packet, int length);
+    [DllImport(dll_path)]
+    public static extern int writePort(int port_num, uint8_t *packet, int length);
+
+    [DllImport(dll_path)]
+    public static extern void setPacketTimeout(int port_num, uint16_t packet_length);
+    [DllImport(dll_path)]
+    public static extern void setPacketTimeoutMSec(int port_num, double msec);
+    [DllImport(dll_path)]
+    public static extern bool isPacketTimeout(int port_num);
     #endregion
 
     #region PacketHandler

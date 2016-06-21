@@ -28,7 +28,7 @@ namespace reboot
     // Default setting
     public const int DXL_ID = 1;                   // Dynamixel ID: 1
     public const int BAUDRATE = 1000000;
-    public const string DEVICENAME = "COM8";              // Check which port is being used on your controller
+    public const string DEVICENAME = "/dev/ttyUSB0";              // Check which port is being used on your controller
                                                           // ex) "COM1"   Linux: "/dev/ttyUSB0"
 
     public const byte ESC_ASCII_VALUE = 0x1b;

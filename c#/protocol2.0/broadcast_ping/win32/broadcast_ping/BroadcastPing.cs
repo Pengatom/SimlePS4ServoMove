@@ -42,10 +42,11 @@ namespace broadcast_ping
       // Set the port path
       // Get methods and members of PortHandlerLinux or PortHandlerWindows
       int port_num = dynamixel.portHandler(DEVICENAME);
-      int id;
+
       // Initialize PacketHandler Structs
       dynamixel.packetHandler();
 
+      int id;
       int dxl_comm_result = COMM_TX_FAIL;             // Communication result
 
       // Open port

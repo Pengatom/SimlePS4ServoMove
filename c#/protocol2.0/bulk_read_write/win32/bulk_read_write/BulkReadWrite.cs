@@ -1,5 +1,5 @@
 ﻿/*
-* bulk_read_write.c
+* bulk_read_write.cs
 *
 *  Created on: 2016. 5. 16.
 *      Author: Leon Ryu Woon Jung

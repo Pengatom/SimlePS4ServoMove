@@ -1,9 +1,9 @@
 /*
-* BulkReadWrite.java
-*
-*  Created on: 2016. 5. 16.
-*      Author: Leon Ryu Woon Jung
-*/
+ * BulkReadWrite.java
+ *
+ *  Created on: 2016. 6. 23.
+ *      Author: Ryu Woon Jung (Leon)
+ */
 
 //
 // *********     Bulk Read and Bulk Write Example      *********
@@ -32,7 +32,7 @@ public class BulkReadWrite
     short LEN_PRO_LED_RED               = 1;
     short LEN_PRO_GOAL_POSITION         = 4;
     short LEN_PRO_PRESENT_POSITION      = 4;
-    
+
     // Protocol version
     int PROTOCOL_VERSION                = 2;                   // See which protocol version is used in the Dynamixel
 
@@ -40,7 +40,7 @@ public class BulkReadWrite
     byte DXL1_ID                        = 1;                   // Dynamixel ID: 1
     byte DXL2_ID                        = 2;                   // Dynamixel ID: 2
     int BAUDRATE                        = 1000000;
-    String DEVICENAME                   = "COM8";              // Check which port is being used on your controller
+    String DEVICENAME                   = "COM1";              // Check which port is being used on your controller
                                                                // ex) "COM1"   Linux: "/dev/ttyUSB0"
 
     byte TORQUE_ENABLE                  = 1;                   // Value for enabling the torque
@@ -56,7 +56,7 @@ public class BulkReadWrite
 
     // Instead of getch
     Scanner scanner = new Scanner(System.in);
-    
+
     // Initialize Dynamixel class for java
     Dynamixel dynamixel = new Dynamixel();
 
@@ -70,7 +70,7 @@ public class BulkReadWrite
 
     // Initialize GroupBulkWrite Struct
     int groupwrite_num = dynamixel.groupBulkWrite(port_num, PROTOCOL_VERSION);
-    
+
     // Initialize Groupsyncwrite instance
     int group_num = dynamixel.groupBulkRead(port_num, PROTOCOL_VERSION);
 
@@ -125,7 +125,7 @@ public class BulkReadWrite
     {
       System.out.printf("Dynamixel#%d has been successfully connected\n", DXL1_ID);
     }
-    
+
     // Enable Dynamixel#2 Torque
     dynamixel.write1ByteTxRx(port_num, PROTOCOL_VERSION, DXL2_ID, ADDR_PRO_TORQUE_ENABLE, TORQUE_ENABLE);
     if ((dxl_comm_result = dynamixel.getLastTxRxResult(port_num, PROTOCOL_VERSION)) != COMM_SUCCESS)
@@ -145,7 +145,7 @@ public class BulkReadWrite
     dxl_addparam_result = dynamixel.groupBulkReadAddParam(group_num, DXL1_ID, ADDR_PRO_PRESENT_POSITION, LEN_PRO_PRESENT_POSITION);
     if (dxl_addparam_result != true)
     {
-      System.out.printf("[ID:%d] groupBulkRead addparam failed\n", DXL1_ID);
+      System.out.printf("[ID: %d] groupBulkRead addparam failed\n", DXL1_ID);
       return;
     }
 
@@ -153,10 +153,10 @@ public class BulkReadWrite
     dxl_addparam_result = dynamixel.groupBulkReadAddParam(group_num, DXL2_ID, ADDR_PRO_LED_RED, LEN_PRO_LED_RED);
     if (dxl_addparam_result != true)
     {
-      System.out.printf("[ID:%d] groupBulkRead addparam failed\n", DXL2_ID);
+      System.out.printf("[ID: %d] groupBulkRead addparam failed\n", DXL2_ID);
       return;
     }
-    
+
     while (true)
     {
       System.out.println("Press enter to continue! (or press e then enter to quit!)");
@@ -197,14 +197,14 @@ public class BulkReadWrite
         dxl_getdata_result = dynamixel.groupBulkReadIsAvailable(group_num, DXL1_ID, ADDR_PRO_PRESENT_POSITION, LEN_PRO_PRESENT_POSITION);
         if (dxl_getdata_result != true)
         {
-          System.out.printf("[ID:%d] groupBulkRead getdata failed\n", DXL1_ID);
+          System.out.printf("[ID: %d] groupBulkRead getdata failed\n", DXL1_ID);
           return;
         }
 
         dxl_getdata_result = dynamixel.groupBulkReadIsAvailable(group_num, DXL2_ID, ADDR_PRO_LED_RED, LEN_PRO_LED_RED);
         if (dxl_getdata_result != true)
         {
-          System.out.printf("[ID:%d] groupBulkRead getdata failed\n", DXL2_ID);
+          System.out.printf("[ID: %d] groupBulkRead getdata failed\n", DXL2_ID);
           return;
         }
 
@@ -216,7 +216,7 @@ public class BulkReadWrite
 
 
         System.out.printf("[ID: %d] Present Position : %d [ID: %d] LED Value : %d\n", DXL1_ID, dxl1_present_position, DXL2_ID, dxl2_led_value_read);
-        
+
       } while (Math.abs(dxl_goal_position[index] - dxl1_present_position) > DXL_MOVING_STATUS_THRESHOLD);
 
       // Change goal position
@@ -254,7 +254,7 @@ public class BulkReadWrite
 
     // Close port
     dynamixel.closePort(port_num);
-    
+
     return;
   }
 }

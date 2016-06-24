@@ -1,8 +1,8 @@
 %
 % ping.m
 %
-%  Created on: 2016. 5. 16.
-%      Author: Leon Ryu Woon Jung
+%  Created on: 2016. 6. 7.
+%      Author: Ryu Woon Jung (Leon)
 %
 
 %
@@ -34,7 +34,7 @@ DEVICENAME                      = 'COM1';       % Check which port is being used
 
 COMM_SUCCESS                    = 0;            % Communication Success result value
 COMM_TX_FAIL                    = -1001;        % Communication Tx Failed
-                                                
+
 % Initialize PortHandler Structs
 % Set the port path
 % Get methods and members of PortHandlerLinux or PortHandlerWindows
@@ -55,6 +55,7 @@ else
     return;
 end
 
+
 % Set port baudrate
 if (setBaudRate(port_num, BAUDRATE))
     fprintf('Succeeded to change the baudrate!\n');
@@ -64,6 +65,7 @@ else
     input('Press any key to terminate...\n');
     return;
 end
+
 
 % Try to ping the Dynamixel
 % Get Dynamixel model number
@@ -75,6 +77,7 @@ elseif getLastRxPacketError(port_num, PROTOCOL_VERSION) ~= 0
 end
 
 fprintf('[ID:%03d] ping Succeeded. Dynamixel model number : %d\n', DXL_ID, dxl_model_number);
+
 
 % Close port
 closePort(port_num);

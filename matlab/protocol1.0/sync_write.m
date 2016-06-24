@@ -2,7 +2,7 @@
 % sync_write.c
 %
 %  Created on: 2016. 5. 24.
-%      Author: Leon Ryu Woon Jung
+%      Author: Ryu Woon Jung (Leon)
 %
 
 %
@@ -58,20 +58,20 @@ COMM_TX_FAIL                = -1001;        % Communication Tx Failed
 % Get methods and members of PortHandlerLinux or PortHandlerWindows
 port_num = portHandler(DEVICENAME);
 
-% Initialize PacketHandler Structs 
+% Initialize PacketHandler Structs
 packetHandler();
 
 % Initialize Groupsyncwrite instance
 group_num = groupSyncWrite(port_num, PROTOCOL_VERSION, ADDR_MX_GOAL_POSITION, LEN_MX_GOAL_POSITION);
 
 index = 1;
-dxl_comm_result = COMM_TX_FAIL;           % Communication result
+dxl_comm_result = COMM_TX_FAIL;             % Communication result
 dxl_addparam_result = false;                % AddParam result
 dxl_goal_position = [DXL_MINIMUM_POSITION_VALUE DXL_MAXIMUM_POSITION_VALUE];         % Goal position
 
 dxl_error = 0;                              % Dynamixel error
 dxl1_present_position = 0;                  % Present position
-dxl2_present_position = 0;              
+dxl2_present_position = 0;
 
 
 % Open port
@@ -84,6 +84,7 @@ else
     return;
 end
 
+
 % Set port baudrate
 if (setBaudRate(port_num, BAUDRATE))
     fprintf('Succeeded to change the baudrate!\n');
@@ -93,6 +94,7 @@ else
     input('Press any key to terminate...\n');
     return;
 end
+
 
 % Enable Dynamixel#1 Torque
 write1ByteTxRx(port_num, PROTOCOL_VERSION, DXL1_ID, ADDR_MX_TORQUE_ENABLE, TORQUE_ENABLE);
@@ -114,11 +116,12 @@ else
     fprintf('Dynamixel has been successfully connected \n');
 end
 
+
 while 1
     if input('Press any key to continue! (or input e to quit!)\n', 's') == ESC_CHARACTER
         break;
     end
-    
+
     % Add Dynamixel#1 goal position value to the Syncwrite storage
     dxl_addparam_result = groupSyncWriteAddParam(group_num, DXL1_ID, dxl_goal_position(index), LEN_MX_GOAL_POSITION);
     if dxl_addparam_result ~= true
@@ -132,16 +135,16 @@ while 1
         fprintf('[ID:%03d] groupSyncWrite addparam failed', DXL2_ID);
         return;
     end
-    
+
     % Syncwrite goal position
     groupSyncWriteTxPacket(group_num);
     if getLastTxRxResult(port_num, PROTOCOL_VERSION) ~= COMM_SUCCESS
         printTxRxResult(PROTOCOL_VERSION, getLastTxRxResult(port_num, PROTOCOL_VERSION));
     end
-    
+
     % Clear syncwrite parameter storage
     groupSyncWriteClearParam(group_num);
-    
+
     while 1
         % Read Dynamixel#1 present position
         dxl1_present_position = read2ByteTxRx(port_num, PROTOCOL_VERSION, DXL1_ID, ADDR_MX_PRESENT_POSITION);
@@ -150,7 +153,7 @@ while 1
         elseif getLastRxPacketError(port_num, PROTOCOL_VERSION) ~= 0
             printRxPacketError(PROTOCOL_VERSION, getLastRxPacketError(port_num, PROTOCOL_VERSION));
         end
-        
+
         % Read Dynamixel#2 present position
         dxl2_present_position = read2ByteTxRx(port_num, PROTOCOL_VERSION, DXL2_ID, ADDR_MX_PRESENT_POSITION);
         if getLastTxRxResult(port_num, PROTOCOL_VERSION) ~= COMM_SUCCESS
@@ -173,6 +176,7 @@ while 1
         index = 1;
     end
 end
+
 
 % Disable Dynamixel#1 Torque
 write1ByteTxRx(port_num, PROTOCOL_VERSION, DXL1_ID, ADDR_MX_TORQUE_ENABLE, TORQUE_DISABLE);

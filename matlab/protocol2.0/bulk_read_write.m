@@ -1,8 +1,8 @@
 %
 % bulk_read_write.m
 %
-%  Created on: 2016. 5. 16.
-%      Author: Leon Ryu Woon Jung
+%  Created on: 2016. 6. 7.
+%      Author: Ryu Woon Jung (Leon)
 %
 
 %
@@ -50,10 +50,10 @@ DXL_MINIMUM_POSITION_VALUE      = -150000;      % Dynamixel will rotate between 
 DXL_MAXIMUM_POSITION_VALUE      = 150000;       % and this value (note that the Dynamixel would not move when the position value is out of movable range. Check e-manual about the range of the Dynamixel you use.)
 DXL_MOVING_STATUS_THRESHOLD     = 20;           % Dynamixel moving status threshold
 
-ESC_CHARACTER                   = 'e';              % Key for escaping loop
+ESC_CHARACTER                   = 'e';          % Key for escaping loop
 
-COMM_SUCCESS                    = 0;                % Communication Success result value
-COMM_TX_FAIL                    = -1001;            % Communication Tx Failed
+COMM_SUCCESS                    = 0;            % Communication Success result value
+COMM_TX_FAIL                    = -1001;        % Communication Tx Failed
 
 % Initialize PortHandler Structs
 % Set the port path
@@ -90,6 +90,7 @@ else
     return;
 end
 
+
 % Set port baudrate
 if (setBaudRate(port_num, BAUDRATE))
     fprintf('Succeeded to change the baudrate!\n');
@@ -99,6 +100,7 @@ else
     input('Press any key to terminate...\n');
     return;
 end
+
 
 % Enable Dynamixel#1 Torque
 write1ByteTxRx(port_num, PROTOCOL_VERSION, DXL1_ID, ADDR_PRO_TORQUE_ENABLE, TORQUE_ENABLE);
@@ -190,12 +192,12 @@ while 1
         dxl2_led_value_read = groupBulkReadGetData(groupread_num, DXL2_ID, ADDR_PRO_LED_RED, LEN_PRO_LED_RED);
 
         fprintf('[ID:%03d] Present Position : %d \t [ID:%03d] LED Value: %d\n', DXL1_ID, typecast(uint32(dxl1_present_position), 'int32'), DXL2_ID, dxl2_led_value_read);
-          
+
         if ~(abs(dxl_goal_position(index) - typecast(uint32(dxl1_present_position), 'int32')) > DXL_MOVING_STATUS_THRESHOLD);
             break;
         end
     end
-    
+
     % Change goal position
     if (index == 1)
       index = 2;
@@ -203,6 +205,7 @@ while 1
       index = 1;
     end
 end
+
 
 % Disable Dynamixel#1 Torque
 write1ByteTxRx(port_num, PROTOCOL_VERSION, DXL1_ID, ADDR_PRO_TORQUE_ENABLE, TORQUE_DISABLE);
@@ -228,4 +231,3 @@ unloadlibrary('dxl_x86_c');
 
 close all;
 clear all;
-  

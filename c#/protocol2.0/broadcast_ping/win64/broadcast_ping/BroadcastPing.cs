@@ -1,12 +1,12 @@
-﻿/*
-* broadcast_ping.cs
-*
-*  Created on: 2016. 5. 16.
-*      Author: Leon Ryu Woon Jung
-*/
+/*
+ * BroadcastPing.cs
+ *
+ *  Created on: 2016. 6. 20.
+ *      Author: Ryu Woon Jung (Leon)
+ */
 
 //
-// *********     broadcastPing Example      *********
+// *********     BroadcastPing Example      *********
 //
 //
 // Available Dynamixel model on this example : All models using Protocol 2.0
@@ -23,18 +23,18 @@ namespace broadcast_ping
   class BroadcastPing
   {
     // Protocol version
-    public const int PROTOCOL_VERSION = 2;                   // See which protocol version is used in the Dynamixel
+    public const int PROTOCOL_VERSION   = 2;                // See which protocol version is used in the Dynamixel
 
     // Default setting
-    public const int BAUDRATE = 1000000;
-    public const string DEVICENAME = "/dev/ttyUSB0";              // Check which port is being used on your controller
-                                                          // ex) "COM1"   Linux: "/dev/ttyUSB0"
+    public const int BAUDRATE           = 1000000;
+    public const string DEVICENAME      = "/dev/ttyUSB0";   // Check which port is being used on your controller
+                                                            // ex) "COM1"   Linux: "/dev/ttyUSB0"
 
-    public const byte ESC_ASCII_VALUE = 0x1b;
+    public const byte ESC_ASCII_VALUE   = 0x1b;
 
-    public const int MAX_ID = 252;          // Maximum ID value
-    public const int COMM_SUCCESS = 0;                   // Communication Success result value
-    public const int COMM_TX_FAIL = -1001;               // Communication Tx Failed
+    public const int MAX_ID             = 252;              // Maximum ID value
+    public const int COMM_SUCCESS       = 0;                // Communication Success result value
+    public const int COMM_TX_FAIL       = -1001;            // Communication Tx Failed
 
     static void Main(string[] args)
     {
@@ -46,7 +46,7 @@ namespace broadcast_ping
       // Initialize PacketHandler Structs
       dynamixel.packetHandler();
 
-      int dxl_comm_result = COMM_TX_FAIL;             // Communication result
+      int dxl_comm_result = COMM_TX_FAIL;                   // Communication result
 
       // Open port
       if (dynamixel.openPort(port_num))
@@ -83,7 +83,7 @@ namespace broadcast_ping
       for (id = 0; id < MAX_ID; id++)
       {
         if (dynamixel.getBroadcastPingResult(port_num, PROTOCOL_VERSION, id))
-          Console.WriteLine("[ID:{0}]", id);
+          Console.WriteLine("[ID: {0}]", id);
       }
 
       // Close port

@@ -1,9 +1,9 @@
-﻿/*
-* reset.cs
-*
-*  Created on: 2016. 5. 16.
-*      Author: Leon Ryu Woon Jung
-*/
+/*
+ * Reset.cs
+ *
+ *  Created on: 2016. 6. 20.
+ *      Author: Ryu Woon Jung (Leon)
+ */
 
 //
 // *********     Factory Reset Example      *********
@@ -36,7 +36,7 @@ namespace reset
     // Default setting
     public const int DXL_ID                          = 1;                   // Dynamixel ID: 1
     public const int BAUDRATE                        = 1000000;
-    public const string DEVICENAME = "/dev/ttyUSB0";              // Check which port is being used on your controller
+    public const string DEVICENAME                   = "/dev/ttyUSB0";      // Check which port is being used on your controller
                                                                             // ex) "COM1"   Linux: "/dev/ttyUSB0"
 
     public const int FACTORYRST_DEFAULTBAUDRATE      = 57600;               // Dynamixel baudrate set by factoryreset
@@ -56,10 +56,10 @@ namespace reset
       // Initialize PacketHandler Structs
       dynamixel.packetHandler();
 
-      int dxl_comm_result = COMM_TX_FAIL;             // Communication result
+      int dxl_comm_result = COMM_TX_FAIL;                                   // Communication result
 
-      byte dxl_error = 0;                          // Dynamixel error
-      byte dxl_baudnum_read;                       // Read baudnum
+      byte dxl_error = 0;                                                   // Dynamixel error
+      byte dxl_baudnum_read;                                                // Read baudnum
 
       // Open port
       if (dynamixel.openPort(port_num))
@@ -87,12 +87,11 @@ namespace reset
         return;
       }
 
-
       // Read present baudrate of the controller
       Console.WriteLine("Now the controller baudrate is : {0}", dynamixel.getBaudRate(port_num));
 
       // Try factoryreset
-      Console.WriteLine("[ID:{0}] Try factoryreset : ", DXL_ID);
+      Console.WriteLine("[ID: {0}] Try factoryreset : ", DXL_ID);
       dynamixel.factoryReset(port_num, PROTOCOL_VERSION, DXL_ID, OPERATION_MODE);
       if ((dxl_comm_result = dynamixel.getLastTxRxResult(port_num, PROTOCOL_VERSION)) != COMM_SUCCESS)
       {
@@ -109,7 +108,7 @@ namespace reset
       Console.WriteLine("Wait for reset...");
       Thread.Sleep(2000);
 
-      Console.WriteLine("[ID:{0}] factoryReset Success!", DXL_ID);
+      Console.WriteLine("[ID: {0}] factoryReset Success!", DXL_ID);
 
       // Set controller baudrate to dxl default baudrate
       if (dynamixel.setBaudRate(port_num, FACTORYRST_DEFAULTBAUDRATE))
@@ -136,7 +135,7 @@ namespace reset
       }
       else
       {
-        Console.WriteLine("[ID:{0}] Dynamixel baudnum is now : {1}", DXL_ID, dxl_baudnum_read);
+        Console.WriteLine("[ID: {0}] Dynamixel baudnum is now : {1}", DXL_ID, dxl_baudnum_read);
       }
 
       // Write new baudnum
@@ -151,7 +150,7 @@ namespace reset
       }
       else
       {
-        Console.WriteLine("[ID:{0}] Set Dynamixel baudnum to : {1}", DXL_ID, NEW_BAUDNUM);
+        Console.WriteLine("[ID: {0}] Set Dynamixel baudnum to : {1}", DXL_ID, NEW_BAUDNUM);
       }
 
       // Set port baudrate to BAUDRATE
@@ -181,7 +180,7 @@ namespace reset
       }
       else
       {
-        Console.WriteLine("[ID:{0}] Dynamixel Baudnum is now : {1}", DXL_ID, dxl_baudnum_read);
+        Console.WriteLine("[ID: {0}] Dynamixel Baudnum is now : {1}", DXL_ID, dxl_baudnum_read);
       }
 
       // Close port

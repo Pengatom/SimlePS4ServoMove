@@ -1,9 +1,9 @@
 /*
-* IndirectAddress.java
-*
-*  Created on: 2016. 5. 16.
-*      Author: Leon Ryu Woon Jung
-*/
+ * IndirectAddress.java
+ *
+ *  Created on: 2016. 6. 23.
+ *      Author: Ryu Woon Jung (Leon)
+ */
 
 //
 // *********     Indirect Address Example      *********
@@ -39,14 +39,14 @@ public class IndirectAddress
     short LEN_PRO_PRESENT_POSITION                = 4;
     short LEN_PRO_INDIRECTDATA_FOR_WRITE          = 5;
     short LEN_PRO_INDIRECTDATA_FOR_READ           = 5;
-    
+
     // Protocol version
     int PROTOCOL_VERSION                = 2;                   // See which protocol version is used in the Dynamixel
 
     // Default setting
     byte DXL_ID                         = 1;                   // Dynamixel ID: 1
     int BAUDRATE                        = 1000000;
-    String DEVICENAME                   = "COM8";              // Check which port is being used on your controller
+    String DEVICENAME                   = "COM1";              // Check which port is being used on your controller
                                                                // ex) "COM1"   Linux: "/dev/ttyUSB0"
 
     byte TORQUE_ENABLE                  = 1;                   // Value for enabling the torque
@@ -64,7 +64,7 @@ public class IndirectAddress
 
     // Instead of getch
     Scanner scanner = new Scanner(System.in);
-    
+
     // Initialize Dynamixel class for java
     Dynamixel dynamixel = new Dynamixel();
 
@@ -132,7 +132,7 @@ public class IndirectAddress
     }
     else
     {
-      System.out.println("Dynamixel has been successfully connected ");
+      System.out.println("Dynamixel has been successfully connected");
     }
 
     // INDIRECTDATA parameter storages replace LED, goal position, present position and moving status storages
@@ -236,7 +236,7 @@ public class IndirectAddress
       dynamixel.printRxPacketError(PROTOCOL_VERSION, dxl_error);
     }
 
-    // Enable DXL Torque
+    // Enable Dynamixel Torque
     dynamixel.write1ByteTxRx(port_num, PROTOCOL_VERSION, DXL_ID, ADDR_PRO_TORQUE_ENABLE, TORQUE_ENABLE);
     if ((dxl_comm_result = dynamixel.getLastTxRxResult(port_num, PROTOCOL_VERSION)) != COMM_SUCCESS)
     {
@@ -254,7 +254,7 @@ public class IndirectAddress
       System.out.printf("[ID: %d] groupSyncRead addparam failed\n", DXL_ID);
       return;
     }
-    
+
     while (true)
     {
       System.out.println("Press enter to continue! (or press e then enter to quit!)");
@@ -340,7 +340,7 @@ public class IndirectAddress
 
     // Close port
     dynamixel.closePort(port_num);
-    
+
     return;
   }
 }

@@ -2,7 +2,7 @@
 % read_write.m
 %
 %  Created on: 2016. 5. 24.
-%      Author: Leon Ryu Woon Jung
+%      Author: Ryu Woon Jung (Leon)
 %
 
 %
@@ -53,11 +53,11 @@ COMM_TX_FAIL                = -1001;        % Communication Tx Failed
 % Get methods and members of PortHandlerLinux or PortHandlerWindows
 port_num = portHandler(DEVICENAME);
 
-% Initialize PacketHandler Structs 
+% Initialize PacketHandler Structs
 packetHandler();
 
 index = 1;
-dxl_comm_result = COMM_TX_FAIL;           % Communication result
+dxl_comm_result = COMM_TX_FAIL;             % Communication result
 dxl_goal_position = [DXL_MINIMUM_POSITION_VALUE DXL_MAXIMUM_POSITION_VALUE];         % Goal position
 
 dxl_error = 0;                              % Dynamixel error
@@ -74,6 +74,7 @@ else
     return;
 end
 
+
 % Set port baudrate
 if (setBaudRate(port_num, BAUDRATE))
     fprintf('Succeeded to change the baudrate!\n');
@@ -84,7 +85,8 @@ else
     return;
 end
 
-% Enable DXL Torque
+
+% Enable Dynamixel Torque
 write1ByteTxRx(port_num, PROTOCOL_VERSION, DXL_ID, ADDR_MX_TORQUE_ENABLE, TORQUE_ENABLE);
 if getLastTxRxResult(port_num, PROTOCOL_VERSION) ~= COMM_SUCCESS
     printTxRxResult(PROTOCOL_VERSION, getLastTxRxResult(port_num, PROTOCOL_VERSION));
@@ -94,11 +96,12 @@ else
     fprintf('Dynamixel has been successfully connected \n');
 end
 
+
 while 1
     if input('Press any key to continue! (or input e to quit!)\n', 's') == ESC_CHARACTER
         break;
     end
-    
+
     % Write goal position
     write2ByteTxRx(port_num, PROTOCOL_VERSION, DXL_ID, ADDR_MX_GOAL_POSITION, dxl_goal_position(index));
     if getLastTxRxResult(port_num, PROTOCOL_VERSION) ~= COMM_SUCCESS
@@ -106,7 +109,7 @@ while 1
     elseif getLastRxPacketError(port_num, PROTOCOL_VERSION) ~= 0
         printRxPacketError(PROTOCOL_VERSION, getLastRxPacketError(port_num, PROTOCOL_VERSION));
     end
-    
+
     while 1
         % Read present position
         dxl_present_position = read2ByteTxRx(port_num, PROTOCOL_VERSION, DXL_ID, ADDR_MX_PRESENT_POSITION);
@@ -117,7 +120,7 @@ while 1
         end
 
         fprintf('[ID:%03d] GoalPos:%03d  PresPos:%03d\n', DXL_ID, dxl_goal_position(index), dxl_present_position);
-        
+
         if ~(abs(dxl_goal_position(index) - dxl_present_position) > DXL_MOVING_STATUS_THRESHOLD)
             break;
         end
@@ -130,6 +133,7 @@ while 1
         index = 1;
     end
 end
+
 
 % Disable Dynamixel Torque
 write1ByteTxRx(port_num, PROTOCOL_VERSION, DXL_ID, ADDR_MX_TORQUE_ENABLE, TORQUE_DISABLE);

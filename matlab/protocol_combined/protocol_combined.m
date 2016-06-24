@@ -1,8 +1,8 @@
 %
 % protocol_combined.c
 %
-%  Created on: 2016. 5. 16.
-%      Author: Leon Ryu Woon Jung
+%  Created on: 2016. 6. 7.
+%      Author: Ryu Woon Jung (Leon)
 %
 
 %
@@ -27,7 +27,7 @@ if ~libisloaded('dxl_x86_c');
 end
 
 % Control table address for Dynamixel MX
-ADDR_MX_TORQUE_ENABLE           = 24;                 % Control table address is different in Dynamixel model
+ADDR_MX_TORQUE_ENABLE           = 24;             % Control table address is different in Dynamixel model
 ADDR_MX_GOAL_POSITION           = 30;
 ADDR_MX_PRESENT_POSITION        = 36;
 
@@ -37,29 +37,29 @@ ADDR_PRO_GOAL_POSITION          = 596;
 ADDR_PRO_PRESENT_POSITION       = 611;
 
 % Protocol version
-PROTOCOL_VERSION1               = 1.0;                % See which protocol version is used in the Dynamixel
+PROTOCOL_VERSION1               = 1.0;            % See which protocol version is used in the Dynamixel
 PROTOCOL_VERSION2               = 2.0;
 
 % Default setting
-DXL1_ID                         = 1;                  % Dynamixel#1 ID: 1
-DXL2_ID                         = 2;                  % Dynamixel#2 ID: 2
+DXL1_ID                         = 1;              % Dynamixel#1 ID: 1
+DXL2_ID                         = 2;              % Dynamixel#2 ID: 2
 BAUDRATE                        = 1000000;
-DEVICENAME                      = 'COM1';             % Check which port is being used on your controller
-                                                      % ex) Windows: 'COM1'   Linux: '/dev/ttyUSB0'
+DEVICENAME                      = 'COM1';         % Check which port is being used on your controller
+                                                  % ex) Windows: 'COM1'   Linux: '/dev/ttyUSB0'
 
-TORQUE_ENABLE                   = 1;                  % Value for enabling the torque
-TORQUE_DISABLE                  = 0;                  % Value for disabling the torque
-DXL1_MINIMUM_POSITION_VALUE     = 100;                % Dynamixel will rotate between this value
-DXL1_MAXIMUM_POSITION_VALUE     = 4000;               % and this value (note that the Dynamixel would not move when the position value is out of movable range. Check e-manual about the range of the Dynamixel you use.)
+TORQUE_ENABLE                   = 1;              % Value for enabling the torque
+TORQUE_DISABLE                  = 0;              % Value for disabling the torque
+DXL1_MINIMUM_POSITION_VALUE     = 100;            % Dynamixel will rotate between this value
+DXL1_MAXIMUM_POSITION_VALUE     = 4000;           % and this value (note that the Dynamixel would not move when the position value is out of movable range. Check e-manual about the range of the Dynamixel you use.)
 DXL2_MINIMUM_POSITION_VALUE     = -150000;
 DXL2_MAXIMUM_POSITION_VALUE     = 150000;
-DXL1_MOVING_STATUS_THRESHOLD    = 10;                 % Dynamixel MX moving status threshold
-DXL2_MOVING_STATUS_THRESHOLD    = 20;                 % Dynamixel PRO moving status threshold
+DXL1_MOVING_STATUS_THRESHOLD    = 10;             % Dynamixel MX moving status threshold
+DXL2_MOVING_STATUS_THRESHOLD    = 20;             % Dynamixel PRO moving status threshold
 
-ESC_CHARACTER               = 'e';          % Key for escaping loop
+ESC_CHARACTER                   = 'e';            % Key for escaping loop
 
-COMM_SUCCESS                = 0;            % Communication Success result value
-COMM_TX_FAIL                = -1001;        % Communication Tx Failed
+COMM_SUCCESS                    = 0;              % Communication Success result value
+COMM_TX_FAIL                    = -1001;          % Communication Tx Failed
 
 
 % Initialize PortHandler Structs
@@ -71,13 +71,13 @@ port_num = portHandler(DEVICENAME);
 packetHandler();
 
 index = 1;
-dxl_comm_result = COMM_TX_FAIL;           % Communication result
+dxl_comm_result = COMM_TX_FAIL;                   % Communication result
 dxl1_goal_position = [DXL1_MINIMUM_POSITION_VALUE DXL1_MAXIMUM_POSITION_VALUE];         % Goal position of Dynamixel MX
 dxl2_goal_position = [DXL2_MINIMUM_POSITION_VALUE DXL2_MAXIMUM_POSITION_VALUE];         % Goal position of Dynamixel PRO
 
-dxl_error = 0;                            % Dynamixel error
-dxl1_present_position = 0;                % Present position of Dynamixel MX
-dxl2_present_position = 0;                % Present position of Dynamixel PRO
+dxl_error = 0;                                    % Dynamixel error
+dxl1_present_position = 0;                        % Present position of Dynamixel MX
+dxl2_present_position = 0;                        % Present position of Dynamixel PRO
 
 % Open port
 if (openPort(port_num))
@@ -89,6 +89,7 @@ else
     return;
 end
 
+
 % Set port baudrate
 if (setBaudRate(port_num, BAUDRATE))
     fprintf('Succeeded to change the baudrate!\n');
@@ -98,6 +99,7 @@ else
     input('Press any key to terminate...\n');
     return;
 end
+
 
 % Enable Dynamixel#1 torque
 write1ByteTxRx(port_num, PROTOCOL_VERSION1, DXL1_ID, ADDR_MX_TORQUE_ENABLE, TORQUE_ENABLE);
@@ -118,6 +120,7 @@ elseif getLastRxPacketError(port_num, PROTOCOL_VERSION2) ~= 0
 else
     fprintf('Dynamixel #%d has been successfully connected \n', DXL2_ID);
 end
+
 
 while 1
     if input('Press any key to continue! (or input e to quit!)\n', 's') == ESC_CHARACTER
@@ -187,6 +190,7 @@ if getLastTxRxResult(port_num, PROTOCOL_VERSION2) ~= COMM_SUCCESS
 elseif getLastRxPacketError(port_num, PROTOCOL_VERSION2) ~= 0
     printRxPacketError(PROTOCOL_VERSION2, getLastRxPacketError(port_num, PROTOCOL_VERSION2));
 end
+
 
 % Close port
 closePort(port_num);

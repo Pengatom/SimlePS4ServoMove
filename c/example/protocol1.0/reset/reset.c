@@ -2,7 +2,7 @@
 * reset.c
 *
 *  Created on: 2016. 5. 16.
-*      Author: Leon Ryu Woon Jung
+*      Author: Ryu Woon Jung (Leon)
 */
 
 //
@@ -28,7 +28,7 @@
 #endif
 
 #include <stdio.h>
-#include "dynamixel_sdk.h"                                   // Uses Dynamixel SDK library
+#include "dynamixel_sdk.h"                                  // Uses Dynamixel SDK library
 
 // Control table address
 #define ADDR_MX_BAUDRATE                4                   // Control table address is different in Dynamixel model

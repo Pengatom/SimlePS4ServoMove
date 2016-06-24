@@ -1,12 +1,12 @@
 /*
-* BroadcastPing.java
-*
-*  Created on: 2016. 5. 16.
-*      Author: Leon Ryu Woon Jung
-*/
+ * BroadcastPing.java
+ *
+ *  Created on: 2016. 6. 23.
+ *      Author: Ryu Woon Jung (Leon)
+ */
 
 //
-// *********     broadcastPing Example      *********
+// *********     BroadcastPing Example      *********
 //
 //
 // Available Dynamixel model on this example : All models using Protocol 2.0
@@ -26,7 +26,7 @@ public class BroadcastPing
 
     // Default setting
     int BAUDRATE                        = 1000000;
-    String DEVICENAME                   = "COM8";              // Check which port is being used on your controller
+    String DEVICENAME                   = "COM1";              // Check which port is being used on your controller
                                                                // ex) "COM1"   Linux: "/dev/ttyUSB0"
 
     int MAX_ID                          = 252;                 // Maximum ID value
@@ -35,7 +35,7 @@ public class BroadcastPing
 
     // Instead of getch
     Scanner scanner = new Scanner(System.in);
-    
+
     // Initialize Dynamixel class for java
     Dynamixel dynamixel = new Dynamixel();
 
@@ -48,7 +48,7 @@ public class BroadcastPing
     dynamixel.packetHandler();
 
     int id;
-    int dxl_comm_result = COMM_TX_FAIL;             // Communication result
+    int dxl_comm_result = COMM_TX_FAIL;                       // Communication result
 
     // Open port
     if (dynamixel.openPort(port_num))

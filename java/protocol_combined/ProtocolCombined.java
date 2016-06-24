@@ -1,8 +1,8 @@
 /*
  * ProtocolCombined.java
  *
- *  Created on: 2016. 5. 16.
- *      Author: Leon Ryu Woon Jung
+ *  Created on: 2016. 6. 23.
+ *      Author: Ryu Woon Jung (Leon)
  */
 
 //
@@ -28,7 +28,7 @@ public class ProtocolCombined
     short ADDR_MX_TORQUE_ENABLE        = 24;                   // Control table address is different in Dynamixel model
     short ADDR_MX_GOAL_POSITION        = 30;
     short ADDR_MX_PRESENT_POSITION     = 36;
-    
+
     // Control table address for Dynamixel PRO
     short ADDR_PRO_TORQUE_ENABLE        = 562;
     short ADDR_PRO_GOAL_POSITION        = 596;
@@ -42,7 +42,7 @@ public class ProtocolCombined
     byte DXL1_ID                        = 1;                   // Dynamixel ID: 1
     byte DXL2_ID                        = 2;                   // Dynamixel ID: 2
     int BAUDRATE                        = 1000000;
-    String DEVICENAME                  = "COM8";               // Check which port is being used on your controller
+    String DEVICENAME                  = "COM1";               // Check which port is being used on your controller
 
     byte TORQUE_ENABLE                  = 1;                   // Value for enabling the torque
     byte TORQUE_DISABLE                 = 0;                   // Value for disabling the torque
@@ -61,7 +61,7 @@ public class ProtocolCombined
 
     // Instead of getch
     Scanner scanner = new Scanner(System.in);
-    
+
     // Initialize Dynamixel class for java
     Dynamixel dynamixel = new Dynamixel();
 
@@ -76,7 +76,7 @@ public class ProtocolCombined
     int index = 0;
     int dxl_comm_result = COMM_TX_FAIL;                         // Communication result
     short[] dxl1_goal_position = new short[]{DXL1_MINIMUM_POSITION_VALUE, DXL1_MAXIMUM_POSITION_VALUE};         // Goal position of Dynamixel MX
-    int[] dxl2_goal_position = new int[]{DXL2_MINIMUM_POSITION_VALUE, DXL2_MAXIMUM_POSITION_VALUE};         // Goal position of Dynamixel PRO
+    int[] dxl2_goal_position = new int[]{DXL2_MINIMUM_POSITION_VALUE, DXL2_MAXIMUM_POSITION_VALUE};             // Goal position of Dynamixel PRO
 
     byte dxl_error = 0;                                         // Dynamixel error
     short dxl1_present_position = 0;                            // Present position
@@ -122,7 +122,7 @@ public class ProtocolCombined
     {
       System.out.printf("Dynamixel#%d has been successfully connected\n", DXL1_ID);
     }
-    
+
     // Enable Dynamixel#2 Torque
     dynamixel.write1ByteTxRx(port_num, PROTOCOL_VERSION2, DXL2_ID, ADDR_PRO_TORQUE_ENABLE, TORQUE_ENABLE);
     if ((dxl_comm_result = dynamixel.getLastTxRxResult(port_num, PROTOCOL_VERSION2)) != COMM_SUCCESS)
@@ -190,8 +190,8 @@ public class ProtocolCombined
           dynamixel.printRxPacketError(PROTOCOL_VERSION2, dxl_error);
         }
 
-        System.out.printf("[ID:%d] GoalPos: %d  PresPos: %d [ID:%d] GoalPos: %d  PresPos: %d\n", DXL1_ID, dxl1_goal_position[index], dxl1_present_position, DXL2_ID, dxl2_goal_position[index], dxl2_present_position);
-        
+        System.out.printf("[ID: %d] GoalPos: %d  PresPos: %d [ID: %d] GoalPos: %d  PresPos: %d\n", DXL1_ID, dxl1_goal_position[index], dxl1_present_position, DXL2_ID, dxl2_goal_position[index], dxl2_present_position);
+
       } while ((Math.abs(dxl1_goal_position[index] - dxl1_present_position) > DXL1_MOVING_STATUS_THRESHOLD) || (Math.abs(dxl2_goal_position[index] - dxl2_present_position) > DXL2_MOVING_STATUS_THRESHOLD));
 
       // Change goal position
@@ -229,7 +229,7 @@ public class ProtocolCombined
 
     // Close port
     dynamixel.closePort(port_num);
-    
+
     return;
   }
 }

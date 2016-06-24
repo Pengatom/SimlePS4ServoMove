@@ -287,7 +287,7 @@ int main()
     packetHandler->printRxPacketError(dxl_error);
   }
 
-  // Enable DXL Torque
+  // Enable Dynamixel Torque
   dxl_comm_result = packetHandler->write1ByteTxRx(portHandler, DXL_ID, ADDR_PRO_TORQUE_ENABLE, TORQUE_ENABLE, &dxl_error);
   if (dxl_comm_result != COMM_SUCCESS)
   {

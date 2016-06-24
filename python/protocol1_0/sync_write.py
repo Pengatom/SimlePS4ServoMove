@@ -4,8 +4,8 @@
 #
 # sync_write.py
 #
-#  Created on: 2016. 5. 16.
-#      Author: Leon Ryu Woon Jung
+#  Created on: 2016. 6. 16.
+#      Author: Ryu Woon Jung (Leon)
 #
 
 #
@@ -24,7 +24,7 @@ import init_path
 from dynamixel_functions_py import dynamixel_functions as dynamixel                      # Uses Dynamixel SDK library
 
 # Control table address
-ADDR_MX_TORQUE_ENABLE       = 24           # Control table address is different in Dynamixel model
+ADDR_MX_TORQUE_ENABLE       = 24                            # Control table address is different in Dynamixel model
 ADDR_MX_GOAL_POSITION       = 30
 ADDR_MX_PRESENT_POSITION    = 36
 
@@ -33,25 +33,25 @@ LEN_MX_GOAL_POSITION        = 2
 LEN_MX_PRESENT_POSITION     = 2
 
 # Protocol version
-PROTOCOL_VERSION            = 1            # See which protocol version is used in the Dynamixel
+PROTOCOL_VERSION            = 1                             # See which protocol version is used in the Dynamixel
 
 # Default setting
-DXL1_ID                     = 1            # Dynamixel ID: 1
-DXL2_ID                     = 2            # Dynamixel ID: 2
+DXL1_ID                     = 1                             # Dynamixel ID: 1
+DXL2_ID                     = 2                             # Dynamixel ID: 2
 BAUDRATE                    = 1000000
-DEVICENAME                  = "COM1".encode('utf-8')       # Check which port is being used on your controller
-                                            # ex) Windows: "COM1"   Linux: "/dev/ttyUSB0"
+DEVICENAME                  = "COM1".encode('utf-8')        # Check which port is being used on your controller
+                                                            # ex) Windows: "COM1"   Linux: "/dev/ttyUSB0"
 
-TORQUE_ENABLE               = 1            # Value for enabling the torque
-TORQUE_DISABLE              = 0            # Value for disabling the torque
-DXL_MINIMUM_POSITION_VALUE  = 100          # Dynamixel will rotate between this value
-DXL_MAXIMUM_POSITION_VALUE  = 4000         # and this value (note that the Dynamixel would not move when the position value is out of movable range. Check e-manual about the range of the Dynamixel you use.)
-DXL_MOVING_STATUS_THRESHOLD = 10           # Dynamixel moving status threshold
+TORQUE_ENABLE               = 1                             # Value for enabling the torque
+TORQUE_DISABLE              = 0                             # Value for disabling the torque
+DXL_MINIMUM_POSITION_VALUE  = 100                           # Dynamixel will rotate between this value
+DXL_MAXIMUM_POSITION_VALUE  = 4000                          # and this value (note that the Dynamixel would not move when the position value is out of movable range. Check e-manual about the range of the Dynamixel you use.)
+DXL_MOVING_STATUS_THRESHOLD = 10                            # Dynamixel moving status threshold
 
 ESC_ASCII_VALUE             = 0x1b
 
-COMM_SUCCESS                = 0            # Communication Success result value
-COMM_TX_FAIL                = -1001        # Communication Tx Failed
+COMM_SUCCESS                = 0                             # Communication Success result value
+COMM_TX_FAIL                = -1001                         # Communication Tx Failed
 
 # Initialize PortHandler Structs
 # Set the port path
@@ -65,11 +65,11 @@ dynamixel.packetHandler()
 group_num = dynamixel.groupSyncWrite(port_num, PROTOCOL_VERSION, ADDR_MX_GOAL_POSITION, LEN_MX_GOAL_POSITION)
 
 index = 0
-dxl_comm_result = COMM_TX_FAIL           # Communication result
+dxl_comm_result = COMM_TX_FAIL                              # Communication result
 dxl_goal_position = [DXL_MINIMUM_POSITION_VALUE, DXL_MAXIMUM_POSITION_VALUE]         # Goal position
 
-dxl_error = 0                              # Dynamixel error
-dxl1_present_position = 0                  # Present position
+dxl_error = 0                                               # Dynamixel error
+dxl1_present_position = 0                                   # Present position
 dxl2_present_position = 0
 
 # Open port

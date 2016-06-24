@@ -1,9 +1,9 @@
 /*
-* Reset.java
-*
-*  Created on: 2016. 5. 16.
-*      Author: Leon Ryu Woon Jung
-*/
+ * Reset.java
+ *
+ *  Created on: 2016. 6. 23.
+ *      Author: Ryu Woon Jung (Leon)
+ */
 
 //
 // *********     Factory Reset Example      *********
@@ -34,7 +34,7 @@ public class Reset
     // Default setting
     byte DXL_ID                         = 1;                   // Dynamixel ID: 1-
     int BAUDRATE                        = 1000000;
-    String DEVICENAME                   = "COM8";              // Check which port is being used on your controller
+    String DEVICENAME                   = "COM1";              // Check which port is being used on your controller
                                                                // ex) "COM1"   Linux: "/dev/ttyUSB0"
 
     int FACTORYRST_DEFAULTBAUDRATE      = 57600;               // Dynamixel baudrate set by factoryreset
@@ -46,7 +46,7 @@ public class Reset
 
     // Instead of getch
     Scanner scanner = new Scanner(System.in);
-    
+
     // Initialize Dynamixel class for java
     Dynamixel dynamixel = new Dynamixel();
 
@@ -58,10 +58,10 @@ public class Reset
     // Initialize PacketHandler Structs
     dynamixel.packetHandler();
 
-    int dxl_comm_result = COMM_TX_FAIL;             // Communication result
-    
-    byte dxl_error = 0;                             // Dynamixel error
-    byte dxl_baudnum_read;                          // Read baudnum
+    int dxl_comm_result = COMM_TX_FAIL;                        // Communication result
+
+    byte dxl_error = 0;                                        // Dynamixel error
+    byte dxl_baudnum_read;                                     // Read baudnum
 
     // Open port
     if (dynamixel.openPort(port_num))
@@ -93,7 +93,7 @@ public class Reset
     System.out.printf("Now the controller baudrate is : %d\n", dynamixel.getBaudRate(port_num));
 
     // Try factoryreset
-    System.out.printf("[ID:%d] Try factoryreset : \n", DXL_ID);
+    System.out.printf("[ID: %d] Try factoryreset : \n", DXL_ID);
     dynamixel.factoryReset(port_num, PROTOCOL_VERSION, DXL_ID, OPERATION_MODE);
     if ((dxl_comm_result = dynamixel.getLastTxRxResult(port_num, PROTOCOL_VERSION)) != COMM_SUCCESS)
     {
@@ -108,13 +108,16 @@ public class Reset
 
     // Wait for reset
     System.out.printf("Wait for reset...\n");
-    try {
+    try
+    {
       Thread.sleep(2000);
-    } catch (InterruptedException e) {
+    }
+    catch (InterruptedException e)
+    {
       System.out.println(e.getMessage());
     }
 
-    System.out.printf("[ID:%d] factoryReset Success!\n", DXL_ID);
+    System.out.printf("[ID: %d] factoryReset Success!\n", DXL_ID);
 
     // Set controller baudrate to dxl default baudrate
     if (dynamixel.setBaudRate(port_num, FACTORYRST_DEFAULTBAUDRATE))
@@ -141,7 +144,7 @@ public class Reset
     }
     else
     {
-      System.out.printf("[ID:%d] Dynamixel baudnum is now : %d\n", DXL_ID, dxl_baudnum_read);
+      System.out.printf("[ID: %d] Dynamixel baudnum is now : %d\n", DXL_ID, dxl_baudnum_read);
     }
 
     // Write new baudnum
@@ -156,7 +159,7 @@ public class Reset
     }
     else
     {
-      System.out.printf("[ID:%d] Set Dynamixel baudnum to : %d\n", DXL_ID, NEW_BAUDNUM);
+      System.out.printf("[ID: %d] Set Dynamixel baudnum to : %d\n", DXL_ID, NEW_BAUDNUM);
     }
 
     // Set port baudrate to BAUDRATE
@@ -190,7 +193,7 @@ public class Reset
     }
     else
     {
-      System.out.printf("[ID:%d] Dynamixel Baudnum is now : %d", DXL_ID, dxl_baudnum_read);
+      System.out.printf("[ID: %d] Dynamixel Baudnum is now : %d", DXL_ID, dxl_baudnum_read);
     }
 
     return;

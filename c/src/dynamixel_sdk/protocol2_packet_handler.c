@@ -28,7 +28,7 @@
 * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 *******************************************************************************/
 
-/* Author: Leon Ryu Woon Jung */
+/* Author: Ryu Woon Jung (Leon) */
 
 /*
 * protocol2_packet_handler.c

@@ -1,8 +1,8 @@
 %
 % factory_reset.m
 %
-%  Created on: 2016. 5. 16.
-%      Author: Leon Ryu Woon Jung
+%  Created on: 2016. 6. 7.
+%      Author: Ryu Woon Jung (Leon)
 %
 
 %
@@ -69,6 +69,7 @@ else
   return;
 end
 
+
 % Set port baudrate
 if (setBaudRate(port_num, BAUDRATE))
   fprintf('Succeeded to change the baudrate!\n');
@@ -78,6 +79,7 @@ else
   input('Press any key to terminate...\n');
   return;
 end
+
 
 % Read present baudrate of the controller
 fprintf('Now the controller baudrate is : %d\n', getBaudRate(port_num));

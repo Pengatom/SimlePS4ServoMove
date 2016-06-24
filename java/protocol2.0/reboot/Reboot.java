@@ -1,12 +1,12 @@
 /*
-* Reboot.java
-*
-*  Created on: 2016. 5. 16.
-*      Author: Leon Ryu Woon Jung
-*/
+ * Reboot.java
+ *
+ *  Created on: 2016. 6. 23.
+ *      Author: Ryu Woon Jung (Leon)
+ */
 
 //
-// *********     reboot Example      *********
+// *********     Reboot Example      *********
 //
 //
 // Available Dynamixel model on this example : All models using Protocol 2.0
@@ -27,7 +27,7 @@ public class Reboot
     // Default setting
     byte DXL_ID                         = 1;                   // Dynamixel ID: 1
     int BAUDRATE                        = 1000000;
-    String DEVICENAME                   = "COM8";              // Check which port is being used on your controller
+    String DEVICENAME                   = "COM1";              // Check which port is being used on your controller
                                                                // ex) "COM1"   Linux: "/dev/ttyUSB0"
 
     int COMM_SUCCESS                    = 0;                   // Communication Success result value
@@ -35,7 +35,7 @@ public class Reboot
 
     // Instead of getch
     Scanner scanner = new Scanner(System.in);
-    
+
     // Initialize Dynamixel class for java
     Dynamixel dynamixel = new Dynamixel();
 
@@ -47,10 +47,10 @@ public class Reboot
     // Initialize PacketHandler Structs
     dynamixel.packetHandler();
 
-    int dxl_comm_result = COMM_TX_FAIL;             // Communication result
-    
-    byte dxl_error = 0;                             // Dynamixel error
-    int dxl_model_number;                           // Dynamixel model number
+    int dxl_comm_result = COMM_TX_FAIL;                       // Communication result
+
+    byte dxl_error = 0;                                       // Dynamixel error
+    int dxl_model_number;                                     // Dynamixel model number
 
     // Open port
     if (dynamixel.openPort(port_num))
@@ -96,7 +96,6 @@ public class Reboot
     }
 
     System.out.printf("[ID: %d] reboot Succeeded\n", DXL_ID);
-
 
     // Close port
     dynamixel.closePort(port_num);

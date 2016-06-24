@@ -1,9 +1,9 @@
-﻿/*
-* bulk_read_write.cs
-*
-*  Created on: 2016. 5. 16.
-*      Author: Leon Ryu Woon Jung
-*/
+/*
+ * BulkReadWrite.cs
+ *
+ *  Created on: 2016. 6. 20.
+ *      Author: Ryu Woon Jung (Leon)
+ */
 
 //
 // *********     Bulk Read and Bulk Write Example      *********
@@ -23,7 +23,7 @@ namespace bulk_read_write
   class BulkReadWrite
   {
     // Control table address
-    public const int ADDR_PRO_TORQUE_ENABLE           = 562;                  // Control table address is different in Dynamixel model
+    public const int ADDR_PRO_TORQUE_ENABLE           = 562;                // Control table address is different in Dynamixel model
     public const int ADDR_PRO_LED_RED                 = 563;
     public const int ADDR_PRO_GOAL_POSITION           = 596;
     public const int ADDR_PRO_PRESENT_POSITION        = 611;
@@ -41,7 +41,7 @@ namespace bulk_read_write
     public const int DXL1_ID                         = 1;                   // Dynamixel ID: 1
     public const int DXL2_ID                         = 2;                   // Dynamixel ID: 2
     public const int BAUDRATE                        = 1000000;
-    public const string DEVICENAME = "/dev/ttyUSB0";              // Check which port is being used on your controller
+    public const string DEVICENAME                   = "/dev/ttyUSB0";      // Check which port is being used on your controller
                                                                             // ex) "COM1"   Linux: "/dev/ttyUSB0"
 
     public const int TORQUE_ENABLE                   = 1;                   // Value for enabling the torque
@@ -72,15 +72,15 @@ namespace bulk_read_write
       int groupread_num = dynamixel.groupBulkRead(port_num, PROTOCOL_VERSION);
 
       int index = 0;
-      int dxl_comm_result = COMM_TX_FAIL;             // Communication result
-      bool dxl_addparam_result = false;               // AddParam result
-      bool dxl_getdata_result = false;                // GetParam result
+      int dxl_comm_result = COMM_TX_FAIL;                                   // Communication result
+      bool dxl_addparam_result = false;                                     // AddParam result
+      bool dxl_getdata_result = false;                                      // GetParam result
       int[] dxl_goal_position = new int[2]{ DXL_MINIMUM_POSITION_VALUE, DXL_MAXIMUM_POSITION_VALUE };         // Goal position
 
-      byte dxl_error = 0;                             // Dynamixel error
-      byte[] dxl_led_value = new byte[2]{ 0x00, 0xFF };         // Dynamixel LED value for write
-      Int32 dxl1_present_position = 0;               // Present position
-      byte dxl2_led_value_read = 0;                           // Dynamixel moving status
+      byte dxl_error = 0;                                                   // Dynamixel error
+      byte[] dxl_led_value = new byte[2]{ 0x00, 0xFF };                     // Dynamixel LED value for write
+      Int32 dxl1_present_position = 0;                                      // Present position
+      byte dxl2_led_value_read = 0;                                         // Dynamixel moving status
 
       // Open port
       if (dynamixel.openPort(port_num))
@@ -142,7 +142,7 @@ namespace bulk_read_write
       dxl_addparam_result = dynamixel.groupBulkReadAddParam(groupread_num, DXL1_ID, ADDR_PRO_PRESENT_POSITION, LEN_PRO_PRESENT_POSITION);
       if (dxl_addparam_result != true)
       {
-        Console.WriteLine("[ID:{0}] groupBulkRead addparam failed", DXL1_ID);
+        Console.WriteLine("[ID: {0}] groupBulkRead addparam failed", DXL1_ID);
         return;
       }
 
@@ -150,7 +150,7 @@ namespace bulk_read_write
       dxl_addparam_result = dynamixel.groupBulkReadAddParam(groupread_num, DXL2_ID, ADDR_PRO_LED_RED, LEN_PRO_LED_RED);
       if (dxl_addparam_result != true)
       {
-        Console.WriteLine("[ID:{0}] groupBulkRead addparam failed", DXL2_ID);
+        Console.WriteLine("[ID: {0}] groupBulkRead addparam failed", DXL2_ID);
         return;
       }
 
@@ -164,7 +164,7 @@ namespace bulk_read_write
         dxl_addparam_result = dynamixel.groupBulkWriteAddParam(groupwrite_num, DXL1_ID, ADDR_PRO_GOAL_POSITION, LEN_PRO_GOAL_POSITION, (UInt32)dxl_goal_position[index], LEN_PRO_GOAL_POSITION);
         if (dxl_addparam_result != true)
         {
-          Console.WriteLine("[ID:{0}] groupBulkWrite addparam failed", DXL1_ID);
+          Console.WriteLine("[ID: {0}] groupBulkWrite addparam failed", DXL1_ID);
           return;
         }
 
@@ -172,7 +172,7 @@ namespace bulk_read_write
         dxl_addparam_result = dynamixel.groupBulkWriteAddParam(groupwrite_num, DXL2_ID, ADDR_PRO_LED_RED, LEN_PRO_LED_RED, dxl_led_value[index], LEN_PRO_LED_RED);
         if (dxl_addparam_result != true)
         {
-          Console.WriteLine("[ID:{0}] groupBulkWrite addparam failed", DXL2_ID);
+          Console.WriteLine("[ID: {0}] groupBulkWrite addparam failed", DXL2_ID);
           return;
         }
 
@@ -194,14 +194,14 @@ namespace bulk_read_write
           dxl_getdata_result = dynamixel.groupBulkReadIsAvailable(groupread_num, DXL1_ID, ADDR_PRO_PRESENT_POSITION, LEN_PRO_PRESENT_POSITION);
           if (dxl_getdata_result != true)
           {
-            Console.WriteLine("[ID:{0}] groupBulkRead getdata failed", DXL1_ID);
+            Console.WriteLine("[ID: {0}] groupBulkRead getdata failed", DXL1_ID);
             return;
           }
 
           dxl_getdata_result = dynamixel.groupBulkReadIsAvailable(groupread_num, DXL2_ID, ADDR_PRO_LED_RED, LEN_PRO_LED_RED);
           if (dxl_getdata_result != true)
           {
-            Console.WriteLine("[ID:{0}] groupBulkRead getdata failed", DXL2_ID);
+            Console.WriteLine("[ID: {0}] groupBulkRead getdata failed", DXL2_ID);
             return;
           }
 
@@ -211,7 +211,7 @@ namespace bulk_read_write
           // Get Dynamixel#2 moving status value
           dxl2_led_value_read = (byte)dynamixel.groupBulkReadGetData(groupread_num, DXL2_ID, ADDR_PRO_LED_RED, LEN_PRO_LED_RED);
 
-          Console.WriteLine("[ID:{0}] Present Position : {1} [ID:{2}] LED Value : {3}", DXL1_ID, dxl1_present_position, DXL2_ID, dxl2_led_value_read);
+          Console.WriteLine("[ID: {0}] Present Position : {1} [ID: {2}] LED Value : {3}", DXL1_ID, dxl1_present_position, DXL2_ID, dxl2_led_value_read);
 
         } while (Math.Abs(dxl_goal_position[index] - dxl1_present_position) > DXL_MOVING_STATUS_THRESHOLD);
 

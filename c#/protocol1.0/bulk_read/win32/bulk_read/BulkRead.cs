@@ -1,9 +1,9 @@
 /*
-* bulk_read.cs
-*
-*  Created on: 2016. 5. 16.
-*      Author: Leon Ryu Woon Jung
-*/
+ * BulkRead.cs
+ *
+ *  Created on: 2016. 6. 20.
+ *      Author: Ryu Woon Jung (Leon)
+ */
 
 //
 // *********     Bulk Read Example      *********
@@ -40,7 +40,7 @@ namespace bulk_read
     public const int DXL1_ID                         = 1;                   // Dynamixel ID: 1
     public const int DXL2_ID                         = 2;                   // Dynamixel ID: 2
     public const int BAUDRATE                        = 1000000;
-    public const string DEVICENAME = "/dev/ttyUSB0";              // Check which port is being used on your controller
+    public const string DEVICENAME                   = "/dev/ttyUSB0";      // Check which port is being used on your controller
                                                                             // ex) "COM1"   Linux: "/dev/ttyUSB0"
 
     public const int TORQUE_ENABLE                   = 1;                   // Value for enabling the torque
@@ -68,14 +68,14 @@ namespace bulk_read
       int group_num = dynamixel.groupBulkRead(port_num, PROTOCOL_VERSION);
 
       int index = 0;
-      int dxl_comm_result = COMM_TX_FAIL;             // Communication result
-      bool dxl_addparam_result = false;               // AddParam result
-      bool dxl_getdata_result = false;                // GetParam result
-      UInt16[] dxl_goal_position = new UInt16[2]{ DXL_MINIMUM_POSITION_VALUE, DXL_MAXIMUM_POSITION_VALUE };         // Goal position
+      int dxl_comm_result = COMM_TX_FAIL;                                   // Communication result
+      bool dxl_addparam_result = false;                                     // AddParam result
+      bool dxl_getdata_result = false;                                      // GetParam result
+      UInt16[] dxl_goal_position = new UInt16[2]{ DXL_MINIMUM_POSITION_VALUE, DXL_MAXIMUM_POSITION_VALUE }; // Goal position
 
-      byte dxl_error = 0;                             // Dynamixel error
-      UInt16 dxl1_present_position = 0;               // Present position
-      byte dxl2_moving = 0;                           // Dynamixel moving status
+      byte dxl_error = 0;                                                   // Dynamixel error
+      UInt16 dxl1_present_position = 0;                                     // Present position
+      byte dxl2_moving = 0;                                                 // Dynamixel moving status
 
       // Open port
       if (dynamixel.openPort(port_num))
@@ -137,7 +137,7 @@ namespace bulk_read
       dxl_addparam_result = dynamixel.groupBulkReadAddParam(group_num, DXL1_ID, ADDR_MX_PRESENT_POSITION, LEN_MX_PRESENT_POSITION);
       if (dxl_addparam_result != true)
       {
-        Console.WriteLine("[ID:{0}] groupBulkRead addparam failed", DXL1_ID);
+        Console.WriteLine("[ID: {0}] groupBulkRead addparam failed", DXL1_ID);
         return;
       }
 
@@ -145,7 +145,7 @@ namespace bulk_read
       dxl_addparam_result = dynamixel.groupBulkReadAddParam(group_num, DXL2_ID, ADDR_MX_MOVING, LEN_MX_MOVING);
       if (dxl_addparam_result != true)
       {
-        Console.WriteLine("[ID:{0}] groupBulkRead addparam failed", DXL2_ID);
+        Console.WriteLine("[ID: {0}] groupBulkRead addparam failed", DXL2_ID);
         return;
       }
 
@@ -187,14 +187,14 @@ namespace bulk_read
           dxl_getdata_result = dynamixel.groupBulkReadIsAvailable(group_num, DXL1_ID, ADDR_MX_PRESENT_POSITION, LEN_MX_PRESENT_POSITION);
           if (dxl_getdata_result != true)
           {
-            Console.WriteLine("[ID:{0}] groupBulkRead getdata failed", DXL1_ID);
+            Console.WriteLine("[ID: {0}] groupBulkRead getdata failed", DXL1_ID);
             return;
           }
 
           dxl_getdata_result = dynamixel.groupBulkReadIsAvailable(group_num, DXL2_ID, ADDR_MX_MOVING, LEN_MX_MOVING);
           if (dxl_getdata_result != true)
           {
-            Console.WriteLine("[ID:{0}] groupBulkRead getdata failed", DXL2_ID);
+            Console.WriteLine("[ID: {0}] groupBulkRead getdata failed", DXL2_ID);
             return;
           }
 
@@ -204,7 +204,7 @@ namespace bulk_read
           // Get Dynamixel#2 moving status value
           dxl2_moving = (byte)dynamixel.groupBulkReadGetData(group_num, DXL2_ID, ADDR_MX_MOVING, LEN_MX_MOVING);
 
-          Console.WriteLine("[ID:{0}] Present Position : {1} [ID:{2}] Is Moving : {3}", DXL1_ID, dxl1_present_position, DXL2_ID, dxl2_moving);
+          Console.WriteLine("[ID: {0}] Present Position : {1} [ID: {2}] Is Moving : {3}", DXL1_ID, dxl1_present_position, DXL2_ID, dxl2_moving);
 
         } while (Math.Abs(dxl_goal_position[index] - dxl1_present_position) > DXL_MOVING_STATUS_THRESHOLD);
 

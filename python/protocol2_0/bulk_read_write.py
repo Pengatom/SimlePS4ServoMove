@@ -4,8 +4,8 @@
 #
 # bulk_read_write.py
 #
-#  Created on: 2016. 5. 16.
-#      Author: Leon Ryu Woon Jung
+#  Created on: 2016. 6. 16.
+#      Author: Ryu Woon Jung (Leon)
 #
 
 #
@@ -24,7 +24,7 @@ import init_path
 from dynamixel_functions_py import dynamixel_functions as dynamixel                      # Uses Dynamixel SDK library
 
 # Control table address
-ADDR_PRO_TORQUE_ENABLE      = 562          # Control table address is different in Dynamixel model
+ADDR_PRO_TORQUE_ENABLE      = 562                           # Control table address is different in Dynamixel model
 ADDR_PRO_LED_RED            = 563
 ADDR_PRO_GOAL_POSITION      = 596
 ADDR_PRO_PRESENT_POSITION   = 611
@@ -35,25 +35,25 @@ LEN_PRO_GOAL_POSITION       = 4
 LEN_PRO_PRESENT_POSITION    = 4
 
 # Protocol version
-PROTOCOL_VERSION            = 2            # See which protocol version is used in the Dynamixel
+PROTOCOL_VERSION            = 2                             # See which protocol version is used in the Dynamixel
 
 # Default setting
-DXL1_ID                     = 1            # Dynamixel ID: 1
-DXL2_ID                     = 2            # Dynamixel ID: 2
+DXL1_ID                     = 1                             # Dynamixel ID: 1
+DXL2_ID                     = 2                             # Dynamixel ID: 2
 BAUDRATE                    = 1000000
-DEVICENAME                  = "COM1".encode('utf-8')       # Check which port is being used on your controller
-                                            # ex) Windows: "COM1"   Linux: "/dev/ttyUSB0"
+DEVICENAME                  = "COM1".encode('utf-8')        # Check which port is being used on your controller
+                                                            # ex) Windows: "COM1"   Linux: "/dev/ttyUSB0"
 
-TORQUE_ENABLE               = 1            # Value for enabling the torque
-TORQUE_DISABLE              = 0            # Value for disabling the torque
-DXL_MINIMUM_POSITION_VALUE  = -150000      # Dynamixel will rotate between this value
-DXL_MAXIMUM_POSITION_VALUE  = 150000       # and this value (note that the Dynamixel would not move when the position value is out of movable range. Check e-manual about the range of the Dynamixel you use.)
-DXL_MOVING_STATUS_THRESHOLD = 20           # Dynamixel moving status threshold
+TORQUE_ENABLE               = 1                             # Value for enabling the torque
+TORQUE_DISABLE              = 0                             # Value for disabling the torque
+DXL_MINIMUM_POSITION_VALUE  = -150000                       # Dynamixel will rotate between this value
+DXL_MAXIMUM_POSITION_VALUE  = 150000                        # and this value (note that the Dynamixel would not move when the position value is out of movable range. Check e-manual about the range of the Dynamixel you use.)
+DXL_MOVING_STATUS_THRESHOLD = 20                            # Dynamixel moving status threshold
 
 ESC_ASCII_VALUE             = 0x1b
 
-COMM_SUCCESS                = 0            # Communication Success result value
-COMM_TX_FAIL                = -1001        # Communication Tx Failed
+COMM_SUCCESS                = 0                             # Communication Success result value
+COMM_TX_FAIL                = -1001                         # Communication Tx Failed
 
 # Initialize PortHandler Structs
 # Set the port path
@@ -70,15 +70,15 @@ groupwrite_num = dynamixel.groupBulkWrite(port_num, PROTOCOL_VERSION)
 groupread_num = dynamixel.groupBulkRead(port_num, PROTOCOL_VERSION)
 
 index = 0
-dxl_comm_result = COMM_TX_FAIL           # Communication result
-dxl_addparam_result = 0                  # AddParam result
-dxl_getdata_result = 0                   # GetParam result
+dxl_comm_result = COMM_TX_FAIL                              # Communication result
+dxl_addparam_result = 0                                     # AddParam result
+dxl_getdata_result = 0                                      # GetParam result
 dxl_goal_position = [DXL_MINIMUM_POSITION_VALUE, DXL_MAXIMUM_POSITION_VALUE]         # Goal position
 
-dxl_error = 0                            # Dynamixel error
-dxl_led_value = [0, 255]                  # Dynamixel LED value for write
-dxl1_present_position = 0                # Present position
-dxl2_led_value_read = 0                  # Dynamixel moving status
+dxl_error = 0                                               # Dynamixel error
+dxl_led_value = [0, 255]                                    # Dynamixel LED value for write
+dxl1_present_position = 0                                   # Present position
+dxl2_led_value_read = 0                                     # Dynamixel moving status
 
 
 # Open port

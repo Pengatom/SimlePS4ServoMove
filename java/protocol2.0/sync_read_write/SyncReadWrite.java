@@ -1,9 +1,9 @@
 /*
-* SyncReadWrite.java
-*
-*  Created on: 2016. 5. 16.
-*      Author: Leon Ryu Woon Jung
-*/
+ * SyncReadWrite.java
+ *
+ *  Created on: 2016. 6. 23.
+ *      Author: Ryu Woon Jung (Leon)
+ */
 
 //
 // *********     Sync Read and Sync Write Example      *********
@@ -29,7 +29,7 @@ public class SyncReadWrite
     // Data Byte Length
     short LEN_PRO_GOAL_POSITION         = 4;
     short LEN_PRO_PRESENT_POSITION      = 4;
-    
+
     // Protocol version
     int PROTOCOL_VERSION                = 2;                   // See which protocol version is used in the Dynamixel
 
@@ -37,7 +37,7 @@ public class SyncReadWrite
     byte DXL1_ID                        = 1;                   // Dynamixel ID: 1
     byte DXL2_ID                        = 2;                   // Dynamixel ID: 2
     int BAUDRATE                        = 1000000;
-    String DEVICENAME                   = "COM8";              // Check which port is being used on your controller
+    String DEVICENAME                   = "COM1";              // Check which port is being used on your controller
                                                                // ex) "COM1"   Linux: "/dev/ttyUSB0"
 
     byte TORQUE_ENABLE                  = 1;                   // Value for enabling the torque
@@ -53,7 +53,7 @@ public class SyncReadWrite
 
     // Instead of getch
     Scanner scanner = new Scanner(System.in);
-    
+
     // Initialize Dynamixel class for java
     Dynamixel dynamixel = new Dynamixel();
 
@@ -120,7 +120,7 @@ public class SyncReadWrite
     {
       System.out.printf("Dynamixel#%d has been successfully connected\n", DXL1_ID);
     }
-    
+
     // Enable Dynamixel#2 Torque
     dynamixel.write1ByteTxRx(port_num, PROTOCOL_VERSION, DXL2_ID, ADDR_PRO_TORQUE_ENABLE, TORQUE_ENABLE);
     if ((dxl_comm_result = dynamixel.getLastTxRxResult(port_num, PROTOCOL_VERSION)) != COMM_SUCCESS)
@@ -140,7 +140,7 @@ public class SyncReadWrite
     dxl_addparam_result = dynamixel.groupSyncReadAddParam(groupread_num, DXL1_ID);
     if (dxl_addparam_result != true)
     {
-      System.out.printf("[ID: %d] groupSyncRead addparam failed", DXL1_ID);
+      System.out.printf("[ID: %d] groupSyncRead addparam failed\n", DXL1_ID);
       return;
     }
 
@@ -148,10 +148,10 @@ public class SyncReadWrite
     dxl_addparam_result = dynamixel.groupSyncReadAddParam(groupread_num, DXL2_ID);
     if (dxl_addparam_result != true)
     {
-      System.out.printf("[ID: %d] groupSyncRead addparam failed", DXL2_ID);
+      System.out.printf("[ID: %d] groupSyncRead addparam failed\n", DXL2_ID);
       return;
     }
-    
+
     while (true)
     {
       System.out.println("Press enter to continue! (or press e then enter to quit!)");
@@ -162,7 +162,7 @@ public class SyncReadWrite
       dxl_addparam_result = dynamixel.groupSyncWriteAddParam(groupwrite_num, DXL1_ID, dxl_goal_position[index], LEN_PRO_GOAL_POSITION);
       if (dxl_addparam_result != true)
       {
-        System.out.printf("[ID:%d] groupSyncWrite addparam failed\n", DXL1_ID);
+        System.out.printf("[ID: %d] groupSyncWrite addparam failed\n", DXL1_ID);
         return;
       }
 
@@ -170,7 +170,7 @@ public class SyncReadWrite
       dxl_addparam_result = dynamixel.groupSyncWriteAddParam(groupwrite_num, DXL2_ID, dxl_goal_position[index], LEN_PRO_GOAL_POSITION);
       if (dxl_addparam_result != true)
       {
-        System.out.printf("[ID:%d] groupSyncWrite addparam failed\n", DXL2_ID);
+        System.out.printf("[ID: %d] groupSyncWrite addparam failed\n", DXL2_ID);
         return;
       }
 
@@ -193,7 +193,7 @@ public class SyncReadWrite
         dxl_getdata_result = dynamixel.groupSyncReadIsAvailable(groupread_num, DXL1_ID, ADDR_PRO_PRESENT_POSITION, LEN_PRO_PRESENT_POSITION);
         if (dxl_getdata_result != true)
         {
-          System.out.printf("[ID: %d] groupSyncRead getdata failed", DXL1_ID);
+          System.out.printf("[ID: %d] groupSyncRead getdata failed\n", DXL1_ID);
           return;
         }
 
@@ -201,7 +201,7 @@ public class SyncReadWrite
         dxl_getdata_result = dynamixel.groupSyncReadIsAvailable(groupread_num, DXL2_ID, ADDR_PRO_PRESENT_POSITION, LEN_PRO_PRESENT_POSITION);
         if (dxl_getdata_result != true)
         {
-          System.out.printf("[ID: %d] groupSyncRead getdata failed", DXL2_ID);
+          System.out.printf("[ID: %d] groupSyncRead getdata failed\n", DXL2_ID);
           return;
         }
 
@@ -250,7 +250,7 @@ public class SyncReadWrite
 
     // Close port
     dynamixel.closePort(port_num);
-    
+
     return;
   }
 }

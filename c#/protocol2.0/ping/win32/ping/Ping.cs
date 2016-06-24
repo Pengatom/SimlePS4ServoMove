@@ -1,12 +1,12 @@
-﻿/*
-* ping.cs
-*
-*  Created on: 2016. 5. 16.
-*      Author: Leon Ryu Woon Jung
-*/
+/*
+ * Ping.cs
+ *
+ *  Created on: 2016. 6. 20.
+ *      Author: Ryu Woon Jung (Leon)
+ */
 
 //
-// *********     ping Example      *********
+// *********     Ping Example      *********
 //
 //
 // Available Dynamixel model on this example : All models using Protocol 2.0
@@ -28,7 +28,7 @@ namespace ping
     // Default setting
     public const int DXL_ID                          = 1;                   // Dynamixel ID: 1
     public const int BAUDRATE                        = 1000000;
-    public const string DEVICENAME = "/dev/ttyUSB0";              // Check which port is being used on your controller
+    public const string DEVICENAME                   = "/dev/ttyUSB0";      // Check which port is being used on your controller
                                                                             // ex) "COM1"   Linux: "/dev/ttyUSB0"
 
     public const byte ESC_ASCII_VALUE                = 0x1b;
@@ -46,10 +46,10 @@ namespace ping
       // Initialize PacketHandler Structs
       dynamixel.packetHandler();
 
-      int dxl_comm_result = COMM_TX_FAIL;             // Communication result
+      int dxl_comm_result = COMM_TX_FAIL;                                   // Communication result
 
-      byte dxl_error = 0;                          // Dynamixel error
-      UInt16 dxl_model_number;                      // Dynamixel model number
+      byte dxl_error = 0;                                                   // Dynamixel error
+      UInt16 dxl_model_number;                                              // Dynamixel model number
 
       // Open port
       if (dynamixel.openPort(port_num))
@@ -76,6 +76,7 @@ namespace ping
         Console.ReadKey();
         return;
       }
+
       // Try to ping the Dynamixel
       // Get Dynamixel model number
       dxl_model_number = dynamixel.pingGetModelNum(port_num, PROTOCOL_VERSION, DXL_ID);
@@ -88,7 +89,7 @@ namespace ping
         dynamixel.printRxPacketError(PROTOCOL_VERSION, dxl_error);
       }
 
-      Console.WriteLine("[ID:{0}] ping Succeeded. Dynamixel model number : {1}", DXL_ID, dxl_model_number);
+      Console.WriteLine("[ID: {0}] ping Succeeded. Dynamixel model number : {1}", DXL_ID, dxl_model_number);
 
       // Close port
       dynamixel.closePort(port_num);

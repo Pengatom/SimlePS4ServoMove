@@ -1,9 +1,9 @@
-﻿/*
-* multi_port.cs
-*
-*  Created on: 2016. 5. 16.
-*      Author: Leon Ryu Woon Jung
-*/
+/*
+ * MultiPort.cs
+ *
+ *  Created on: 2016. 6. 20.
+ *      Author: Ryu Woon Jung (Leon)
+ */
 
 //
 // *********     MultiPort Example      *********
@@ -60,11 +60,11 @@ namespace read_write
       dynamixel.packetHandler();
 
       int index = 0;
-      int dxl_comm_result = COMM_TX_FAIL;             // Communication result
-      int[] dxl_goal_position = new int[2]{ DXL_MINIMUM_POSITION_VALUE, DXL_MAXIMUM_POSITION_VALUE };         // Goal position
+      int dxl_comm_result = COMM_TX_FAIL;                                   // Communication result
+      int[] dxl_goal_position = new int[2]{ DXL_MINIMUM_POSITION_VALUE, DXL_MAXIMUM_POSITION_VALUE }; // Goal position
 
-      byte dxl_error = 0;                             // Dynamixel error
-      Int32 dxl1_present_position = 0, dxl2_present_position = 0;                // Present position
+      byte dxl_error = 0;                                                   // Dynamixel error
+      Int32 dxl1_present_position = 0, dxl2_present_position = 0;           // Present position
 
       // Open port1
       if (dynamixel.openPort(port_num1))
@@ -200,7 +200,7 @@ namespace read_write
             dynamixel.printRxPacketError(PROTOCOL_VERSION, dxl_error);
           }
 
-          Console.WriteLine("[ID:{0}] GoalPos:{1}  PresPos:{2} [ID:{3}] GoalPos:{4}  PresPos:{5}", DXL1_ID, dxl_goal_position[index], dxl1_present_position, DXL2_ID, dxl_goal_position[index], dxl2_present_position);
+          Console.WriteLine("[ID: {0}] GoalPos: {1}  PresPos: {2} [ID: {3}] GoalPos: {4}  PresPos: {5}", DXL1_ID, dxl_goal_position[index], dxl1_present_position, DXL2_ID, dxl_goal_position[index], dxl2_present_position);
 
         } while ((Math.Abs(dxl_goal_position[index] - dxl1_present_position) > DXL_MOVING_STATUS_THRESHOLD) || (Math.Abs(dxl_goal_position[index] - dxl2_present_position) > DXL_MOVING_STATUS_THRESHOLD));
 

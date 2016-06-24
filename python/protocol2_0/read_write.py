@@ -4,8 +4,8 @@
 #
 # read_write.py
 #
-#  Created on: 2016. 5. 16.
-#      Author: Leon Ryu Woon Jung
+#  Created on: 2016. 6. 16.
+#      Author: Ryu Woon Jung (Leon)
 #
 
 #
@@ -24,29 +24,29 @@ import init_path
 from dynamixel_functions_py import dynamixel_functions as dynamixel                      # Uses Dynamixel SDK library
 
 # Control table address
-ADDR_PRO_TORQUE_ENABLE       = 562         # Control table address is different in Dynamixel model
+ADDR_PRO_TORQUE_ENABLE       = 562                          # Control table address is different in Dynamixel model
 ADDR_PRO_GOAL_POSITION       = 596
 ADDR_PRO_PRESENT_POSITION    = 611
 
 # Protocol version
-PROTOCOL_VERSION            = 2            # See which protocol version is used in the Dynamixel
+PROTOCOL_VERSION            = 2                             # See which protocol version is used in the Dynamixel
 
 # Default setting
-DXL_ID                      = 1            # Dynamixel ID: 1
+DXL_ID                      = 1                             # Dynamixel ID: 1
 BAUDRATE                    = 1000000
-DEVICENAME                  = "COM1".encode('utf-8')       # Check which port is being used on your controller
-                                            # ex) Windows: "COM1"   Linux: "/dev/ttyUSB0"
+DEVICENAME                  = "COM1".encode('utf-8')        # Check which port is being used on your controller
+                                                            # ex) Windows: "COM1"   Linux: "/dev/ttyUSB0"
 
-TORQUE_ENABLE               = 1            # Value for enabling the torque
-TORQUE_DISABLE              = 0            # Value for disabling the torque
-DXL_MINIMUM_POSITION_VALUE  = -150000      # Dynamixel will rotate between this value
-DXL_MAXIMUM_POSITION_VALUE  = 150000       # and this value (note that the Dynamixel would not move when the position value is out of movable range. Check e-manual about the range of the Dynamixel you use.)
-DXL_MOVING_STATUS_THRESHOLD = 20           # Dynamixel moving status threshold
+TORQUE_ENABLE               = 1                             # Value for enabling the torque
+TORQUE_DISABLE              = 0                             # Value for disabling the torque
+DXL_MINIMUM_POSITION_VALUE  = -150000                       # Dynamixel will rotate between this value
+DXL_MAXIMUM_POSITION_VALUE  = 150000                        # and this value (note that the Dynamixel would not move when the position value is out of movable range. Check e-manual about the range of the Dynamixel you use.)
+DXL_MOVING_STATUS_THRESHOLD = 20                            # Dynamixel moving status threshold
 
 ESC_ASCII_VALUE             = 0x1b
 
-COMM_SUCCESS                = 0            # Communication Success result value
-COMM_TX_FAIL                = -1001        # Communication Tx Failed
+COMM_SUCCESS                = 0                             # Communication Success result value
+COMM_TX_FAIL                = -1001                         # Communication Tx Failed
 
 # Initialize PortHandler Structs
 # Set the port path
@@ -57,11 +57,11 @@ port_num = dynamixel.portHandler(DEVICENAME)
 dynamixel.packetHandler()
 
 index = 0
-dxl_comm_result = COMM_TX_FAIL           # Communication result
+dxl_comm_result = COMM_TX_FAIL                              # Communication result
 dxl_goal_position = [DXL_MINIMUM_POSITION_VALUE, DXL_MAXIMUM_POSITION_VALUE]         # Goal position
 
-dxl_error = 0                              # Dynamixel error
-dxl_present_position = 0                   # Present position
+dxl_error = 0                                               # Dynamixel error
+dxl_present_position = 0                                    # Present position
 
 # Open port
 if dynamixel.openPort(port_num):
@@ -82,7 +82,7 @@ else:
     quit()
 
 
-# Enable DXL Torque
+# Enable Dynamixel Torque
 dynamixel.write1ByteTxRx(port_num, PROTOCOL_VERSION, DXL_ID, ADDR_PRO_TORQUE_ENABLE, TORQUE_ENABLE)
 if dynamixel.getLastTxRxResult(port_num, PROTOCOL_VERSION) != COMM_SUCCESS:
     dynamixel.printTxRxResult(PROTOCOL_VERSION, dynamixel.getLastTxRxResult(port_num, PROTOCOL_VERSION))

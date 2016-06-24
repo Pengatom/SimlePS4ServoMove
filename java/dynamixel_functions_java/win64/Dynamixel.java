@@ -1,3 +1,10 @@
+/*
+ * Dynamixel.java for 64bit
+ *
+ *  Created on: 2016. 6. 23.
+ *      Author: Ryu Woon Jung (Leon)
+ */
+
 import com.sun.jna.Library;
 import com.sun.jna.Native;
 

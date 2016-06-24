@@ -1,12 +1,12 @@
-﻿/*
-* reboot.cs
-*
-*  Created on: 2016. 5. 16.
-*      Author: Leon Ryu Woon Jung
-*/
+/*
+ * Reboot.cs
+ *
+ *  Created on: 2016. 6. 20.
+ *      Author: Ryu Woon Jung (Leon)
+ */
 
 //
-// *********     reboot Example      *********
+// *********     Reboot Example      *********
 //
 //
 // Available Dynamixel model on this example : All models using Protocol 2.0
@@ -23,18 +23,18 @@ namespace reboot
   class Reboot
   {
     // Protocol version
-    public const int PROTOCOL_VERSION = 2;                   // See which protocol version is used in the Dynamixel
+    public const int PROTOCOL_VERSION = 2;                // See which protocol version is used in the Dynamixel
 
     // Default setting
-    public const int DXL_ID = 1;                   // Dynamixel ID: 1
-    public const int BAUDRATE = 1000000;
-    public const string DEVICENAME = "/dev/ttyUSB0";              // Check which port is being used on your controller
+    public const int DXL_ID           = 1;                // Dynamixel ID: 1
+    public const int BAUDRATE         = 1000000;
+    public const string DEVICENAME    = "/dev/ttyUSB0";   // Check which port is being used on your controller
                                                           // ex) "COM1"   Linux: "/dev/ttyUSB0"
 
     public const byte ESC_ASCII_VALUE = 0x1b;
 
-    public const int COMM_SUCCESS = 0;                   // Communication Success result value
-    public const int COMM_TX_FAIL = -1001;               // Communication Tx Failed
+    public const int COMM_SUCCESS     = 0;                // Communication Success result value
+    public const int COMM_TX_FAIL     = -1001;            // Communication Tx Failed
 
     static void Main(string[] args)
     {
@@ -46,9 +46,9 @@ namespace reboot
       // Initialize PacketHandler Structs
       dynamixel.packetHandler();
 
-      int dxl_comm_result = COMM_TX_FAIL;             // Communication result
+      int dxl_comm_result = COMM_TX_FAIL;                 // Communication result
 
-      byte dxl_error = 0;                          // Dynamixel error
+      byte dxl_error = 0;                                 // Dynamixel error
 
       // Open port
       if (dynamixel.openPort(port_num))
@@ -93,7 +93,7 @@ namespace reboot
         dynamixel.printRxPacketError(PROTOCOL_VERSION, dxl_error);
       }
 
-      Console.WriteLine("[ID:{0}] reboot Succeeded", DXL_ID);
+      Console.WriteLine("[ID: {0}] reboot Succeeded", DXL_ID);
 
       // Close port
       dynamixel.closePort(port_num);

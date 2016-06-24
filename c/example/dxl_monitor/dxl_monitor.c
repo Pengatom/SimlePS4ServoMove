@@ -2,7 +2,7 @@
  * dxl_monitor.c
  *
  *  Created on: 2016. 5. 16.
- *      Author: Leon Ryu Woon Jung
+ *      Author: Ryu Woon Jung (Leon)
  */
 
 //

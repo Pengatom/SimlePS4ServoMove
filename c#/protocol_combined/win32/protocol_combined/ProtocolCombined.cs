@@ -1,8 +1,8 @@
-﻿/*
- * protocol_combined.cs
+/*
+ * ProtocolCombined.cs
  *
- *  Created on: 2016. 5. 16.
- *      Author: Leon Ryu Woon Jung
+ *  Created on: 2016. 6. 20.
+ *      Author: Ryu Woon Jung (Leon)
  */
 
 //
@@ -26,25 +26,25 @@ namespace protocol_combined
   class ProtocolCombined
   {
     // Control table address for Dynamixel MX
-    public const int ADDR_MX_TORQUE_ENABLE = 24;                 // Control table address is different in Dynamixel model
-    public const int ADDR_MX_GOAL_POSITION = 30;
-    public const int ADDR_MX_PRESENT_POSITION = 36;
+    public const int ADDR_MX_TORQUE_ENABLE          = 24;                  // Control table address is different in Dynamixel model
+    public const int ADDR_MX_GOAL_POSITION          = 30;
+    public const int ADDR_MX_PRESENT_POSITION       = 36;
 
     // Control table address for Dynamixel PRO
-    public const int ADDR_PRO_TORQUE_ENABLE = 562;
-    public const int ADDR_PRO_GOAL_POSITION = 596;
-    public const int ADDR_PRO_PRESENT_POSITION = 611;
+    public const int ADDR_PRO_TORQUE_ENABLE         = 562;
+    public const int ADDR_PRO_GOAL_POSITION         = 596;
+    public const int ADDR_PRO_PRESENT_POSITION      = 611;
 
     // Protocol version
-    public const int PROTOCOL_VERSION1 = 1;                   // See which protocol version is used in the Dynamixel
-    public const int PROTOCOL_VERSION2 = 2;
+    public const int PROTOCOL_VERSION1              = 1;                   // See which protocol version is used in the Dynamixel
+    public const int PROTOCOL_VERSION2              = 2;
 
     // Default setting
-    public const int DXL1_ID = 1;                   // Dynamixel ID: 1
-    public const int DXL2_ID = 2;                   // Dynamixel ID: 2
-    public const int BAUDRATE = 1000000;
-    public const string DEVICENAME = "/dev/ttyUSB0";              // Check which port is being used on your controller
-                                                          // ex) "COM1"   Linux: "/dev/ttyUSB0"
+    public const int DXL1_ID                        = 1;                   // Dynamixel ID: 1
+    public const int DXL2_ID                        = 2;                   // Dynamixel ID: 2
+    public const int BAUDRATE                       = 1000000;
+    public const string DEVICENAME                  = "/dev/ttyUSB0";      // Check which port is being used on your controller
+                                                                           // ex) "COM1"   Linux: "/dev/ttyUSB0"
 
     public const int TORQUE_ENABLE                  = 1;                   // Value for enabling the torque
     public const int TORQUE_DISABLE                 = 0;                   // Value for disabling the torque
@@ -57,8 +57,8 @@ namespace protocol_combined
 
     public const byte ESC_ASCII_VALUE = 0x1b;
 
-    public const int COMM_SUCCESS = 0;                   // Communication Success result value
-    public const int COMM_TX_FAIL = -1001;               // Communication Tx Failed
+    public const int COMM_SUCCESS = 0;                                     // Communication Success result value
+    public const int COMM_TX_FAIL = -1001;                                 // Communication Tx Failed
 
     static void Main(string[] args)
     {
@@ -71,13 +71,13 @@ namespace protocol_combined
       dynamixel.packetHandler();
 
       int index = 0;
-      int dxl_comm_result = COMM_TX_FAIL;             // Communication result
-      UInt16[] dxl1_goal_position = new UInt16[2]{ DXL1_MINIMUM_POSITION_VALUE, DXL1_MAXIMUM_POSITION_VALUE };         // Goal position of Dynamixel MX
+      int dxl_comm_result = COMM_TX_FAIL;                                  // Communication result
+      UInt16[] dxl1_goal_position = new UInt16[2]{ DXL1_MINIMUM_POSITION_VALUE, DXL1_MAXIMUM_POSITION_VALUE };   // Goal position of Dynamixel MX
       int[] dxl2_goal_position = new int[2]{ DXL2_MINIMUM_POSITION_VALUE, DXL2_MAXIMUM_POSITION_VALUE };         // Goal position of Dynamixel PRO
 
-      byte dxl_error = 0;                             // Dynamixel error
-      UInt16 dxl1_present_position = 0;             // Present position of Dynamixel MX
-      Int32 dxl2_present_position = 0;              // Present position of Dynamixel PRO
+      byte dxl_error = 0;                                                  // Dynamixel error
+      UInt16 dxl1_present_position = 0;                                    // Present position of Dynamixel MX
+      Int32 dxl2_present_position = 0;                                     // Present position of Dynamixel PRO
 
 
       // Open port
@@ -188,7 +188,7 @@ namespace protocol_combined
             dynamixel.printRxPacketError(PROTOCOL_VERSION2, dxl_error);
           }
 
-          Console.WriteLine("[ID:{0}] GoalPos:{1}  PresPos:{2} [ID:{3}] GoalPos:{4}  PresPos:{5}", DXL1_ID, dxl1_goal_position[index], dxl1_present_position, DXL2_ID, dxl2_goal_position[index], dxl2_present_position);
+          Console.WriteLine("[ID: {0}] GoalPos: {1}  PresPos: {2} [ID: {3}] GoalPos: {4}  PresPos: {5}", DXL1_ID, dxl1_goal_position[index], dxl1_present_position, DXL2_ID, dxl2_goal_position[index], dxl2_present_position);
 
         } while ((Math.Abs(dxl1_goal_position[index] - dxl1_present_position) > DXL1_MOVING_STATUS_THRESHOLD) || (Math.Abs(dxl2_goal_position[index] - dxl2_present_position) > DXL2_MOVING_STATUS_THRESHOLD));
 

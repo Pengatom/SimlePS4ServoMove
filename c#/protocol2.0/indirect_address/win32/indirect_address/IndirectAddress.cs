@@ -1,9 +1,9 @@
-﻿/*
-* indirect_address.cs
-*
-*  Created on: 2016. 5. 16.
-*      Author: Leon Ryu Woon Jung
-*/
+/*
+ * IndirectAddress.cs
+ *
+ *  Created on: 2016. 6. 20.
+ *      Author: Ryu Woon Jung (Leon)
+ */
 
 //
 // *********     Indirect Address Example      *********
@@ -22,9 +22,9 @@ namespace sync_write
 {
   class SyncWrite
   {
-    // Control table address                                            // Control table address is different in Dynamixel model
-    public const int ADDR_PRO_INDIRECTADDRESS_FOR_WRITE      = 49;      // EEPROM region
-    public const int ADDR_PRO_INDIRECTADDRESS_FOR_READ       = 59;      // EEPROM region
+    // Control table address                                                        // Control table address is different in Dynamixel model
+    public const int ADDR_PRO_INDIRECTADDRESS_FOR_WRITE      = 49;                  // EEPROM region
+    public const int ADDR_PRO_INDIRECTADDRESS_FOR_READ       = 59;                  // EEPROM region
     public const int ADDR_PRO_TORQUE_ENABLE                  = 562;
     public const int ADDR_PRO_LED_RED                        = 563;
     public const int ADDR_PRO_GOAL_POSITION                  = 596;
@@ -42,26 +42,26 @@ namespace sync_write
     public const int LEN_PRO_INDIRECTDATA_FOR_READ           = 5;
 
     // Protocol version
-    public const int PROTOCOL_VERSION                = 2;                   // See which protocol version is used in the Dynamixel
+    public const int PROTOCOL_VERSION                        = 2;                   // See which protocol version is used in the Dynamixel
 
     // Default setting
-    public const int DXL_ID                          = 1;                   // Dynamixel ID: 1
-    public const int BAUDRATE                        = 1000000;
-    public const string DEVICENAME = "/dev/ttyUSB0";              // Check which port is being used on your controller
-                                                                            // ex) "COM1"   Linux: "/dev/ttyUSB0"
+    public const int DXL_ID                                  = 1;                   // Dynamixel ID: 1
+    public const int BAUDRATE                                = 1000000;
+    public const string DEVICENAME                           = "/dev/ttyUSB0";      // Check which port is being used on your controller
+                                                                                    // ex) "COM1"   Linux: "/dev/ttyUSB0"
 
-    public const int TORQUE_ENABLE                   = 1;                   // Value for enabling the torque
-    public const int TORQUE_DISABLE                  = 0;                   // Value for disabling the torque
-    public const int DXL_MINIMUM_POSITION_VALUE      = -150000;             // Dynamixel will rotate between this value
-    public const int DXL_MAXIMUM_POSITION_VALUE      = 150000;              // and this value (note that the Dynamixel would not move when the position value is out of movable range. Check e-manual about the range of the Dynamixel you use.)
-    public const int DXL_MINIMUM_LED_VALUE           = 0;                   // Dynamixel LED will light between this value
-    public const int DXL_MAXIMUM_LED_VALUE           = 255;                 // and this value
-    public const int DXL_MOVING_STATUS_THRESHOLD     = 20;                  // Dynamixel moving status threshold
+    public const int TORQUE_ENABLE                           = 1;                   // Value for enabling the torque
+    public const int TORQUE_DISABLE                          = 0;                   // Value for disabling the torque
+    public const int DXL_MINIMUM_POSITION_VALUE              = -150000;             // Dynamixel will rotate between this value
+    public const int DXL_MAXIMUM_POSITION_VALUE              = 150000;              // and this value (note that the Dynamixel would not move when the position value is out of movable range. Check e-manual about the range of the Dynamixel you use.)
+    public const int DXL_MINIMUM_LED_VALUE                   = 0;                   // Dynamixel LED will light between this value
+    public const int DXL_MAXIMUM_LED_VALUE                   = 255;                 // and this value
+    public const int DXL_MOVING_STATUS_THRESHOLD             = 20;                  // Dynamixel moving status threshold
 
-    public const byte ESC_ASCII_VALUE                = 0x1b;
+    public const byte ESC_ASCII_VALUE                        = 0x1b;
 
-    public const int COMM_SUCCESS                    = 0;                   // Communication Success result value
-    public const int COMM_TX_FAIL                    = -1001;               // Communication Tx Failed
+    public const int COMM_SUCCESS                            = 0;                   // Communication Success result value
+    public const int COMM_TX_FAIL                            = -1001;               // Communication Tx Failed
 
     static void Main(string[] args)
     {
@@ -80,15 +80,15 @@ namespace sync_write
       int groupread_num = dynamixel.groupSyncRead(port_num, PROTOCOL_VERSION, ADDR_PRO_INDIRECTDATA_FOR_READ, LEN_PRO_INDIRECTDATA_FOR_READ);
 
       int index = 0;
-      int dxl_comm_result = COMM_TX_FAIL;             // Communication result
-      bool dxl_addparam_result = false;               // AddParam result
-      bool dxl_getdata_result = false;                // GetParam result
+      int dxl_comm_result = COMM_TX_FAIL;                     // Communication result
+      bool dxl_addparam_result = false;                       // AddParam result
+      bool dxl_getdata_result = false;                        // GetParam result
       int[] dxl_goal_position = new int[2]{ DXL_MINIMUM_POSITION_VALUE, DXL_MAXIMUM_POSITION_VALUE };         // Goal position
 
-      byte dxl_error = 0;                             // Dynamixel error
-      byte dxl_moving = 0;                            // Dynamixel moving status
-      byte[] dxl_led_value = new byte[2]{ 0x00, 0xFF };      // Dynamixel LED value
-      Int32 dxl_present_position = 0;                // Present position
+      byte dxl_error = 0;                                     // Dynamixel error
+      byte dxl_moving = 0;                                    // Dynamixel moving status
+      byte[] dxl_led_value = new byte[2]{ 0x00, 0xFF };       // Dynamixel LED value
+      Int32 dxl_present_position = 0;                         // Present position
 
       // Open port
       if (dynamixel.openPort(port_num))
@@ -129,7 +129,7 @@ namespace sync_write
       }
       else
       {
-        Console.WriteLine("Dynamixel has been successfully connected ");
+        Console.WriteLine("Dynamixel has been successfully connected");
       }
 
       // INDIRECTDATA parameter storages replace LED, goal position, present position and moving status storages
@@ -233,7 +233,7 @@ namespace sync_write
         dynamixel.printRxPacketError(PROTOCOL_VERSION, dxl_error);
       }
 
-      // Enable DXL Torque
+      // Enable Dynamixel Torque
       dynamixel.write1ByteTxRx(port_num, PROTOCOL_VERSION, DXL_ID, ADDR_PRO_TORQUE_ENABLE, TORQUE_ENABLE);
       if ((dxl_comm_result = dynamixel.getLastTxRxResult(port_num, PROTOCOL_VERSION)) != COMM_SUCCESS)
       {
@@ -248,7 +248,7 @@ namespace sync_write
       dxl_addparam_result = dynamixel.groupSyncReadAddParam(groupread_num, DXL_ID);
       if (dxl_addparam_result != true)
       {
-        Console.WriteLine("[ID:{0}] groupSyncRead addparam failed", DXL_ID);
+        Console.WriteLine("[ID: {0}] groupSyncRead addparam failed", DXL_ID);
         return;
       }
 
@@ -262,13 +262,13 @@ namespace sync_write
         dxl_addparam_result = dynamixel.groupSyncWriteAddParam(groupwrite_num, DXL_ID, (UInt32)dxl_goal_position[index], LEN_PRO_GOAL_POSITION);
         if (dxl_addparam_result != true)
         {
-          Console.WriteLine("[ID:{0}] groupSyncWrite addparam failed", DXL_ID);
+          Console.WriteLine("[ID: {0}] groupSyncWrite addparam failed", DXL_ID);
           return;
         }
         dxl_addparam_result = dynamixel.groupSyncWriteAddParam(groupwrite_num, DXL_ID, dxl_led_value[index], LEN_PRO_LED_RED);
         if (dxl_addparam_result != true)
         {
-          Console.WriteLine("[ID:{0}] groupSyncWrite addparam failed", DXL_ID);
+          Console.WriteLine("[ID: {0}] groupSyncWrite addparam failed", DXL_ID);
           return;
         }
 
@@ -291,7 +291,7 @@ namespace sync_write
           dxl_getdata_result = dynamixel.groupSyncReadIsAvailable(groupread_num, DXL_ID, ADDR_PRO_INDIRECTDATA_FOR_READ, LEN_PRO_PRESENT_POSITION);
           if (dxl_getdata_result != true)
           {
-            Console.WriteLine("[ID:{0}] groupSyncRead getdata failed", DXL_ID);
+            Console.WriteLine("[ID: {0}] groupSyncRead getdata failed", DXL_ID);
             return;
           }
 
@@ -299,7 +299,7 @@ namespace sync_write
           dxl_getdata_result = dynamixel.groupSyncReadIsAvailable(groupread_num, DXL_ID, ADDR_PRO_INDIRECTDATA_FOR_READ + LEN_PRO_PRESENT_POSITION, LEN_PRO_MOVING);
           if (dxl_getdata_result != true)
           {
-            Console.WriteLine("[ID:{0}] groupSyncRead getdata failed", DXL_ID);
+            Console.WriteLine("[ID: {0}] groupSyncRead getdata failed", DXL_ID);
             return;
           }
 
@@ -309,7 +309,7 @@ namespace sync_write
           // Get Dynamixel moving status value
           dxl_moving = (byte)dynamixel.groupSyncReadGetData(groupread_num, DXL_ID, ADDR_PRO_INDIRECTDATA_FOR_READ + LEN_PRO_PRESENT_POSITION, LEN_PRO_MOVING);
 
-          Console.WriteLine("[ID:{0}] GoalPos:{1}  PresPos:{2}  IsMoving:{3}", DXL_ID, dxl_goal_position[index], dxl_present_position, dxl_moving);
+          Console.WriteLine("[ID: {0}] GoalPos: {1}  PresPos: {2}  IsMoving: {3}", DXL_ID, dxl_goal_position[index], dxl_present_position, dxl_moving);
 
         } while (Math.Abs(dxl_goal_position[index] - dxl_present_position) > DXL_MOVING_STATUS_THRESHOLD);
 

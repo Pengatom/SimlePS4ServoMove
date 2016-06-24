@@ -1,8 +1,8 @@
 %
 % multi_port.m
 %
-%  Created on: 2016. 5. 16.
-%      Author: Leon Ryu Woon Jung
+%  Created on: 2016. 6. 7.
+%      Author: Ryu Woon Jung (Leon)
 %
 
 %
@@ -11,7 +11,7 @@
 %
 % Available Dynamixel model on this example : All models using Protocol 2.0
 % This example is designed for using two Dynamixel PRO 54-200, and two USB2DYNAMIXELs.
-% To use another Dynamixel model, such as X series, see their details in E-Manual(support.robotis.com) and edit below "#define"d variables yourself.
+% To use another Dynamixel model, such as X series, see their details in E-Manual(support.robotis.com) and edit below variables yourself.
 % Be sure that Dynamixel PRO properties are already set as %% ID : 1 / Baudnum : 3 (Baudrate : 1000000)
 %
 
@@ -86,6 +86,7 @@ else
     return;
 end
 
+
 % Set port1 baudrate
 if (setBaudRate(port_num1, BAUDRATE))
     fprintf('Succeeded to change the baudrate!\n');
@@ -106,6 +107,7 @@ else
     return;
 end
 
+
 % Enable Dynamixel#1 Torque
 write1ByteTxRx(port_num1, PROTOCOL_VERSION, DXL1_ID, ADDR_PRO_TORQUE_ENABLE, TORQUE_ENABLE);
 if getLastTxRxResult(port_num1, PROTOCOL_VERSION) ~= COMM_SUCCESS
@@ -125,6 +127,7 @@ elseif getLastRxPacketError(port_num2, PROTOCOL_VERSION) ~= 0
 else
     fprintf('Dynamixel has been successfully connected \n');
 end
+
 
 while 1
     if input('Press any key to continue! (or input e to quit!)\n', 's') == ESC_CHARACTER
@@ -178,6 +181,7 @@ while 1
         index = 1;
     end
 end
+
 
 % Disable Dynamixel#1 Torque
 write1ByteTxRx(port_num1, PROTOCOL_VERSION, DXL1_ID, ADDR_PRO_TORQUE_ENABLE, TORQUE_DISABLE);

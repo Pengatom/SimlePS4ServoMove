@@ -4,8 +4,8 @@
 #
 # indirect_address.py
 #
-#  Created on: 2016. 5. 16.
-#      Author: Leon Ryu Woon Jung
+#  Created on: 2016. 6. 16.
+#      Author: Ryu Woon Jung (Leon)
 #
 
 #
@@ -43,24 +43,24 @@ LEN_PRO_INDIRECTDATA_FOR_WRITE          = 5
 LEN_PRO_INDIRECTDATA_FOR_READ           = 5
 
 # Protocol version
-PROTOCOL_VERSION            = 2            # See which protocol version is used in the Dynamixel
+PROTOCOL_VERSION            = 2                             # See which protocol version is used in the Dynamixel
 
 # Default setting
-DXL_ID                      = 1            # Dynamixel ID: 1
+DXL_ID                      = 1                             # Dynamixel ID: 1
 BAUDRATE                    = 1000000
-DEVICENAME                  = "COM1".encode('utf-8')       # Check which port is being used on your controller
-                                            # ex) Windows: "COM1"   Linux: "/dev/ttyUSB0"
+DEVICENAME                  = "COM1".encode('utf-8')        # Check which port is being used on your controller
+                                                            # ex) Windows: "COM1"   Linux: "/dev/ttyUSB0"
 
-TORQUE_ENABLE               = 1            # Value for enabling the torque
-TORQUE_DISABLE              = 0            # Value for disabling the torque
-DXL_MINIMUM_POSITION_VALUE  = -150000       # Dynamixel will rotate between this value
-DXL_MAXIMUM_POSITION_VALUE  = 150000      # and this value (note that the Dynamixel would not move when the position value is out of movable range. Check e-manual about the range of the Dynamixel you use.)
-DXL_MOVING_STATUS_THRESHOLD = 20           # Dynamixel moving status threshold
+TORQUE_ENABLE               = 1                             # Value for enabling the torque
+TORQUE_DISABLE              = 0                             # Value for disabling the torque
+DXL_MINIMUM_POSITION_VALUE  = -150000                       # Dynamixel will rotate between this value
+DXL_MAXIMUM_POSITION_VALUE  = 150000                        # and this value (note that the Dynamixel would not move when the position value is out of movable range. Check e-manual about the range of the Dynamixel you use.)
+DXL_MOVING_STATUS_THRESHOLD = 20                            # Dynamixel moving status threshold
 
 ESC_ASCII_VALUE             = 0x1b
 
-COMM_SUCCESS                = 0            # Communication Success result value
-COMM_TX_FAIL                = -1001        # Communication Tx Failed
+COMM_SUCCESS                = 0                             # Communication Success result value
+COMM_TX_FAIL                = -1001                         # Communication Tx Failed
 
 # Initialize PortHandler Structs
 # Set the port path
@@ -77,15 +77,15 @@ groupwrite_num = dynamixel.groupSyncWrite(port_num, PROTOCOL_VERSION, ADDR_PRO_I
 groupread_num = dynamixel.groupSyncRead(port_num, PROTOCOL_VERSION, ADDR_PRO_INDIRECTDATA_FOR_READ, LEN_PRO_INDIRECTDATA_FOR_READ)
 
 index = 0
-dxl_comm_result = COMM_TX_FAIL          # Communication result
-dxl_addparam_result = 0                 # AddParam result
-dxl_getdata_result = 0                  # GetParam result
+dxl_comm_result = COMM_TX_FAIL                              # Communication result
+dxl_addparam_result = 0                                     # AddParam result
+dxl_getdata_result = 0                                      # GetParam result
 dxl_goal_position = [DXL_MINIMUM_POSITION_VALUE, DXL_MAXIMUM_POSITION_VALUE]         # Goal position
 
-dxl_error = 0                           # Dynamixel error
-dxl_moving = 0                          # Dynamixel moving status
-dxl_led_value = [0x00, 0xFF]            # Dynamixel LED value
-dxl_present_position = 0                # Present position
+dxl_error = 0                                               # Dynamixel error
+dxl_moving = 0                                              # Dynamixel moving status
+dxl_led_value = [0x00, 0xFF]                                # Dynamixel LED value
+dxl_present_position = 0                                    # Present position
 
 # Open port
 if dynamixel.openPort(port_num):
@@ -104,7 +104,7 @@ else:
     print("Press any key to terminate...")
     msvcrt.getch()
     quit()
-    
+
 
 # Disable Dynamixel Torque :
 # Indirect address would not accessible when the torque is already enabled

@@ -1,9 +1,9 @@
-﻿/*
-* sync_read_write.cs
-*
-*  Created on: 2016. 5. 16.
-*      Author: Leon Ryu Woon Jung
-*/
+/*
+ * SyncReadWrite.cs
+ *
+ *  Created on: 2016. 6. 20.
+ *      Author: Ryu Woon Jung (Leon)
+ */
 
 //
 // *********     Sync Read and Sync Write Example      *********
@@ -38,7 +38,7 @@ namespace sync_write
     public const int DXL1_ID                         = 1;                   // Dynamixel ID: 1
     public const int DXL2_ID                         = 2;                   // Dynamixel ID: 2
     public const int BAUDRATE                        = 1000000;
-    public const string DEVICENAME = "/dev/ttyUSB0";              // Check which port is being used on your controller
+    public const string DEVICENAME                   = "/dev/ttyUSB0";      // Check which port is being used on your controller
                                                                             // ex) "COM1"   Linux: "/dev/ttyUSB0"
 
     public const int TORQUE_ENABLE                   = 1;                   // Value for enabling the torque
@@ -69,13 +69,13 @@ namespace sync_write
       int groupread_num = dynamixel.groupSyncRead(port_num, PROTOCOL_VERSION, ADDR_PRO_PRESENT_POSITION, LEN_PRO_PRESENT_POSITION);
 
       int index = 0;
-      int dxl_comm_result = COMM_TX_FAIL;             // Communication result
-      bool dxl_addparam_result = false;               // AddParam result
-      bool dxl_getdata_result = false;                // GetParam result
-      int[] dxl_goal_position = new int[2]{ DXL_MINIMUM_POSITION_VALUE, DXL_MAXIMUM_POSITION_VALUE };         // Goal position
+      int dxl_comm_result = COMM_TX_FAIL;                                   // Communication result
+      bool dxl_addparam_result = false;                                     // AddParam result
+      bool dxl_getdata_result = false;                                      // GetParam result
+      int[] dxl_goal_position = new int[2]{ DXL_MINIMUM_POSITION_VALUE, DXL_MAXIMUM_POSITION_VALUE }; // Goal position
 
-      byte dxl_error = 0;                             // Dynamixel error
-      Int32 dxl1_present_position = 0, dxl2_present_position = 0;                // Present position
+      byte dxl_error = 0;                                                   // Dynamixel error
+      Int32 dxl1_present_position = 0, dxl2_present_position = 0;           // Present position
 
       // Open port
       if (dynamixel.openPort(port_num))
@@ -137,7 +137,7 @@ namespace sync_write
       dxl_addparam_result = dynamixel.groupSyncReadAddParam(groupread_num, DXL1_ID);
       if (dxl_addparam_result != true)
       {
-        Console.WriteLine("[ID:{0}] groupSyncRead addparam failed", DXL1_ID);
+        Console.WriteLine("[ID: {0}] groupSyncRead addparam failed", DXL1_ID);
         return;
       }
 
@@ -145,7 +145,7 @@ namespace sync_write
       dxl_addparam_result = dynamixel.groupSyncReadAddParam(groupread_num, DXL2_ID);
       if (dxl_addparam_result != true)
       {
-        Console.WriteLine("[ID:{0}] groupSyncRead addparam failed", DXL2_ID);
+        Console.WriteLine("[ID: {0}] groupSyncRead addparam failed", DXL2_ID);
         return;
       }
 
@@ -159,7 +159,7 @@ namespace sync_write
         dxl_addparam_result = dynamixel.groupSyncWriteAddParam(groupwrite_num, DXL1_ID, (UInt32)dxl_goal_position[index], LEN_PRO_GOAL_POSITION);
         if (dxl_addparam_result != true)
         {
-          Console.WriteLine("[ID:{0}] groupSyncWrite addparam failed", DXL1_ID);
+          Console.WriteLine("[ID: {0}] groupSyncWrite addparam failed", DXL1_ID);
           return;
         }
 
@@ -167,7 +167,7 @@ namespace sync_write
         dxl_addparam_result = dynamixel.groupSyncWriteAddParam(groupwrite_num, DXL2_ID, (UInt32)dxl_goal_position[index], LEN_PRO_GOAL_POSITION);
         if (dxl_addparam_result != true)
         {
-          Console.WriteLine("[ID:{0}] groupSyncWrite addparam failed", DXL2_ID);
+          Console.WriteLine("[ID: {0}] groupSyncWrite addparam failed", DXL2_ID);
           return;
         }
 
@@ -190,7 +190,7 @@ namespace sync_write
           dxl_getdata_result = dynamixel.groupSyncReadIsAvailable(groupread_num, DXL1_ID, ADDR_PRO_PRESENT_POSITION, LEN_PRO_PRESENT_POSITION);
           if (dxl_getdata_result != true)
           {
-            Console.WriteLine("[ID:{0}] groupSyncRead getdata failed", DXL1_ID);
+            Console.WriteLine("[ID: {0}] groupSyncRead getdata failed", DXL1_ID);
             return;
           }
 
@@ -198,7 +198,7 @@ namespace sync_write
           dxl_getdata_result = dynamixel.groupSyncReadIsAvailable(groupread_num, DXL2_ID, ADDR_PRO_PRESENT_POSITION, LEN_PRO_PRESENT_POSITION);
           if (dxl_getdata_result != true)
           {
-            Console.WriteLine("[ID:{0}] groupSyncRead getdata failed", DXL2_ID);
+            Console.WriteLine("[ID: {0}] groupSyncRead getdata failed", DXL2_ID);
             return;
           }
 
@@ -208,7 +208,7 @@ namespace sync_write
           // Get Dynamixel#2 present position value
           dxl2_present_position = (Int32)dynamixel.groupSyncReadGetData(groupread_num, DXL2_ID, ADDR_PRO_PRESENT_POSITION, LEN_PRO_PRESENT_POSITION);
 
-          Console.WriteLine("[ID:{0}] GoalPos:{1}  PresPos:{2} [ID:{3}] GoalPos:{4}  PresPos:{5}", DXL1_ID, dxl_goal_position[index], dxl1_present_position, DXL2_ID, dxl_goal_position[index], dxl2_present_position);
+          Console.WriteLine("[ID: {0}] GoalPos: {1}  PresPos: {2} [ID: {3}] GoalPos: {4}  PresPos: {5}", DXL1_ID, dxl_goal_position[index], dxl1_present_position, DXL2_ID, dxl_goal_position[index], dxl2_present_position);
 
         } while ((Math.Abs(dxl_goal_position[index] - dxl1_present_position) > DXL_MOVING_STATUS_THRESHOLD) || (Math.Abs(dxl_goal_position[index] - dxl2_present_position) > DXL_MOVING_STATUS_THRESHOLD));
 

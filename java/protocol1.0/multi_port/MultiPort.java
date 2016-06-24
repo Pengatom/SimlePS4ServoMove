@@ -1,9 +1,9 @@
 /*
-* MultiPort.java
-*
-*  Created on: 2016. 5. 16.
-*      Author: Leon Ryu Woon Jung
-*/
+ * MultiPort.java
+ *
+ *  Created on: 2016. 6. 23.
+ *      Author: Ryu Woon Jung (Leon)
+ */
 
 //
 // *********     Multi Port Example      *********
@@ -33,8 +33,8 @@ public class MultiPort
     byte DXL1_ID                        = 1;                   // Dynamixel ID: 1
     byte DXL2_ID                        = 2;                   // Dynamixel ID: 2
     int BAUDRATE                        = 1000000;
-    String DEVICENAME1                  = "COM8";              // Check which port is being used on your controller
-    String DEVICENAME2                  = "COM4";              // ex) "COM1"   Linux: "/dev/ttyUSB0"
+    String DEVICENAME1                  = "COM1";              // Check which port is being used on your controller
+    String DEVICENAME2                  = "COM2";              // ex) "COM1"   Linux: "/dev/ttyUSB0"
 
     byte TORQUE_ENABLE                  = 1;                   // Value for enabling the torque
     byte TORQUE_DISABLE                 = 0;                   // Value for disabling the torque
@@ -49,7 +49,7 @@ public class MultiPort
 
     // Instead of getch
     Scanner scanner = new Scanner(System.in);
-    
+
     // Initialize Dynamixel class for java
     Dynamixel dynamixel = new Dynamixel();
 
@@ -136,7 +136,7 @@ public class MultiPort
     {
       System.out.printf("Dynamixel#%d has been successfully connected\n", DXL1_ID);
     }
-    
+
     // Enable Dynamixel#2 Torque
     dynamixel.write1ByteTxRx(port_num2, PROTOCOL_VERSION, DXL2_ID, ADDR_MX_TORQUE_ENABLE, TORQUE_ENABLE);
     if ((dxl_comm_result = dynamixel.getLastTxRxResult(port_num2, PROTOCOL_VERSION)) != COMM_SUCCESS)
@@ -204,8 +204,8 @@ public class MultiPort
           dynamixel.printRxPacketError(PROTOCOL_VERSION, dxl_error);
         }
 
-        System.out.printf("[ID:%d] GoalPos: %d  PresPos: %d [ID:%d] GoalPos: %d  PresPos: %d\n", DXL1_ID, dxl_goal_position[index], dxl1_present_position, DXL2_ID, dxl_goal_position[index], dxl2_present_position);
-        
+        System.out.printf("[ID: %d] GoalPos: %d  PresPos: %d [ID: %d] GoalPos: %d  PresPos: %d\n", DXL1_ID, dxl_goal_position[index], dxl1_present_position, DXL2_ID, dxl_goal_position[index], dxl2_present_position);
+
       } while ((Math.abs(dxl_goal_position[index] - dxl1_present_position) > DXL_MOVING_STATUS_THRESHOLD) || (Math.abs(dxl_goal_position[index] - dxl2_present_position) > DXL_MOVING_STATUS_THRESHOLD));
 
       // Change goal position
@@ -243,10 +243,10 @@ public class MultiPort
 
     // Close port1
     dynamixel.closePort(port_num1);
-    
+
     // Close port2
     dynamixel.closePort(port_num2);
-    
+
     return;
   }
 }

@@ -2,7 +2,7 @@
 * ping.c
 *
 *  Created on: 2016. 5. 16.
-*      Author: Leon Ryu Woon Jung
+*      Author: Ryu Woon Jung (Leon)
 */
 
 //
@@ -24,7 +24,7 @@
 #endif
 
 #include <stdio.h>
-#include "dynamixel_sdk.h"                                   // Uses Dynamixel SDK library
+#include "dynamixel_sdk.h"                                  // Uses Dynamixel SDK library
 
 // Protocol version
 #define PROTOCOL_VERSION                1.0                 // See which protocol version is used in the Dynamixel

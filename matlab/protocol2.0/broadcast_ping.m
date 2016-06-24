@@ -1,8 +1,8 @@
 %
 % broadcast_ping.m
 %
-%  Created on: 2016. 5. 16.
-%      Author: Leon Ryu Woon Jung
+%  Created on: 2016. 6. 7.
+%      Author: Ryu Woon Jung (Leon)
 %
 
 %
@@ -11,7 +11,7 @@
 %
 % Available Dynamixel model on this example : All models using Protocol 2.0
 % This example is designed for using a Dynamixel PRO 54-200, and an USB2DYNAMIXEL.
-% To use another Dynamixel model, such as X series, see their details in E-Manual(support.robotis.com) and edit below '#define'd variables yourself.
+% To use another Dynamixel model, such as X series, see their details in E-Manual(support.robotis.com) and edit below variables yourself.
 % Be sure that Dynamixel PRO properties are already set as %% ID : 1 / Baudnum : 3 (Baudrate : 1000000 [1M])
 %
 
@@ -34,7 +34,7 @@ DEVICENAME                      = 'COM1';       % Check which port is being used
 MAX_ID                          = 252;          % Maximum ID value
 COMM_SUCCESS                    = 0;            % Communication Success result value
 COMM_TX_FAIL                    = -1001;        % Communication Tx Failed
-                                                
+
 % Initialize PortHandler Structs
 % Set the port path
 % Get methods and members of PortHandlerLinux or PortHandlerWindows
@@ -55,6 +55,7 @@ else
     return;
 end
 
+
 % Set port baudrate
 if (setBaudRate(port_num, BAUDRATE))
     fprintf('Succeeded to change the baudrate!\n');
@@ -64,6 +65,7 @@ else
     input('Press any key to terminate...\n');
     return;
 end
+
 
 % Try to broadcast ping the Dynamixel
 broadcastPing(port_num, PROTOCOL_VERSION);
@@ -77,6 +79,7 @@ for id = 0 : MAX_ID
     fprintf('[ID:%03d]\n', id);
   end
 end
+
 
 % Close port
 closePort(port_num);

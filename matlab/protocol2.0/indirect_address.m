@@ -1,8 +1,8 @@
 %
 % indirect_address.m
 %
-%  Created on: 2016. 5. 16.
-%      Author: Leon Ryu Woon Jung
+%  Created on: 2016. 6. 7.
+%      Author: Ryu Woon Jung (Leon)
 %
 
 %
@@ -59,17 +59,17 @@ DXL_MINIMUM_LED_VALUE                   = 0;                  % Dynamixel LED wi
 DXL_MAXIMUM_LED_VALUE                   = 255;                % and this value
 DXL_MOVING_STATUS_THRESHOLD             = 20;                 % Dynamixel moving status threshold
 
-ESC_CHARACTER               = 'e';          % Key for escaping loop
+ESC_CHARACTER                           = 'e';                % Key for escaping loop
 
-COMM_SUCCESS                = 0;            % Communication Success result value
-COMM_TX_FAIL                = -1001;        % Communication Tx Failed
+COMM_SUCCESS                            = 0;                  % Communication Success result value
+COMM_TX_FAIL                            = -1001;              % Communication Tx Failed
 
 % Initialize PortHandler Structs
 % Set the port path
 % Get methods and members of PortHandlerLinux or PortHandlerWindows
 port_num = portHandler(DEVICENAME);
 
-% Initialize PacketHandler Structs 
+% Initialize PacketHandler Structs
 packetHandler();
 
 % Initialize Groupsyncwrite Structs
@@ -79,15 +79,15 @@ groupwrite_num = groupSyncWrite(port_num, PROTOCOL_VERSION, ADDR_PRO_INDIRECTDAT
 groupread_num = groupSyncRead(port_num, PROTOCOL_VERSION, ADDR_PRO_INDIRECTDATA_FOR_READ, LEN_PRO_INDIRECTDATA_FOR_READ);
 
 index = 1;
-dxl_comm_result = COMM_TX_FAIL;           % Communication result
-dxl_addparam_result = false;              % AddParam result
-dxl_getdata_result = false;               % GetParam result
+dxl_comm_result = COMM_TX_FAIL;                               % Communication result
+dxl_addparam_result = false;                                  % AddParam result
+dxl_getdata_result = false;                                   % GetParam result
 dxl_goal_position = [DXL_MINIMUM_POSITION_VALUE DXL_MAXIMUM_POSITION_VALUE];         % Goal position
 
-dxl_error = 0;                            % Dynamixel error
-dxl_moving = 0;                           % Dynamixel moving status
-dxl_led_value = [0 255];                  % Dynamixel LED value
-dxl_present_position = 0;                 % Present position
+dxl_error = 0;                                                % Dynamixel error
+dxl_moving = 0;                                               % Dynamixel moving status
+dxl_led_value = [0 255];                                      % Dynamixel LED value
+dxl_present_position = 0;                                     % Present position
 
 
 % Open port
@@ -100,6 +100,7 @@ else
     return;
 end
 
+
 % Set port baudrate
 if (setBaudRate(port_num, BAUDRATE))
     fprintf('Succeeded to change the baudrate!\n');
@@ -109,6 +110,7 @@ else
     input('Press any key to terminate...\n');
     return;
 end
+
 
 % Disable Dynamixel Torque :
 % Indirect address would not accessible when the torque is already enabled
@@ -192,7 +194,7 @@ elseif getLastRxPacketError(port_num, PROTOCOL_VERSION) ~= 0
     printRxPacketError(PROTOCOL_VERSION, getLastRxPacketError(port_num, PROTOCOL_VERSION));
 end
 
-% Enable DXL Torque
+% Enable Dynamixel Torque
 write1ByteTxRx(port_num, PROTOCOL_VERSION, DXL_ID, ADDR_PRO_TORQUE_ENABLE, TORQUE_ENABLE);
 if getLastTxRxResult(port_num, PROTOCOL_VERSION) ~= COMM_SUCCESS
     printTxRxResult(PROTOCOL_VERSION, getLastTxRxResult(port_num, PROTOCOL_VERSION));
@@ -206,6 +208,7 @@ if dxl_addparam_result ~= true
   fprintf('[ID:%03d] groupSyncRead addparam failed', DXL1_ID);
   return;
 end
+
 
 while 1
     if input('Press any key to continue! (or input e to quit!)\n', 's') == ESC_CHARACTER

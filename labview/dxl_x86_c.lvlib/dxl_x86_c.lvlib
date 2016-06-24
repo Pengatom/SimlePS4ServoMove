@@ -65,7 +65,7 @@
 	<Item Name="read2Byte Tx Rx.vi" Type="VI" URL="../VIs/read2Byte Tx Rx.vi"/>
 	<Item Name="read2Byte Tx.vi" Type="VI" URL="../VIs/read2Byte Tx.vi"/>
 	<Item Name="read4Byte Rx.vi" Type="VI" URL="../VIs/read4Byte Rx.vi"/>
-	<Item Name="read4Byte Tx Rx.vi" Type="VI" URL="/&lt;userlib&gt;/dxl_x86_c/VIs/read4Byte Tx Rx.vi"/>
+	<Item Name="read4Byte Tx Rx.vi" Type="VI" URL="../VIs/read4Byte Tx Rx.vi"/>
 	<Item Name="read4Byte Tx.vi" Type="VI" URL="../VIs/read4Byte Tx.vi"/>
 	<Item Name="reboot.vi" Type="VI" URL="../VIs/reboot.vi"/>
 	<Item Name="reg Write Tx Only.vi" Type="VI" URL="../VIs/reg Write Tx Only.vi"/>
@@ -88,5 +88,5 @@
 	<Item Name="write2Byte Tx Only.vi" Type="VI" URL="../VIs/write2Byte Tx Only.vi"/>
 	<Item Name="write2Byte Tx Rx.vi" Type="VI" URL="../VIs/write2Byte Tx Rx.vi"/>
 	<Item Name="write4Byte Tx Only.vi" Type="VI" URL="../VIs/write4Byte Tx Only.vi"/>
-	<Item Name="write4Byte Tx Rx.vi" Type="VI" URL="/&lt;userlib&gt;/dxl_x86_c/VIs/write4Byte Tx Rx.vi"/>
+	<Item Name="write4Byte Tx Rx.vi" Type="VI" URL="../VIs/write4Byte Tx Rx.vi"/>
 </Library>

@@ -4,18 +4,21 @@
 #
 # protocol_combined.py
 #
-#  Created on: 2016. 5. 16.
-#      Author: Leon Ryu Woon Jung
+#  Created on: 2016. 6. 16.
+#      Author: Ryu Woon Jung (Leon)
 #
 
 #
-# *********     Read and Write Example      *********
+# *********     Protocol Combined Example      *********
 #
 #
-# Available Dynamixel model on this example : All models using Protocol 2.0
-# This example is designed for using a Dynamixel PRO 54-200, and an USB2DYNAMIXEL.
-# To use another Dynamixel model, such as X series, see their details in E-Manual(support.robotis.com) and edit below variables yourself.
-# Be sure that Dynamixel PRO properties are already set as %% ID : 1 / Baudnum : 3 (Baudrate : 1000000 [1M])
+# Available Dynamixel model on this example : All models using Protocol 1.0 and 2.0
+# This example is tested with a Dynamixel MX-28, a Dynamixel PRO 54-200 and an USB2DYNAMIXEL
+# Be sure that properties of Dynamixel MX and PRO are already set as %% MX - ID : 1 / Baudnum : 1 (Baudrate : 1000000) , PRO - ID : 1 / Baudnum : 3 (Baudrate : 1000000)
+#
+
+# Be aware that:
+# This example configures two different control tables (especially, if it uses Dynamixel and Dynamixel PRO). It may modify critical Dynamixel parameter on the control table, if Dynamixels have wrong ID.
 #
 
 import msvcrt
@@ -24,7 +27,7 @@ import init_path
 from dynamixel_functions_py import dynamixel_functions as dynamixel                      # Uses Dynamixel SDK library
 
 # Control table address for Dynamixel MX
-ADDR_MX_TORQUE_ENABLE       = 24           # Control table address is different in Dynamixel model
+ADDR_MX_TORQUE_ENABLE       = 24                            # Control table address is different in Dynamixel model
 ADDR_MX_GOAL_POSITION       = 30
 ADDR_MX_PRESENT_POSITION    = 36
 
@@ -34,29 +37,29 @@ ADDR_PRO_GOAL_POSITION      = 596
 ADDR_PRO_PRESENT_POSITION   = 611
 
 # Protocol version
-PROTOCOL_VERSION1           = 1            # See which protocol version is used in the Dynamixel
+PROTOCOL_VERSION1           = 1                             # See which protocol version is used in the Dynamixel
 PROTOCOL_VERSION2           = 2
 
 # Default setting
-DXL1_ID                     = 1            # Dynamixel ID: 1
-DXL2_ID                     = 2            # Dynamixel ID: 2
+DXL1_ID                     = 1                             # Dynamixel ID: 1
+DXL2_ID                     = 2                             # Dynamixel ID: 2
 BAUDRATE                    = 1000000
-DEVICENAME                  = "COM1".encode('utf-8')       # Check which port is being used on your controller
-                                            # ex) Windows: "COM1"   Linux: "/dev/ttyUSB0"
+DEVICENAME                  = "COM1".encode('utf-8')        # Check which port is being used on your controller
+                                                            # ex) Windows: "COM1"   Linux: "/dev/ttyUSB0"
 
-TORQUE_ENABLE               = 1            # Value for enabling the torque
-TORQUE_DISABLE              = 0            # Value for disabling the torque
-DXL1_MINIMUM_POSITION_VALUE = 100          # Dynamixel will rotate between this value
-DXL1_MAXIMUM_POSITION_VALUE = 4000         # and this value (note that the Dynamixel would not move when the position value is out of movable range. Check e-manual about the range of the Dynamixel you use.)
+TORQUE_ENABLE               = 1                             # Value for enabling the torque
+TORQUE_DISABLE              = 0                             # Value for disabling the torque
+DXL1_MINIMUM_POSITION_VALUE = 100                           # Dynamixel will rotate between this value
+DXL1_MAXIMUM_POSITION_VALUE = 4000                          # and this value (note that the Dynamixel would not move when the position value is out of movable range. Check e-manual about the range of the Dynamixel you use.)
 DXL2_MINIMUM_POSITION_VALUE = -150000
 DXL2_MAXIMUM_POSITION_VALUE = 150000
-DXL1_MOVING_STATUS_THRESHOLD = 10           # Dynamixel moving status threshold
+DXL1_MOVING_STATUS_THRESHOLD = 10                           # Dynamixel moving status threshold
 DXL2_MOVING_STATUS_THRESHOLD = 20
 
 ESC_ASCII_VALUE             = 0x1b
 
-COMM_SUCCESS                = 0            # Communication Success result value
-COMM_TX_FAIL                = -1001        # Communication Tx Failed
+COMM_SUCCESS                = 0                             # Communication Success result value
+COMM_TX_FAIL                = -1001                         # Communication Tx Failed
 
 # Initialize PortHandler Structs
 # Set the port path
@@ -67,12 +70,12 @@ port_num = dynamixel.portHandler(DEVICENAME)
 dynamixel.packetHandler()
 
 index = 0
-dxl_comm_result = COMM_TX_FAIL            # Communication result
+dxl_comm_result = COMM_TX_FAIL                              # Communication result
 dxl1_goal_position = [DXL1_MINIMUM_POSITION_VALUE, DXL1_MAXIMUM_POSITION_VALUE]         # Goal position of Dynamixel MX
 dxl2_goal_position = [DXL2_MINIMUM_POSITION_VALUE, DXL2_MAXIMUM_POSITION_VALUE]         # Goal position of Dynamixel PRO
-dxl_error = 0                              # Dynamixel error
-dxl1_present_position = 0                  # Present position of Dynamixel MX
-dxl2_present_position = 0                  # Present position of Dynamixel PRO
+dxl_error = 0                                               # Dynamixel error
+dxl1_present_position = 0                                   # Present position of Dynamixel MX
+dxl2_present_position = 0                                   # Present position of Dynamixel PRO
 
 # Open port
 if dynamixel.openPort(port_num):

@@ -1,9 +1,9 @@
 /*
-* read_write.cs
-*
-*  Created on: 2016. 5. 16.
-*      Author: Leon Ryu Woon Jung
-*/
+ * ReadWrite.cs
+ *
+ *  Created on: 2016. 6. 20.
+ *      Author: Ryu Woon Jung (Leon)
+ */
 
 //
 // *********     Read and Write Example      *********
@@ -33,7 +33,7 @@ namespace read_write
     // Default setting
     public const int DXL_ID                          = 1;                   // Dynamixel ID: 1
     public const int BAUDRATE                        = 1000000;
-    public const string DEVICENAME = "/dev/ttyUSB0";              // Check which port is being used on your controller
+    public const string DEVICENAME                   = "/dev/ttyUSB0";      // Check which port is being used on your controller
                                                                             // ex) "COM1"   Linux: "/dev/ttyUSB0"
 
     public const int TORQUE_ENABLE                   = 1;                   // Value for enabling the torque
@@ -58,11 +58,11 @@ namespace read_write
       dynamixel.packetHandler();
 
       int index = 0;
-      int dxl_comm_result = COMM_TX_FAIL;             // Communication result
+      int dxl_comm_result = COMM_TX_FAIL;                                   // Communication result
       int[] dxl_goal_position = new int[2]{ DXL_MINIMUM_POSITION_VALUE, DXL_MAXIMUM_POSITION_VALUE };         // Goal position
 
-      byte dxl_error = 0;                             // Dynamixel error
-      Int32 dxl_present_position = 0;                 // Present position
+      byte dxl_error = 0;                                                   // Dynamixel error
+      Int32 dxl_present_position = 0;                                       // Present position
 
       // Open port
       if (dynamixel.openPort(port_num))
@@ -90,7 +90,7 @@ namespace read_write
         return;
       }
 
-      // Enable DXL Torque
+      // Enable Dynamixel Torque
       dynamixel.write1ByteTxRx(port_num, PROTOCOL_VERSION, DXL_ID, ADDR_PRO_TORQUE_ENABLE, TORQUE_ENABLE);
       if ((dxl_comm_result = dynamixel.getLastTxRxResult(port_num, PROTOCOL_VERSION)) != COMM_SUCCESS)
       {
@@ -102,7 +102,7 @@ namespace read_write
       }
       else
       {
-        Console.WriteLine("Dynamixel has been successfully connected ");
+        Console.WriteLine("Dynamixel has been successfully connected");
       }
 
       while (true)
@@ -135,7 +135,7 @@ namespace read_write
             dynamixel.printRxPacketError(PROTOCOL_VERSION, dxl_error);
           }
 
-          Console.WriteLine("[ID:{0}] GoalPos:{1}  PresPos:{2}", DXL_ID, dxl_goal_position[index], dxl_present_position);
+          Console.WriteLine("[ID: {0}] GoalPos: {1}  PresPos: {2}", DXL_ID, dxl_goal_position[index], dxl_present_position);
 
         } while ((Math.Abs(dxl_goal_position[index] - dxl_present_position) > DXL_MOVING_STATUS_THRESHOLD));
 

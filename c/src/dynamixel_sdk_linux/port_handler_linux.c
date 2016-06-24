@@ -28,7 +28,7 @@
 * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 *******************************************************************************/
 
-/* Author: Leon Ryu Woon Jung */
+/* Author: Ryu Woon Jung (Leon) */
 
 /*
 * port_handler_linux.c

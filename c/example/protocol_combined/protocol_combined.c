@@ -2,7 +2,7 @@
  * protocol_combined.c
  *
  *  Created on: 2016. 5. 16.
- *      Author: Leon Ryu Woon Jung
+ *      Author: Ryu Woon Jung (Leon)
  */
 
 //
@@ -28,7 +28,7 @@
 
 #include <stdlib.h>
 #include <stdio.h>
-#include "dynamixel_sdk.h"                                   // Uses Dynamixel SDK library
+#include "dynamixel_sdk.h"                                  // Uses Dynamixel SDK library
 
 // Control table address for Dynamixel MX
 #define ADDR_MX_TORQUE_ENABLE           24                  // Control table address is different in Dynamixel model

@@ -1,9 +1,9 @@
 /*
-* SyncWrite.java
-*
-*  Created on: 2016. 5. 16.
-*      Author: Leon Ryu Woon Jung
-*/
+ * SyncWrite.java
+ *
+ *  Created on: 2016. 6. 23.
+ *      Author: Ryu Woon Jung (Leon)
+ */
 
 //
 // *********     Sync Write Example      *********
@@ -28,7 +28,7 @@ public class SyncWrite
 
     // Data Byte Length
     short LEN_MX_GOAL_POSITION          = 2;
-    
+
     // Protocol version
     int PROTOCOL_VERSION                = 1;                   // See which protocol version is used in the Dynamixel
 
@@ -36,7 +36,7 @@ public class SyncWrite
     byte DXL1_ID                        = 1;                   // Dynamixel ID: 1
     byte DXL2_ID                        = 2;                   // Dynamixel ID: 2
     int BAUDRATE                        = 1000000;
-    String DEVICENAME                   = "COM8";              // Check which port is being used on your controller
+    String DEVICENAME                   = "COM1";              // Check which port is being used on your controller
                                                                // ex) "COM1"   Linux: "/dev/ttyUSB0"
 
     byte TORQUE_ENABLE                  = 1;                   // Value for enabling the torque
@@ -52,7 +52,7 @@ public class SyncWrite
 
     // Instead of getch
     Scanner scanner = new Scanner(System.in);
-    
+
     // Initialize Dynamixel class for java
     Dynamixel dynamixel = new Dynamixel();
 
@@ -115,7 +115,7 @@ public class SyncWrite
     {
       System.out.printf("Dynamixel#%d has been successfully connected\n", DXL1_ID);
     }
-    
+
     // Enable Dynamixel#2 Torque
     dynamixel.write1ByteTxRx(port_num, PROTOCOL_VERSION, DXL2_ID, ADDR_MX_TORQUE_ENABLE, TORQUE_ENABLE);
     if ((dxl_comm_result = dynamixel.getLastTxRxResult(port_num, PROTOCOL_VERSION)) != COMM_SUCCESS)
@@ -141,7 +141,7 @@ public class SyncWrite
       dxl_addparam_result = dynamixel.groupSyncWriteAddParam(group_num, DXL1_ID, dxl_goal_position[index], LEN_MX_GOAL_POSITION);
       if (dxl_addparam_result != true)
       {
-        System.out.printf("[ID:%d] groupSyncWrite addparam failed\n", DXL1_ID);
+        System.out.printf("[ID: %d] groupSyncWrite addparam failed\n", DXL1_ID);
         return;
       }
 
@@ -149,7 +149,7 @@ public class SyncWrite
       dxl_addparam_result = dynamixel.groupSyncWriteAddParam(group_num, DXL2_ID, dxl_goal_position[index], LEN_MX_GOAL_POSITION);
       if (dxl_addparam_result != true)
       {
-        System.out.printf("[ID:%d] groupSyncWrite addparam failed\n", DXL2_ID);
+        System.out.printf("[ID: %d] groupSyncWrite addparam failed\n", DXL2_ID);
         return;
       }
 
@@ -185,8 +185,8 @@ public class SyncWrite
           dynamixel.printRxPacketError(PROTOCOL_VERSION, dxl_error);
         }
 
-        System.out.printf("[ID:%d] GoalPos:%d  PresPos:%d [ID:%d] GoalPos:%d  PresPos:%d\n", DXL1_ID, dxl_goal_position[index], dxl1_present_position, DXL2_ID, dxl_goal_position[index], dxl2_present_position);
-        
+        System.out.printf("[ID: %d] GoalPos:%d  PresPos:%d [ID: %d] GoalPos:%d  PresPos:%d\n", DXL1_ID, dxl_goal_position[index], dxl1_present_position, DXL2_ID, dxl_goal_position[index], dxl2_present_position);
+
       } while ((Math.abs(dxl_goal_position[index] - dxl1_present_position) > DXL_MOVING_STATUS_THRESHOLD) || (Math.abs(dxl_goal_position[index] - dxl2_present_position) > DXL_MOVING_STATUS_THRESHOLD));
 
       // Change goal position
@@ -224,7 +224,7 @@ public class SyncWrite
 
     // Close port
     dynamixel.closePort(port_num);
-    
+
     return;
   }
 }

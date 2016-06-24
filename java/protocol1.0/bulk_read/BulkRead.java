@@ -1,9 +1,9 @@
 /*
-* BulkRead.java
-*
-*  Created on: 2016. 5. 16.
-*      Author: Leon Ryu Woon Jung
-*/
+ * BulkRead.java
+ *
+ *  Created on: 2016. 6. 23.
+ *      Author: Ryu Woon Jung (Leon)
+ */
 
 //
 // *********     Bulk Read Example      *********
@@ -31,7 +31,7 @@ public class BulkRead
     short LEN_MX_GOAL_POSITION          = 2;
     short LEN_MX_PRESENT_POSITION       = 2;
     short LEN_MX_MOVING                 = 1;
-    
+
     // Protocol version
     int PROTOCOL_VERSION                = 1;                   // See which protocol version is used in the Dynamixel
 
@@ -39,7 +39,7 @@ public class BulkRead
     byte DXL1_ID                        = 1;                   // Dynamixel ID: 1
     byte DXL2_ID                        = 2;                   // Dynamixel ID: 2
     int BAUDRATE                        = 1000000;
-    String DEVICENAME                   = "COM8";              // Check which port is being used on your controller
+    String DEVICENAME                   = "COM1";              // Check which port is being used on your controller
                                                                // ex) "COM1"   Linux: "/dev/ttyUSB0"
 
     byte TORQUE_ENABLE                  = 1;                   // Value for enabling the torque
@@ -55,7 +55,7 @@ public class BulkRead
 
     // Instead of getch
     Scanner scanner = new Scanner(System.in);
-    
+
     // Initialize Dynamixel class for java
     Dynamixel dynamixel = new Dynamixel();
 
@@ -120,7 +120,7 @@ public class BulkRead
     {
       System.out.printf("Dynamixel#%d has been successfully connected\n", DXL1_ID);
     }
-    
+
     // Enable Dynamixel#2 Torque
     dynamixel.write1ByteTxRx(port_num, PROTOCOL_VERSION, DXL2_ID, ADDR_MX_TORQUE_ENABLE, TORQUE_ENABLE);
     if ((dxl_comm_result = dynamixel.getLastTxRxResult(port_num, PROTOCOL_VERSION)) != COMM_SUCCESS)
@@ -140,7 +140,7 @@ public class BulkRead
     dxl_addparam_result = dynamixel.groupBulkReadAddParam(group_num, DXL1_ID, ADDR_MX_PRESENT_POSITION, LEN_MX_PRESENT_POSITION);
     if (dxl_addparam_result != true)
     {
-      System.out.printf("[ID:%d] groupBulkRead addparam failed\n", DXL1_ID);
+      System.out.printf("[ID: %d] groupBulkRead addparam failed\n", DXL1_ID);
       return;
     }
 
@@ -148,10 +148,10 @@ public class BulkRead
     dxl_addparam_result = dynamixel.groupBulkReadAddParam(group_num, DXL2_ID, ADDR_MX_MOVING, LEN_MX_MOVING);
     if (dxl_addparam_result != true)
     {
-      System.out.printf("[ID:%d] groupBulkRead addparam failed\n", DXL2_ID);
+      System.out.printf("[ID: %d] groupBulkRead addparam failed\n", DXL2_ID);
       return;
     }
-    
+
     while (true)
     {
       System.out.println("Press enter to continue! (or press e then enter to quit!)");
@@ -190,14 +190,14 @@ public class BulkRead
         dxl_getdata_result = dynamixel.groupBulkReadIsAvailable(group_num, DXL1_ID, ADDR_MX_PRESENT_POSITION, LEN_MX_PRESENT_POSITION);
         if (dxl_getdata_result != true)
         {
-          System.out.printf("[ID:%d] groupBulkRead getdata failed\n", DXL1_ID);
+          System.out.printf("[ID: %d] groupBulkRead getdata failed\n", DXL1_ID);
           return;
         }
 
         dxl_getdata_result = dynamixel.groupBulkReadIsAvailable(group_num, DXL2_ID, ADDR_MX_MOVING, LEN_MX_MOVING);
         if (dxl_getdata_result != true)
         {
-          System.out.printf("[ID:%d] groupBulkRead getdata failed\n", DXL2_ID);
+          System.out.printf("[ID: %d] groupBulkRead getdata failed\n", DXL2_ID);
           return;
         }
 
@@ -207,9 +207,8 @@ public class BulkRead
         // Get Dynamixel#2 moving status value
         dxl2_moving = (byte)dynamixel.groupBulkReadGetData(group_num, DXL2_ID, ADDR_MX_MOVING, LEN_MX_MOVING);
 
+        System.out.printf("[ID: %d] Present Position : %d [ID: %d] Is Moving : %d\n", DXL1_ID, dxl1_present_position, DXL2_ID, dxl2_moving);
 
-        System.out.printf("[ID:%d] Present Position : %d [ID:%d] Is Moving : %d\n", DXL1_ID, dxl1_present_position, DXL2_ID, dxl2_moving);
-        
       } while (Math.abs(dxl_goal_position[index] - dxl1_present_position) > DXL_MOVING_STATUS_THRESHOLD);
 
       // Change goal position
@@ -247,7 +246,7 @@ public class BulkRead
 
     // Close port
     dynamixel.closePort(port_num);
-    
+
     return;
   }
 }

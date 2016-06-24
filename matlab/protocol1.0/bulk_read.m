@@ -1,8 +1,8 @@
 %
 % bulk_read.m
 %
-%  Created on: 2016. 5. 16.
-%      Author: Leon Ryu Woon Jung
+%  Created on: 2016. 6. 7.
+%      Author: Ryu Woon Jung (Leon)
 %
 
 %
@@ -50,10 +50,10 @@ DXL_MINIMUM_POSITION_VALUE      = 100;          % Dynamixel will rotate between 
 DXL_MAXIMUM_POSITION_VALUE      = 4000;         % and this value (note that the Dynamixel would not move when the position value is out of movable range. Check e-manual about the range of the Dynamixel you use.)
 DXL_MOVING_STATUS_THRESHOLD     = 10;           % Dynamixel moving status threshold
 
-ESC_CHARACTER                   = 'e';              % Key for escaping loop
+ESC_CHARACTER                   = 'e';          % Key for escaping loop
 
-COMM_SUCCESS                    = 0;                % Communication Success result value
-COMM_TX_FAIL                    = -1001;            % Communication Tx Failed
+COMM_SUCCESS                    = 0;            % Communication Success result value
+COMM_TX_FAIL                    = -1001;        % Communication Tx Failed
 
 % Initialize PortHandler Structs
 % Set the port path
@@ -86,6 +86,7 @@ else
     return;
 end
 
+
 % Set port baudrate
 if (setBaudRate(port_num, BAUDRATE))
     fprintf('Succeeded to change the baudrate!\n');
@@ -95,6 +96,7 @@ else
     input('Press any key to terminate...\n');
     return;
 end
+
 
 % Enable Dynamixel#1 Torque
 write1ByteTxRx(port_num, PROTOCOL_VERSION, DXL1_ID, ADDR_MX_TORQUE_ENABLE, TORQUE_ENABLE);
@@ -129,6 +131,7 @@ if dxl_addparam_result ~= true
     fprintf('[ID:%03d] groupBulkRead addparam failed', DXL2_ID);
     return;
 end
+
 
 while 1
     if input('Press any key to continue! (or input e to quit!)\n', 's') == ESC_CHARACTER
@@ -184,7 +187,7 @@ while 1
             break;
         end
     end
-    
+
     % Change goal position
     if (index == 1)
       index = 2;
@@ -192,6 +195,7 @@ while 1
       index = 1;
     end
 end
+
 
 % Disable Dynamixel#1 Torque
 write1ByteTxRx(port_num, PROTOCOL_VERSION, DXL1_ID, ADDR_MX_TORQUE_ENABLE, TORQUE_DISABLE);
@@ -217,4 +221,3 @@ unloadlibrary('dxl_x86_c');
 
 close all;
 clear all;
-  

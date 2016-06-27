@@ -37,7 +37,7 @@ public class SyncReadWrite
     byte DXL1_ID                        = 1;                   // Dynamixel ID: 1
     byte DXL2_ID                        = 2;                   // Dynamixel ID: 2
     int BAUDRATE                        = 1000000;
-    String DEVICENAME                   = "COM1";              // Check which port is being used on your controller
+    String DEVICENAME                   = "/dev/ttyUSB0";      // Check which port is being used on your controller
                                                                // ex) "COM1"   Linux: "/dev/ttyUSB0"
 
     byte TORQUE_ENABLE                  = 1;                   // Value for enabling the torque

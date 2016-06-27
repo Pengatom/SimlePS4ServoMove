@@ -26,7 +26,7 @@ public class BroadcastPing
 
     // Default setting
     int BAUDRATE                        = 1000000;
-    String DEVICENAME                   = "COM1";              // Check which port is being used on your controller
+    String DEVICENAME                   = "/dev/ttyUSB0";      // Check which port is being used on your controller
                                                                // ex) "COM1"   Linux: "/dev/ttyUSB0"
 
     int MAX_ID                          = 252;                 // Maximum ID value

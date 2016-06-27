@@ -28,7 +28,6 @@ namespace bulk_read_write
     public const int ADDR_PRO_GOAL_POSITION           = 596;
     public const int ADDR_PRO_PRESENT_POSITION        = 611;
 
-
     // Data Byte Length
     public const int LEN_PRO_LED_RED                  = 1;
     public const int LEN_PRO_GOAL_POSITION            = 4;

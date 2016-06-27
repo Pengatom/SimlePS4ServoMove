@@ -24,12 +24,11 @@
 
 from time import sleep
 import msvcrt
-import ctypes
 import init_path
 from dynamixel_functions_py import dynamixel_functions as dynamixel                      # Uses Dynamixel SDK library
 
 # Control table address
-ADDR_MX_BAUDRATE            = 8                             # Control table address is different in Dynamixel model
+ADDR_PRO_BAUDRATE           = 8                             # Control table address is different in Dynamixel model
 
 # Protocol version
 PROTOCOL_VERSION            = 2                             # See which protocol version is used in the Dynamixel
@@ -110,7 +109,7 @@ else:
     quit()
 
 # Read Dynamixel baudnum
-dxl_baudnum_read = dynamixel.read1ByteTxRx(port_num, PROTOCOL_VERSION, DXL_ID, ADDR_MX_BAUDRATE)
+dxl_baudnum_read = dynamixel.read1ByteTxRx(port_num, PROTOCOL_VERSION, DXL_ID, ADDR_PRO_BAUDRATE)
 if dynamixel.getLastTxRxResult(port_num, PROTOCOL_VERSION) != COMM_SUCCESS:
     dynamixel.printTxRxResult(PROTOCOL_VERSION, dynamixel.getLastTxRxResult(port_num, PROTOCOL_VERSION))
 elif dynamixel.getLastRxPacketError(port_num, PROTOCOL_VERSION) != 0:
@@ -119,7 +118,7 @@ else:
   print("[ID:%03d] Dynamixel baudnum is now : %d" % (DXL_ID, dxl_baudnum_read))
 
 # Write new baudnum
-dynamixel.write1ByteTxRx(port_num, PROTOCOL_VERSION, DXL_ID, ADDR_MX_BAUDRATE, NEW_BAUDNUM)
+dynamixel.write1ByteTxRx(port_num, PROTOCOL_VERSION, DXL_ID, ADDR_PRO_BAUDRATE, NEW_BAUDNUM)
 if dynamixel.getLastTxRxResult(port_num, PROTOCOL_VERSION) != COMM_SUCCESS:
     dynamixel.printTxRxResult(PROTOCOL_VERSION, dynamixel.getLastTxRxResult(port_num, PROTOCOL_VERSION))
 elif dynamixel.getLastRxPacketError(port_num, PROTOCOL_VERSION) != 0:
@@ -138,7 +137,7 @@ else:
 sleep(0.2)
 
 # Read Dynamixel baudnum
-dxl_baudnum_read = dynamixel.read1ByteTxRx(port_num, PROTOCOL_VERSION, DXL_ID, ADDR_MX_BAUDRATE)
+dxl_baudnum_read = dynamixel.read1ByteTxRx(port_num, PROTOCOL_VERSION, DXL_ID, ADDR_PRO_BAUDRATE)
 if dynamixel.getLastTxRxResult(port_num, PROTOCOL_VERSION) != COMM_SUCCESS:
     dynamixel.printTxRxResult(PROTOCOL_VERSION, dynamixel.getLastTxRxResult(port_num, PROTOCOL_VERSION))
 elif dynamixel.getLastRxPacketError(port_num, PROTOCOL_VERSION) != 0:

@@ -24,7 +24,6 @@
 
 from time import sleep
 import msvcrt
-import ctypes
 import init_path
 from dynamixel_functions_py import dynamixel_functions as dynamixel                      # Uses Dynamixel SDK library
 

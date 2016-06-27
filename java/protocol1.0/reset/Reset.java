@@ -175,9 +175,12 @@ public class Reset
       return;
     }
 
-    try {
+    try
+    {
       Thread.sleep(200);
-    } catch (InterruptedException e) {
+    }
+    catch (InterruptedException e)
+    {
       System.out.println(e.getMessage());
     }
 

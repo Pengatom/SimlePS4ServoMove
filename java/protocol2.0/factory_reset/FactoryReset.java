@@ -110,9 +110,12 @@ public class FactoryReset
 
     // Wait for reset
     System.out.printf("Wait for reset...\n");
-    try {
+    try
+    {
       Thread.sleep(2000);
-    } catch (InterruptedException e) {
+    } 
+    catch (InterruptedException e)
+    {
       System.out.println(e.getMessage());
     }
 

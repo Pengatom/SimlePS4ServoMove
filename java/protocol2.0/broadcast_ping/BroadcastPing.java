@@ -47,8 +47,8 @@ public class BroadcastPing
     // Initialize PacketHandler Structs
     dynamixel.packetHandler();
 
-    int id;
     int dxl_comm_result = COMM_TX_FAIL;                       // Communication result
+    int id;
 
     // Open port
     if (dynamixel.openPort(port_num))

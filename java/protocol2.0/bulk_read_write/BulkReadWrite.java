@@ -27,7 +27,6 @@ public class BulkReadWrite
     short ADDR_PRO_GOAL_POSITION        = 596;
     short ADDR_PRO_PRESENT_POSITION     = 611;
 
-
     // Data Byte Length
     short LEN_PRO_LED_RED               = 1;
     short LEN_PRO_GOAL_POSITION         = 4;

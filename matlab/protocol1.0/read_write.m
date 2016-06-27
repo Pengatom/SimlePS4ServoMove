@@ -6,7 +6,7 @@
 %
 
 %
-% %%%%%%%%%     Read and Write Example      %%%%%%%%%
+% *********     Read and Write Example      *********
 %
 %
 % Available DXL model on this example : All models using Protocol 1.0

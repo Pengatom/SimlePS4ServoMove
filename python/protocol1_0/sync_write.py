@@ -19,6 +19,7 @@
 #
 
 import msvcrt
+import ctypes
 import init_path
 from dynamixel_functions_py import dynamixel_functions as dynamixel                      # Uses Dynamixel SDK library
 
@@ -38,7 +39,7 @@ PROTOCOL_VERSION            = 1                             # See which protocol
 DXL1_ID                     = 1                             # Dynamixel ID: 1
 DXL2_ID                     = 2                             # Dynamixel ID: 2
 BAUDRATE                    = 1000000
-DEVICENAME                  = "COM1".encode('utf-8')        # Check which port is being used on your controller
+DEVICENAME                  = "/dev/ttyUSB0".encode('utf-8')# Check which port is being used on your controller
                                                             # ex) Windows: "COM1"   Linux: "/dev/ttyUSB0"
 
 TORQUE_ENABLE               = 1                             # Value for enabling the torque

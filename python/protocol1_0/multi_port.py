@@ -34,8 +34,8 @@ PROTOCOL_VERSION            = 1                             # See which protocol
 DXL1_ID                     = 1                             # Dynamixel ID: 1
 DXL2_ID                     = 2                             # Dynamixel ID: 2
 BAUDRATE                    = 1000000
-DEVICENAME1                  = "COM1".encode('utf-8')       # Check which port is being used on your controller
-DEVICENAME2                  = "COM2".encode('utf-8')       # ex) Windows: "COM1"   Linux: "/dev/ttyUSB0"
+DEVICENAME1                 = "/dev/ttyUSB0".encode('utf-8')# Check which port is being used on your controller
+DEVICENAME2                 = "/dev/ttyUSB1".encode('utf-8')# ex) Windows: "COM1"   Linux: "/dev/ttyUSB0"
 
 TORQUE_ENABLE               = 1                             # Value for enabling the torque
 TORQUE_DISABLE              = 0                             # Value for disabling the torque

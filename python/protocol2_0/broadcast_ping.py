@@ -19,6 +19,7 @@
 #
 
 import msvcrt
+import ctypes
 import init_path
 from dynamixel_functions_py import dynamixel_functions as dynamixel                      # Uses Dynamixel SDK library
 
@@ -28,7 +29,7 @@ PROTOCOL_VERSION            = 2                             # See which protocol
 # Default setting
 DXL_ID                      = 1                             # Dynamixel ID: 1
 BAUDRATE                    = 1000000
-DEVICENAME                  = "COM1".encode('utf-8')        # Check which port is being used on your controller
+DEVICENAME                  = "/dev/ttyUSB0".encode('utf-8')# Check which port is being used on your controller
                                                             # ex) Windows: "COM1"   Linux: "/dev/ttyUSB0"
 
 MAX_ID                      = 252                           # Maximum ID value

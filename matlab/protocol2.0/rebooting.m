@@ -1,5 +1,5 @@
 %
-% reboot.m
+% rebooting.m
 %
 %  Created on: 2016. 6. 7.
 %      Author: Ryu Woon Jung (Leon)
@@ -44,8 +44,6 @@ port_num = portHandler(DEVICENAME);
 packetHandler();
 
 dxl_comm_result = COMM_TX_FAIL;                 % Communication result
-
-dxl_error = 0;                                  % Dynamixel error
 
 % Open port
 if (openPort(port_num))

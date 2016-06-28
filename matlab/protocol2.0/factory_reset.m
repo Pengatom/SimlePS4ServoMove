@@ -135,7 +135,7 @@ else
   fprintf('[ID:%03d] Set Dynamixel baudnum to : %d\n', DXL_ID, NEW_BAUDNUM);
 end
 
-  % Set port baudrate to BAUDRATE
+% Set port baudrate to BAUDRATE
 if (setBaudRate(port_num, BAUDRATE))
   fprintf('Succeed to change the controller baudrate to : %d\n', BAUDRATE);
 else

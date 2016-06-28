@@ -2,7 +2,7 @@
 * factory_reset.c
 *
 *  Created on: 2016. 5. 16.
-*      Author: Leon Ryu Woon Jung
+*      Author: Ryu Woon Jung (Leon)
 */
 
 //
@@ -27,7 +27,7 @@
 #include <conio.h>
 #endif
 #include <stdio.h>
-#include "dynamixel_sdk.h"                                   // Uses Dynamixel SDK library
+#include "dynamixel_sdk.h"                                  // Uses Dynamixel SDK library
 
 // Control table address
 #define ADDR_PRO_BAUDRATE               8                   // Control table address is different in Dynamixel model

@@ -28,7 +28,7 @@
 * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 *******************************************************************************/
 
-/* Author: Leon Ryu Woon Jung */
+/* Author: Ryu Woon Jung (Leon) */
 
 /*
 * group_bulk_write.c
@@ -301,6 +301,8 @@ void groupBulkWriteClearParam(int group_num)
   packetData[port_num].data_write = 0;
 
   groupData[group_num].data_list_length = 0;
+
+  groupData[group_num].is_param_changed = False;
 }
 void groupBulkWriteTxPacket(int group_num)
 {

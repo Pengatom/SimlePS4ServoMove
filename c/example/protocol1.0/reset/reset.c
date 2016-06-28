@@ -2,7 +2,7 @@
 * reset.c
 *
 *  Created on: 2016. 5. 16.
-*      Author: Leon Ryu Woon Jung
+*      Author: Ryu Woon Jung (Leon)
 */
 
 //
@@ -28,7 +28,7 @@
 #endif
 
 #include <stdio.h>
-#include "dynamixel_sdk.h"                                   // Uses Dynamixel SDK library
+#include "dynamixel_sdk.h"                                  // Uses Dynamixel SDK library
 
 // Control table address
 #define ADDR_MX_BAUDRATE                4                   // Control table address is different in Dynamixel model
@@ -45,9 +45,6 @@
 #define FACTORYRST_DEFAULTBAUDRATE      57600               // Dynamixel baudrate set by factoryreset
 #define NEW_BAUDNUM                     1                   // New baudnum to recover Dynamixel baudrate as it was
 #define OPERATION_MODE                  0x00                // Mode is unavailable in Protocol 1.0 Reset
-
-#define TORQUE_ENABLE                   1                   // Value for enabling the torque
-#define TORQUE_DISABLE                  0                   // Value for disabling the torque
 
 int getch()
 {

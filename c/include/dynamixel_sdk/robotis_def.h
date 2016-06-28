@@ -28,7 +28,7 @@
 * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 *******************************************************************************/
 
-/* Author: Leon Ryu Woon Jung */
+/* Author: Ryu Woon Jung (Leon) */
 
 /*
  * robotis_def.h
@@ -39,9 +39,11 @@
 #ifndef DYNAMIXEL_SDK_INCLUDE_DYNAMIXEL_SDK_ROBOTISDEF_C_H_
 #define DYNAMIXEL_SDK_INCLUDE_DYNAMIXEL_SDK_ROBOTISDEF_C_H_
 
+#if defined(_WIN32) || defined(_WIN64)
 typedef char                int8_t;
 typedef short int           int16_t;
 typedef int                 int32_t;
+#endif
 
 typedef unsigned char       uint8_t;
 typedef unsigned short int  uint16_t;

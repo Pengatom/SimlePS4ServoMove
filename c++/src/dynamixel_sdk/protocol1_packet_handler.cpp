@@ -28,7 +28,7 @@
 * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 *******************************************************************************/
 
-/* Author: zerom, Leon Ryu Woon Jung */
+/* Author: zerom, Ryu Woon Jung (Leon) */
 
 /*
  * protocol1_packet_handler.cpp

@@ -2,7 +2,7 @@
 * read_write.c
 *
 *  Created on: 2016. 5. 16.
-*      Author: Leon Ryu Woon Jung
+*      Author: Ryu Woon Jung (Leon)
 */
 
 //
@@ -25,7 +25,7 @@
 
 #include <stdlib.h>
 #include <stdio.h>
-#include "dynamixel_sdk.h"                                   // Uses Dynamixel SDK library
+#include "dynamixel_sdk.h"                                  // Uses Dynamixel SDK library
 
 // Control table address
 #define ADDR_MX_TORQUE_ENABLE           24                  // Control table address is different in Dynamixel model
@@ -141,7 +141,7 @@ int main()
     return 0;
   }
 
-  // Enable DXL Torque
+  // Enable Dynamixel Torque
   write1ByteTxRx(port_num, PROTOCOL_VERSION, DXL_ID, ADDR_MX_TORQUE_ENABLE, TORQUE_ENABLE);
   if ((dxl_comm_result = getLastTxRxResult(port_num, PROTOCOL_VERSION)) != COMM_SUCCESS)
   {

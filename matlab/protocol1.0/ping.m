@@ -1,0 +1,89 @@
+%
+% ping.m
+%
+%  Created on: 2016. 6. 7.
+%      Author: Ryu Woon Jung (Leon)
+%
+
+%
+% *********     Ping Example      *********
+%
+%
+% Available Dynamixel model on this example : All models using Protocol 1.0
+% This example is designed for using a Dynamixel MX-28, and an USB2DYNAMIXEL.
+% To use another Dynamixel model, such as X series, see their details in E-Manual(support.robotis.com) and edit below variables yourself.
+% Be sure that Dynamixel MX properties are already set as %% ID : 1 / Baudnum : 1 (Baudrate : 1000000 [1M])
+%
+
+clc;
+clear all;
+
+% Load Libraries
+if ~libisloaded('dxl_x86_c');
+    [notfound, warnings] = loadlibrary('dxl_x86_c', 'dynamixel_sdk.h', 'addheader', 'port_handler.h', 'addheader', 'packet_handler.h');
+end
+
+% Protocol version
+PROTOCOL_VERSION                = 1.0;          % See which protocol version is used in the Dynamixel
+
+% Default setting
+DXL_ID                          = 1;            % Dynamixel ID: 1
+BAUDRATE                        = 1000000;
+DEVICENAME                      = 'COM1';       % Check which port is being used on your controller
+                                                % ex) Windows: "COM1"   Linux: "/dev/ttyUSB0"
+
+COMM_SUCCESS                    = 0;            % Communication Success result value
+COMM_TX_FAIL                    = -1001;        % Communication Tx Failed
+
+% Initialize PortHandler Structs
+% Set the port path
+% Get methods and members of PortHandlerLinux or PortHandlerWindows
+port_num = portHandler(DEVICENAME);
+
+% Initialize PacketHandler Structs
+packetHandler();
+
+dxl_comm_result = COMM_TX_FAIL;                 % Communication result
+
+% Open port
+if (openPort(port_num))
+    fprintf('Succeeded to open the port!\n');
+else
+    unloadlibrary('dxl_x86_c');
+    fprintf('Failed to open the port!\n');
+    input('Press any key to terminate...\n');
+    return;
+end
+
+
+% Set port baudrate
+if (setBaudRate(port_num, BAUDRATE))
+    fprintf('Succeeded to change the baudrate!\n');
+else
+    unloadlibrary('dxl_x86_c');
+    fprintf('Failed to change the baudrate!\n');
+    input('Press any key to terminate...\n');
+    return;
+end
+
+
+% Try to ping the Dynamixel
+% Get Dynamixel model number
+dxl_model_number = pingGetModelNum(port_num, PROTOCOL_VERSION, DXL_ID);
+if getLastTxRxResult(port_num, PROTOCOL_VERSION) ~= COMM_SUCCESS
+    printTxRxResult(PROTOCOL_VERSION, getLastTxRxResult(port_num, PROTOCOL_VERSION));
+elseif getLastRxPacketError(port_num, PROTOCOL_VERSION) ~= 0
+    printRxPacketError(PROTOCOL_VERSION, getLastRxPacketError(port_num, PROTOCOL_VERSION));
+end
+
+fprintf('[ID:%03d] ping Succeeded. Dynamixel model number : %d\n', DXL_ID, dxl_model_number);
+
+
+% Close port
+closePort(port_num);
+
+% Unload Library
+unloadlibrary('dxl_x86_c');
+
+close all;
+clear all;

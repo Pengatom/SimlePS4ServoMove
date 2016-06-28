@@ -6,23 +6,23 @@
 | OS | Linux | Windows | Linux + Windows |
 | Available Dynamixel models | All models | All models | All models |
 |||||
-| Multi Port Control <br> (Controls Dynamixels through <br> more than two ports)| X | X | O | 
-| Cross-compilability | X | X | O | 
+| Multi Port Control <br> (Controls Dynamixels through <br> more than two ports)| X | X | O |
+| Cross-compilability | X | X | O |
 | Modularized Structure | X | X | O |
 |||||
 | SDK Languages :  ||||
 | (Protocol 1.0) | C (builds .a) | C (builds .dll)| C / C++ (builds .so & .dll) |
 | (Protocol 2.0) | C++ (builds .so)| C (builds .dll)| C / C++ (builds .so & .dll) |
 | SDK Examples : | | | |
-| (C ver. Library binded)| C | | C| 
-| | | C++| | 
-| | | C#| C# (To be released)| 
-| | | MATLAB| MATLAB (To be released)| 
-| | | LabVIEW| LabVIEW (To be released)| 
-| | | VB| | 
-| | | | Python (To be released)| 
-| | | | Java (To be released)| 
-| (C++ ver. Library binded)¹| C++|  | C++| 
+| (C ver. Library binded)| C | | C|
+| | | C++| |
+| | | C#| C# |
+| | | MATLAB| MATLAB |
+| | | LabVIEW| LabVIEW |
+| | | VB| |
+| | | | Python |
+| | | | Java |
+| (C++ ver. Library binded)¹| C++|  | C++|
 
 #####¹ C++ ver. Library is not optimized in binding other languages. Please use C ver. Library instead.  
 ---------------------------------------------------------------------------

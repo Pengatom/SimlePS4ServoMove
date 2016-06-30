@@ -22,10 +22,24 @@
 # This example resets all properties of Dynamixel to default values, such as %% ID : 1 / Baudnum : 1 (Baudrate : 57600)
 #
 
+import os, sys
+
+if os.name == 'nt':
+    import msvcrt
+    def getch():
+        return msvcrt.getch().decode()
+else:
+    import tty, termios
+    fd = sys.stdin.fileno()
+    old_settings = termios.tcgetattr(fd)
+    tty.setraw(sys.stdin.fileno())
+    def getch():
+        return sys.stdin.read(1)
+
+os.sys.path.append('../dynamixel_functions_py')             # Path setting
+
 from time import sleep
-import msvcrt
-import init_path
-from dynamixel_functions_py import dynamixel_functions as dynamixel                      # Uses Dynamixel SDK library
+import dynamixel_functions as dynamixel                     # Uses Dynamixel SDK library
 
 # Control table address
 ADDR_PRO_BAUDRATE           = 8                             # Control table address is different in Dynamixel model

@@ -18,10 +18,23 @@
 # Be sure that Dynamixel PRO properties are already set as %% ID : 1 / Baudnum : 3 (Baudrate : 1000000 [1M])
 #
 
-import msvcrt
-import ctypes
-import init_path
-from dynamixel_functions_py import dynamixel_functions as dynamixel                      # Uses Dynamixel SDK library
+import os, sys, ctypes
+
+if os.name == 'nt':
+    import msvcrt
+    def getch():
+        return msvcrt.getch().decode()
+else:
+    import tty, termios
+    fd = sys.stdin.fileno()
+    old_settings = termios.tcgetattr(fd)
+    tty.setraw(sys.stdin.fileno())
+    def getch():
+        return sys.stdin.read(1)
+
+os.sys.path.append('../dynamixel_functions_py')             # Path setting
+
+import dynamixel_functions as dynamixel                     # Uses Dynamixel SDK library
 
 # Control table address                                     # Control table address is different in Dynamixel model
 ADDR_PRO_INDIRECTADDRESS_FOR_WRITE      = 49                # EEPROM region
@@ -193,7 +206,7 @@ if dxl_addparam_result != 1:
 
 while 1:
     print("Press any key to continue! (or press ESC to quit!)")
-    if msvcrt.getch().decode() == chr(ESC_ASCII_VALUE):
+    if getch() == chr(ESC_ASCII_VALUE):
         break
 
     # Add Dynamixel#1 goal position value to the Syncwrite storage

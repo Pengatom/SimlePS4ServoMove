@@ -21,9 +21,23 @@
 # This example configures two different control tables (especially, if it uses Dynamixel and Dynamixel PRO). It may modify critical Dynamixel parameter on the control table, if Dynamixels have wrong ID.
 #
 
-import msvcrt
-import init_path
-from dynamixel_functions_py import dynamixel_functions as dynamixel                      # Uses Dynamixel SDK library
+import os, sys
+
+if os.name == 'nt':
+    import msvcrt
+    def getch():
+        return msvcrt.getch().decode()
+else:
+    import tty, termios
+    fd = sys.stdin.fileno()
+    old_settings = termios.tcgetattr(fd)
+    tty.setraw(sys.stdin.fileno())
+    def getch():
+        return sys.stdin.read(1)
+
+os.sys.path.append('../dynamixel_functions_py')             # Path setting
+
+import dynamixel_functions as dynamixel                     # Uses Dynamixel SDK library
 
 # Control table address for Dynamixel MX
 ADDR_MX_TORQUE_ENABLE       = 24                            # Control table address is different in Dynamixel model
@@ -117,7 +131,7 @@ else:
 
 while 1:
     print("Press any key to continue! (or press ESC to quit!)")
-    if msvcrt.getch().decode() == chr(ESC_ASCII_VALUE):
+    if getch() == chr(ESC_ASCII_VALUE):
         break
 
     # Write Dynamixel#1 goal position

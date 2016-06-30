@@ -18,10 +18,23 @@
 # Be sure that Dynamixel PRO properties are already set as %% ID : 1 / Baudnum : 3 (Baudrate : 1000000 [1M])
 #
 
-import msvcrt
-import ctypes
-import init_path
-from dynamixel_functions_py import dynamixel_functions as dynamixel                      # Uses Dynamixel SDK library
+import os, sys, ctypes
+
+if os.name == 'nt':
+    import msvcrt
+    def getch():
+        return msvcrt.getch().decode()
+else:
+    import tty, termios
+    fd = sys.stdin.fileno()
+    old_settings = termios.tcgetattr(fd)
+    tty.setraw(sys.stdin.fileno())
+    def getch():
+        return sys.stdin.read(1)
+
+os.sys.path.append('../dynamixel_functions_py')             # Path setting
+
+import dynamixel_functions as dynamixel                     # Uses Dynamixel SDK library
 
 # Protocol version
 PROTOCOL_VERSION            = 2                             # See which protocol version is used in the Dynamixel

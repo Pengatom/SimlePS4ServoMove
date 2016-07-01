@@ -18,19 +18,23 @@
 # Be sure that Dynamixel PRO properties are already set as %% ID : 1 and 2 / Baudnum : 3 (Baudrate : 1000000 [1M])
 #
 
-import os, sys, ctypes
+import os, ctypes
 
 if os.name == 'nt':
     import msvcrt
     def getch():
         return msvcrt.getch().decode()
 else:
-    import tty, termios
+    import sys, tty, termios
     fd = sys.stdin.fileno()
     old_settings = termios.tcgetattr(fd)
-    tty.setraw(sys.stdin.fileno())
     def getch():
-        return sys.stdin.read(1)
+        try:
+            tty.setraw(sys.stdin.fileno())
+            ch = sys.stdin.read(1)
+        finally:
+            termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
+        return ch
 
 os.sys.path.append('../dynamixel_functions_py')             # Path setting
 
@@ -100,7 +104,7 @@ if dynamixel.openPort(port_num):
 else:
     print("Failed to open the port!")
     print("Press any key to terminate...")
-    msvcrt.getch()
+    getch()
     quit()
 
 # Set port baudrate
@@ -109,7 +113,7 @@ if dynamixel.setBaudRate(port_num, BAUDRATE):
 else:
     print("Failed to change the baudrate!")
     print("Press any key to terminate...")
-    msvcrt.getch()
+    getch()
     quit()
 
 

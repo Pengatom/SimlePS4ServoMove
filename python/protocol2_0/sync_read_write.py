@@ -18,19 +18,23 @@
 # Be sure that Dynamixel PRO properties are already set as %% ID : 1 / Baudnum : 3 (Baudrate : 1000000 [1M])
 #
 
-import os, sys, ctypes
+import os, ctypes
 
 if os.name == 'nt':
     import msvcrt
     def getch():
         return msvcrt.getch().decode()
 else:
-    import tty, termios
+    import sys, tty, termios
     fd = sys.stdin.fileno()
     old_settings = termios.tcgetattr(fd)
-    tty.setraw(sys.stdin.fileno())
     def getch():
-        return sys.stdin.read(1)
+        try:
+            tty.setraw(sys.stdin.fileno())
+            ch = sys.stdin.read(1)
+        finally:
+            termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
+        return ch
 
 os.sys.path.append('../dynamixel_functions_py')             # Path setting
 
@@ -96,7 +100,7 @@ if dynamixel.openPort(port_num):
 else:
     print("Failed to open the port!")
     print("Press any key to terminate...")
-    msvcrt.getch()
+    getch()
     quit()
 
 
@@ -106,7 +110,7 @@ if dynamixel.setBaudRate(port_num, BAUDRATE):
 else:
     print("Failed to change the baudrate!")
     print("Press any key to terminate...")
-    msvcrt.getch()
+    getch()
     quit()
 
 
@@ -191,7 +195,7 @@ while 1:
         # Get Dynamixel#2 present position value
         dxl2_present_position = dynamixel.groupSyncReadGetData(groupread_num, DXL2_ID, ADDR_PRO_PRESENT_POSITION, LEN_PRO_PRESENT_POSITION)
 
-        print("[ID:%03d] GoalPos:%03d  PresPos:%03d\t[ID:%03d] GoalPos:%03d  PresPos:%03d\n" % (DXL1_ID, dxl_goal_position[index], dxl1_present_position, DXL2_ID, dxl_goal_position[index], dxl2_present_position))
+        print("[ID:%03d] GoalPos:%03d  PresPos:%03d\t[ID:%03d] GoalPos:%03d  PresPos:%03d" % (DXL1_ID, dxl_goal_position[index], dxl1_present_position, DXL2_ID, dxl_goal_position[index], dxl2_present_position))
 
         if not ((abs(dxl_goal_position[index] - dxl1_present_position) > DXL_MOVING_STATUS_THRESHOLD) or (abs(dxl_goal_position[index] - dxl2_present_position) > DXL_MOVING_STATUS_THRESHOLD)):
             break

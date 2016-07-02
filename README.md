@@ -32,6 +32,6 @@
 
 * ####For the other questions, including Hardware-wise problems on your Dynamixels, please contact to support@robotis.com 
 
-* ####See 'How to use' in [Dynamixel SDK Manual](https://github.com/ROBOTIS-GIT/ROBOTIS-Documents/wiki/ROBOTIS-Dynamixel-SDK-Documents)
+* ####See 'How to use' in [Dynamixel SDK Manual](https://github.com/ROBOTIS-GIT/DynamixelSDK/wiki)
 
 * ####Visit [ROBOTIS E-Manual](http://support.robotis.com/) and have details of ROBOTIS products

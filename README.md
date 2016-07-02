@@ -26,7 +26,7 @@
 
 #####¹ C++ ver. Library is not optimized in binding other languages. Please use C ver. Library instead.  
 ---------------------------------------------------------------------------
-* ####Here we opened [FAQ board](https://github.com/ROBOTIS-GIT/DynamixelSDK/wiki/FAQ). You may get your solutions faster! 
+* ####Here we opened [FAQ board](https://github.com/ROBOTIS-GIT/DynamixelSDK/wiki/FAQ). You may get your keys faster! 
 
 * ####But any questions related with DynamixelSDK are always welcomed. Just let me know at: [ISSUES](https://github.com/ROBOTIS-GIT/DynamixelSDK/issues)
 

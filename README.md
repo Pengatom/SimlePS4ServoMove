@@ -3,6 +3,7 @@
 | Dynamixel SDK Version | 1.X | 2.X | 3.X ([Download](https://github.com/ROBOTIS-GIT/DynamixelSDK/archive/master.zip)) |
 | ------------- | ------------- | ------------- | ------------- |
 | Release date| 2010.05.16 | 2015.02.10 | 2016.03.08 |
+| Latest version released |||3.3.2|
 | OS | Linux | Windows | Linux + Windows |
 | Available Dynamixel models | All models | All models | All models |
 |||||

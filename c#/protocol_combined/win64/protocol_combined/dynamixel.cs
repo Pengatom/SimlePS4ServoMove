@@ -5,7 +5,7 @@ namespace dynamixel_sdk
 {
   class dynamixel
   {
-    const string dll_path = "../../../c/build/win64/output/dxl_x64_c.dll";
+    const string dll_path = "../../../../../../../../c/build/win64/output/dxl_x64_c.dll";
 
     #region PortHandler
     [DllImport(dll_path)]

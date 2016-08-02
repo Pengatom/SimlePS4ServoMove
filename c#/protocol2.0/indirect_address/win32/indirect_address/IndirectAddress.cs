@@ -47,7 +47,7 @@ namespace sync_write
     // Default setting
     public const int DXL_ID                                  = 1;                   // Dynamixel ID: 1
     public const int BAUDRATE                                = 1000000;
-    public const string DEVICENAME                           = "/dev/ttyUSB0";      // Check which port is being used on your controller
+    public const string DEVICENAME                           = "COM1";      // Check which port is being used on your controller
                                                                                     // ex) "COM1"   Linux: "/dev/ttyUSB0"
 
     public const int TORQUE_ENABLE                           = 1;                   // Value for enabling the torque

@@ -34,8 +34,8 @@ namespace read_write
     public const int DXL1_ID                         = 1;                   // Dynamixel ID: 1
     public const int DXL2_ID                         = 2;                   // Dynamixel ID: 2
     public const int BAUDRATE                        = 1000000;
-    public const string DEVICENAME1                  = "/dev/ttyUSB0";      // Check which port is being used on your controller
-    public const string DEVICENAME2                  = "/dev/ttyUSB1";      // ex) "COM1"   Linux: "/dev/ttyUSB0"
+    public const string DEVICENAME1                  = "COM1";      // Check which port is being used on your controller
+    public const string DEVICENAME2                  = "COM2";      // ex) "COM1"   Linux: "/dev/ttyUSB0"
 
     public const int TORQUE_ENABLE                   = 1;                   // Value for enabling the torque
     public const int TORQUE_DISABLE                  = 0;                   // Value for disabling the torque

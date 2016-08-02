@@ -30,12 +30,6 @@
 
 /* Author: Ryu Woon Jung (Leon) */
 
-/*
-* protocol2_packet_handler.h
-*
-*  Created on: 2016. 5. 4.
-*/
-
 #ifndef DYNAMIXEL_SDK_INCLUDE_DYNAMIXEL_SDK_PROTOCOL2PACKETHANDLER_C_H_
 #define DYNAMIXEL_SDK_INCLUDE_DYNAMIXEL_SDK_PROTOCOL2PACKETHANDLER_C_H_
 

@@ -30,11 +30,6 @@
 
 /* Author: Ryu Woon Jung (Leon) */
 
-/*
-* protocol1_packet_handler.c
-*
-*  Created on: 2016. 5. 4.
-*/
 #if defined(_WIN32) || defined(_WIN64)
 #define WINDLLEXPORT
 #endif

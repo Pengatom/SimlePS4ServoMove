@@ -30,12 +30,6 @@
 
 /* Author: Ryu Woon Jung (Leon) */
 
-/*
-* port_handler_linux.c
-*
-*  Created on: 2016. 5. 17.
-*/
-
 #include <stdio.h>
 #include <fcntl.h>
 #include <string.h>

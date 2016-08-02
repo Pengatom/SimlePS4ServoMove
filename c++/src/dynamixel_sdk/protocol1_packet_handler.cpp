@@ -30,11 +30,6 @@
 
 /* Author: zerom, Ryu Woon Jung (Leon) */
 
-/*
- * protocol1_packet_handler.cpp
- *
- *  Created on: 2016. 1. 26.
- */
 #if defined(_WIN32) || defined(_WIN64)
 #define WINDLLEXPORT
 #endif

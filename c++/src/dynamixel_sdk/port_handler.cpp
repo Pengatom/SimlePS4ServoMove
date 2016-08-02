@@ -30,11 +30,6 @@
 
 /* Author: zerom, Ryu Woon Jung (Leon) */
 
-/*
- * port_handler.cpp
- *
- *  Created on: 2016. 2. 5.
- */
 #if defined(_WIN32) || defined(_WIN64)
 #define WINDLLEXPORT
 #endif

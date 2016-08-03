@@ -32,5 +32,14 @@
 
 function [] = clearPort( port_num )
 
-calllib('dxl_x86_c', 'clearPort', port_num);
+if strcmp(computer, 'PCWIN')
+  calllib('dxl_x86_c', 'clearPort', port_num);
+elseif strcmp(computer, 'PCWIN64')
+  calllib('dxl_x64_c', 'clearPort', port_num);
+elseif strcmp(computer, 'GLNXA')
+  calllib('libdxl_x86_c', 'clearPort', port_num);
+elseif strcmp(computer, 'GLNXA64')
+  calllib('libdxl_x64_c', 'clearPort', port_num);
+end
+
 end

@@ -32,5 +32,14 @@
 
 function [] = writeTxRx( port_num, protocol_version, id, address, length )
 
-calllib('dxl_x86_c', 'writeTxRx', port_num, protocol_version, id, address, length);
+if strcmp(computer, 'PCWIN')
+  calllib('dxl_x86_c', 'writeTxRx', port_num, protocol_version, id, address, length);
+elseif strcmp(computer, 'PCWIN64')
+  calllib('dxl_x64_c', 'writeTxRx', port_num, protocol_version, id, address, length);
+elseif strcmp(computer, 'GLNXA')
+  calllib('libdxl_x86_c', 'writeTxRx', port_num, protocol_version, id, address, length);
+elseif strcmp(computer, 'GLNXA64')
+  calllib('libdxl_x64_c', 'writeTxRx', port_num, protocol_version, id, address, length);
+end
+
 end

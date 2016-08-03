@@ -32,5 +32,14 @@
 
 function [VALUE] = portHandler( DEVICE_NAME )
 
-VALUE = calllib('dxl_x86_c', 'portHandler', DEVICE_NAME);
+if strcmp(computer, 'PCWIN')
+  VALUE = calllib('dxl_x86_c', 'portHandler', DEVICE_NAME);
+elseif strcmp(computer, 'PCWIN64')
+  VALUE = calllib('dxl_x64_c', 'portHandler', DEVICE_NAME);
+elseif strcmp(computer, 'GLNXA')
+  VALUE = calllib('libdxl_x86_c', 'portHandler', DEVICE_NAME);
+elseif strcmp(computer, 'GLNXA64')
+  VALUE = calllib('libdxl_x64_c', 'portHandler', DEVICE_NAME);
+end
+
 end

@@ -32,5 +32,14 @@
 
 function [VALUE] = getBaudRate( port_num )
 
-VALUE = calllib('dxl_x86_c', 'getBaudRate', port_num);
+if strcmp(computer, 'PCWIN')
+  VALUE = calllib('dxl_x86_c', 'getBaudRate', port_num);
+elseif strcmp(computer, 'PCWIN64')
+  VALUE = calllib('dxl_x64_c', 'getBaudRate', port_num);
+elseif strcmp(computer, 'GLNXA')
+  VALUE = calllib('libdxl_x86_c', 'getBaudRate', port_num);
+elseif strcmp(computer, 'GLNXA64')
+  VALUE = calllib('libdxl_x64_c', 'getBaudRate', port_num);
+end
+
 end

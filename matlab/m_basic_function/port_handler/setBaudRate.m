@@ -30,7 +30,16 @@
 
 % Author: Ryu Woon Jung (Leon)
 
-function [VALUE] = setBaudRate( port_num, baudrate)
+function [VALUE] = setBaudRate( port_num, baudrate )
 
-VALUE = calllib('dxl_x86_c', 'setBaudRate', port_num, baudrate);
+if strcmp(computer, 'PCWIN')
+  VALUE = calllib('dxl_x86_c', 'setBaudRate', port_num, baudrate);
+elseif strcmp(computer, 'PCWIN64')
+  VALUE = calllib('dxl_x64_c', 'setBaudRate', port_num, baudrate);
+elseif strcmp(computer, 'GLNXA')
+  VALUE = calllib('libdxl_x86_c', 'setBaudRate', port_num, baudrate);
+elseif strcmp(computer, 'GLNXA64')
+  VALUE = calllib('libdxl_x64_c', 'setBaudRate', port_num, baudrate);
+end
+
 end

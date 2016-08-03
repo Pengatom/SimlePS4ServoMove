@@ -32,5 +32,14 @@
 
 function [VALUE] = openPort( port_num )
 
-VALUE = calllib('dxl_x86_c', 'openPort', port_num);
+if strcmp(computer, 'PCWIN')
+  VALUE = calllib('dxl_x86_c', 'openPort', port_num);
+elseif strcmp(computer, 'PCWIN64')
+  VALUE = calllib('dxl_x64_c', 'openPort', port_num);
+elseif strcmp(computer, 'GLNXA')
+  VALUE = calllib('libdxl_x86_c', 'openPort', port_num);
+elseif strcmp(computer, 'GLNXA64')
+  VALUE = calllib('libdxl_x64_c', 'openPort', port_num);
+end
+
 end

@@ -30,7 +30,16 @@
 
 % Author: Ryu Woon Jung (Leon)
 
-function [] = setPacketTimeout( port_num, packet_length)
+function [] = setPacketTimeout( port_num, packet_length )
 
-calllib('dxl_x86_c', 'setPacketTimeout', port_num, packet_length);
+if strcmp(computer, 'PCWIN')
+  calllib('dxl_x86_c', 'setPacketTimeout', port_num, packet_length);
+elseif strcmp(computer, 'PCWIN64')
+  calllib('dxl_x64_c', 'setPacketTimeout', port_num, packet_length);
+elseif strcmp(computer, 'GLNXA')
+  calllib('libdxl_x86_c', 'setPacketTimeout', port_num, packet_length);
+elseif strcmp(computer, 'GLNXA64')
+  calllib('libdxl_x64_c', 'setPacketTimeout', port_num, packet_length);
+end
+
 end

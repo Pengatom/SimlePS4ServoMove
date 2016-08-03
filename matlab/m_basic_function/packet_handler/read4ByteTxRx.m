@@ -32,5 +32,17 @@
 
 function [VALUE] = read4ByteTxRx( port_num, protocol_version, id, address )
 
-VALUE = calllib('dxl_x86_c', 'read4ByteTxRx', port_num, protocol_version, id, address);
+lib_name = '';
+
+if strcmp(computer, 'PCWIN')
+  lib_name = 'dxl_x86_c';
+elseif strcmp(computer, 'PCWIN64')
+  lib_name = 'dxl_x64_c';
+elseif strcmp(computer, 'GLNX86')
+  lib_name = 'libdxl_x86_c';
+elseif strcmp(computer, 'GLNXA64')
+  lib_name = 'libdxl_x64_c';
+end
+
+VALUE = calllib(lib_name, 'read4ByteTxRx', port_num, protocol_version, id, address);
 end

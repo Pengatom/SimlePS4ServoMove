@@ -32,14 +32,18 @@
 
 function [STRING] = getPortName( port_num )
 
+lib_name = '';
+
 if strcmp(computer, 'PCWIN')
-  STRING = calllib('dxl_x86_c', 'getPortName', port_num);
+  lib_name = 'dxl_x86_c';
 elseif strcmp(computer, 'PCWIN64')
-  STRING = calllib('dxl_x64_c', 'getPortName', port_num);
-elseif strcmp(computer, 'GLNXA')
-  STRING = calllib('libdxl_x86_c', 'getPortName', port_num);
+  lib_name = 'dxl_x64_c';
+elseif strcmp(computer, 'GLNX86')
+  lib_name = 'libdxl_x86_c';
 elseif strcmp(computer, 'GLNXA64')
-  STRING = calllib('libdxl_x64_c', 'getPortName', port_num);
+  lib_name = 'libdxl_x64_c';
 end
+
+STRING = calllib(lib_name, 'getPortName', port_num);
 
 end

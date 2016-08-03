@@ -43,9 +43,21 @@
 clc;
 clear all;
 
+lib_name = '';
+
+if strcmp(computer, 'PCWIN')
+  lib_name = 'dxl_x86_c';
+elseif strcmp(computer, 'PCWIN64')
+  lib_name = 'dxl_x64_c';
+elseif strcmp(computer, 'GLNX86')
+  lib_name = 'libdxl_x86_c';
+elseif strcmp(computer, 'GLNXA64')
+  lib_name = 'libdxl_x64_c';
+end
+
 % Load Libraries
-if ~libisloaded('dxl_x86_c');
-  [notfound, warnings] = loadlibrary('dxl_x86_c', 'dynamixel_sdk.h', 'addheader', 'port_handler.h', 'addheader', 'packet_handler.h');
+if ~libisloaded(lib_name)
+  [notfound, warnings] = loadlibrary(lib_name, 'dynamixel_sdk.h', 'addheader', 'port_handler.h', 'addheader', 'packet_handler.h');
 end
 
 % Control table address
@@ -95,7 +107,7 @@ dxl2_present_position = 0;
 if (openPort(port_num1))
     fprintf('Succeeded to open the port!\n');
 else
-    unloadlibrary('dxl_x86_c');
+    unloadlibrary(lib_name);
     fprintf('Failed to open the port!\n');
     input('Press any key to terminate...\n');
     return;
@@ -105,7 +117,7 @@ end
 if (openPort(port_num2))
     fprintf('Succeeded to open the port!\n');
 else
-    unloadlibrary('dxl_x86_c');
+    unloadlibrary(lib_name);
     fprintf('Failed to open the port!\n');
     input('Press any key to terminate...\n');
     return;
@@ -116,7 +128,7 @@ end
 if (setBaudRate(port_num1, BAUDRATE))
     fprintf('Succeeded to change the baudrate!\n');
 else
-    unloadlibrary('dxl_x86_c');
+    unloadlibrary(lib_name);
     fprintf('Failed to change the baudrate!\n');
     input('Press any key to terminate...\n');
     return;
@@ -126,7 +138,7 @@ end
 if (setBaudRate(port_num2, BAUDRATE))
     fprintf('Succeeded to change the baudrate!\n');
 else
-    unloadlibrary('dxl_x86_c');
+    unloadlibrary(lib_name);
     fprintf('Failed to change the baudrate!\n');
     input('Press any key to terminate...\n');
     return;
@@ -231,7 +243,7 @@ closePort(port_num1);
 closePort(port_num2);
 
 % Unload Library
-unloadlibrary('dxl_x86_c');
+unloadlibrary(lib_name);
 
 close all;
 clear all;

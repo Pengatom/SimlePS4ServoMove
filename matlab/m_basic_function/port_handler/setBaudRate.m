@@ -32,14 +32,18 @@
 
 function [VALUE] = setBaudRate( port_num, baudrate )
 
+ilib_name = '';
+
 if strcmp(computer, 'PCWIN')
-  VALUE = calllib('dxl_x86_c', 'setBaudRate', port_num, baudrate);
+  lib_name = 'dxl_x86_c';
 elseif strcmp(computer, 'PCWIN64')
-  VALUE = calllib('dxl_x64_c', 'setBaudRate', port_num, baudrate);
-elseif strcmp(computer, 'GLNXA')
-  VALUE = calllib('libdxl_x86_c', 'setBaudRate', port_num, baudrate);
+  lib_name = 'dxl_x64_c';
+elseif strcmp(computer, 'GLNX86')
+  lib_name = 'libdxl_x86_c';
 elseif strcmp(computer, 'GLNXA64')
-  VALUE = calllib('libdxl_x64_c', 'setBaudRate', port_num, baudrate);
+  lib_name = 'libdxl_x64_c';
 end
+
+VALUE = calllib(lib_name, 'setBaudRate', port_num, baudrate);
 
 end

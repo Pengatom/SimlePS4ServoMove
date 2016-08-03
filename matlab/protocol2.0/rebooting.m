@@ -36,16 +36,28 @@
 %
 % Available Dynamixel model on this example : All models using Protocol 2.0
 % This example is designed for using a Dynamixel PRO 54-200, and an USB2DYNAMIXEL.
-% To use another Dynamixel model, such as X series, see their details in E-Manual(support.robotis.com) and edit below '#define'd variables yourself.
+% To use another Dynamixel model, such as X series, see their details in E-Manual(support.robotis.com) and edit below variables yourself.
 % Be sure that Dynamixel PRO properties are already set as %% ID : 1 / Baudnum : 3 (Baudrate : 1000000 [1M])
 %
 
 clc;
 clear all;
 
+lib_name = '';
+
+if strcmp(computer, 'PCWIN')
+  lib_name = 'dxl_x86_c';
+elseif strcmp(computer, 'PCWIN64')
+  lib_name = 'dxl_x64_c';
+elseif strcmp(computer, 'GLNX86')
+  lib_name = 'libdxl_x86_c';
+elseif strcmp(computer, 'GLNXA64')
+  lib_name = 'libdxl_x64_c';
+end
+
 % Load Libraries
-if ~libisloaded('dxl_x86_c');
-    [notfound, warnings] = loadlibrary('dxl_x86_c', 'dynamixel_sdk.h', 'addheader', 'port_handler.h', 'addheader', 'packet_handler.h');
+if ~libisloaded(lib_name)
+    [notfound, warnings] = loadlibrary(lib_name, 'dynamixel_sdk.h', 'addheader', 'port_handler.h', 'addheader', 'packet_handler.h');
 end
 
 % Protocol version
@@ -74,7 +86,7 @@ dxl_comm_result = COMM_TX_FAIL;                 % Communication result
 if (openPort(port_num))
     fprintf('Succeeded to open the port!\n');
 else
-    unloadlibrary('dxl_x86_c');
+    unloadlibrary(lib_name);
     fprintf('Failed to open the port!\n');
     input('Press any key to terminate...\n');
     return;
@@ -85,7 +97,7 @@ end
 if (setBaudRate(port_num, BAUDRATE))
     fprintf('Succeeded to change the baudrate!\n');
 else
-    unloadlibrary('dxl_x86_c');
+    unloadlibrary(lib_name);
     fprintf('Failed to change the baudrate!\n');
     input('Press any key to terminate...\n');
     return;
@@ -112,7 +124,7 @@ fprintf('[ID:%03d] reboot Succeeded\n', DXL_ID);
 closePort(port_num);
 
 % Unload Library
-unloadlibrary('dxl_x86_c');
+unloadlibrary(lib_name);
 
 close all;
 clear all;

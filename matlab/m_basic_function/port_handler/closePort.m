@@ -32,15 +32,19 @@
 
 function [] = closePort( port_num )
 
+lib_name = '';
+
 if strcmp(computer, 'PCWIN')
-  calllib('dxl_x86_c', 'closePort', port_num);
+  lib_name = 'dxl_x86_c';
 elseif strcmp(computer, 'PCWIN64')
-  calllib('dxl_x64_c', 'closePort', port_num);
-elseif strcmp(computer, 'GLNXA')
-  calllib('libdxl_x86_c', 'closePort', port_num);
+  lib_name = 'dxl_x64_c';
+elseif strcmp(computer, 'GLNX86')
+  lib_name = 'libdxl_x86_c';
 elseif strcmp(computer, 'GLNXA64')
-  calllib('libdxl_x64_c', 'closePort', port_num);
+  lib_name = 'libdxl_x64_c';
 end
+
+calllib(lib_name, 'closePort', port_num);
 
 
 end

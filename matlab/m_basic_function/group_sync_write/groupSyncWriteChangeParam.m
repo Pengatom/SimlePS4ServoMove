@@ -32,5 +32,17 @@
 
 function [VALUE] = groupSyncWriteChangeParam( group_num, id, data, data_length, data_pos )
 
-VALUE = calllib('dxl_x86_c', 'groupSyncWriteChangeParam', group_num, id, data, data_length, data_pos);
+lib_name = '';
+
+if strcmp(computer, 'PCWIN')
+  lib_name = 'dxl_x86_c';
+elseif strcmp(computer, 'PCWIN64')
+  lib_name = 'dxl_x64_c';
+elseif strcmp(computer, 'GLNX86')
+  lib_name = 'libdxl_x86_c';
+elseif strcmp(computer, 'GLNXA64')
+  lib_name = 'libdxl_x64_c';
+end
+
+VALUE = calllib(lib_name, 'groupSyncWriteChangeParam', group_num, id, data, data_length, data_pos);
 end

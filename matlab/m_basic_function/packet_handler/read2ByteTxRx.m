@@ -32,14 +32,18 @@
 
 function [VALUE] = read2ByteTxRx( port_num, protocol_version, id, address )
 
+lib_name = '';
+
 if strcmp(computer, 'PCWIN')
-  VALUE = calllib('dxl_x86_c', 'read2ByteTxRx', port_num, protocol_version, id, address);
+  lib_name = 'dxl_x86_c';
 elseif strcmp(computer, 'PCWIN64')
-  VALUE = calllib('dxl_x64_c', 'read2ByteTxRx', port_num, protocol_version, id, address);
-elseif strcmp(computer, 'GLNXA')
-  VALUE = calllib('libdxl_x86_c', 'read2ByteTxRx', port_num, protocol_version, id, address);
+  lib_name = 'dxl_x64_c';
+elseif strcmp(computer, 'GLNX86')
+  lib_name = 'libdxl_x86_c';
 elseif strcmp(computer, 'GLNXA64')
-  VALUE = calllib('libdxl_x64_c', 'read2ByteTxRx', port_num, protocol_version, id, address);
+  lib_name = 'libdxl_x64_c';
 end
+
+VALUE = calllib(lib_name, 'read2ByteTxRx', port_num, protocol_version, id, address);
 
 end

@@ -25,7 +25,7 @@ STRIP       = strip
 AR          = ar
 ARFLAGS     = cr
 LD          = g++
-LDFLAGS     = -shared -fPIC $(FORMAT)#-Wl,-soname,dxl
+LDFLAGS     = -shared -fPIC #-Wl,-soname,dxl
 LD_CONFIG   = ldconfig
 CP          = cp
 CP_ALL      = cp -r
@@ -35,9 +35,8 @@ SYMLINK     = ln -s
 MKDIR       = mkdir
 CC          = gcc
 CX          = g++
-CCFLAGS     = -O2 -O3 -DLINUX -D_GNU_SOURCE -Wall -c $(INCLUDES) $(FORMAT) -fPIC -g
-CXFLAGS     = -O2 -O3 -DLINUX -D_GNU_SOURCE -Wall -c $(INCLUDES) $(FORMAT) -fPIC -g
-FORMAT     = -m32
+CCFLAGS     = -O2 -O3 -DLINUX -D_GNU_SOURCE -Wall -c $(INCLUDES) -fPIC -g
+CXFLAGS     = -O2 -O3 -DLINUX -D_GNU_SOURCE -Wall -c $(INCLUDES) -fPIC -g
 INCLUDES    += -I$(DIR_DXL)/include
 
 #---------------------------------------------------------------------

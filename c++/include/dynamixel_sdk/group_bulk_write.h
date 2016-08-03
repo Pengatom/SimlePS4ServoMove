@@ -30,12 +30,6 @@
 
 /* Author: zerom, Ryu Woon Jung (Leon) */
 
-/*
- * group_bulk_write.h
- *
- *  Created on: 2016. 2. 2.
- */
-
 #ifndef DYNAMIXEL_SDK_INCLUDE_DYNAMIXEL_SDK_GROUPBULKWRITE_H_
 #define DYNAMIXEL_SDK_INCLUDE_DYNAMIXEL_SDK_GROUPBULKWRITE_H_
 

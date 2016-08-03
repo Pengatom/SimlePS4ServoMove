@@ -30,11 +30,6 @@
 
 /* Author: zerom, Ryu Woon Jung (Leon) */
 
-/*
- * group_bulk_write.cpp
- *
- *  Created on: 2016. 2. 2.
- */
 #if defined(_WIN32) || defined(_WIN64)
 #define WINDLLEXPORT
 #endif

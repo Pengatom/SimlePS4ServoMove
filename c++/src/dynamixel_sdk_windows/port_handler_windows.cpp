@@ -30,11 +30,6 @@
 
 /* Author: Ryu Woon Jung (Leon) */
 
-/*
-* PortHandlerWindows.cpp
-*
-*  Created on: 2016. 4. 06.
-*/
 #if defined(_WIN32) || defined(_WIN64)
 #define WINDLLEXPORT
 #endif

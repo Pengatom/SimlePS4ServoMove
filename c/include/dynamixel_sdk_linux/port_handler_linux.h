@@ -30,12 +30,6 @@
 
 /* Author: Ryu Woon Jung (Leon) */
 
-/*
-* port_handler_linux.h
-*
-*  Created on: 2016. 5. 17.
-*/
-
 #ifndef DYNAMIXEL_SDK_INCLUDE_DYNAMIXEL_SDK_LINUX_PORTHANDLERLINUX_C_H_
 #define DYNAMIXEL_SDK_INCLUDE_DYNAMIXEL_SDK_LINUX_PORTHANDLERLINUX_C_H_
 

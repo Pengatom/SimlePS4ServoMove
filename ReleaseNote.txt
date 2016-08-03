@@ -1,4 +1,21 @@
 ==============================================
+    Dynamixel SDK v3.3.3 (Protocol 1.0/2.0)
+==============================================
+
+- 08.03.2016
+
+* SDK C#     Resource Files comments Korean -> English
+* SDK C#     properties comments Korean removed
+* SDK C#     example default device path modified
+* SDK All    License marks for example codes updated
+* SDK Java   example source - folder name changed
+* SDK MATLAB example code modified as platform version auto-detection #1
+* SDK C/C++  build file for linux used by SBC(Single Board Computer)s updated #15
+
+* Solved issue : #3, #8, #1, #15
+
+
+==============================================
     Dynamixel SDK v3.3.2 (Protocol 1.0/2.0)
 ==============================================
 

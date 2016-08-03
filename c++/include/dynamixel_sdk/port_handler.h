@@ -30,12 +30,6 @@
 
 /* Author: zerom, Ryu Woon Jung (Leon) */
 
-/*
- * port_handler.h
- *
- *  Created on: 2016. 1. 26.
- */
-
 #ifndef DYNAMIXEL_SDK_INCLUDE_DYNAMIXEL_SDK_PORTHANDLER_H_
 #define DYNAMIXEL_SDK_INCLUDE_DYNAMIXEL_SDK_PORTHANDLER_H_
 

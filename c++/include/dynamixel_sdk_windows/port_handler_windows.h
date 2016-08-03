@@ -30,12 +30,6 @@
 
 /* Author: Ryu Woon Jung (Leon) */
 
-/*
-* port_handler_windows.h
-*
-*  Created on: 2016. 4. 26.
-*/
-
 #ifndef DYNAMIXEL_SDK_INCLUDE_DYNAMIXEL_SDK_WINDOWS_PORTHANDLERWINDOWS_H_
 #define DYNAMIXEL_SDK_INCLUDE_DYNAMIXEL_SDK_WINDOWS_PORTHANDLERWINDOWS_H_
 

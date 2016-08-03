@@ -30,12 +30,6 @@
 
 /* Author: zerom, Ryu Woon Jung (Leon) */
 
-/*
- * port_handler_linux.cpp
- *
- *  Created on: 2016. 1. 26.
- */
-
 #include <stdio.h>
 #include <fcntl.h>
 #include <string.h>

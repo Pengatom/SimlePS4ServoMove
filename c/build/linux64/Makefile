@@ -3,7 +3,7 @@
 ##################################################
 
 #---------------------------------------------------------------------
-# C++ COMPILER, COMPILER FLAGS, AND TARGET PROGRAM NAME
+# C COMPILER, COMPILER FLAGS, AND TARGET PROGRAM NAME
 #---------------------------------------------------------------------
 DIR_DXL     = ../..
 DIR_OBJS    = ./.objects

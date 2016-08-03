@@ -3,7 +3,7 @@
 ##################################################
 
 #---------------------------------------------------------------------
-# C COMPILER, COMPILER FLAGS, AND TARGET PROGRAM NAME
+# C++ COMPILER, COMPILER FLAGS, AND TARGET PROGRAM NAME
 #---------------------------------------------------------------------
 DIR_DXL     = ../..
 DIR_OBJS    = ./.objects
@@ -14,7 +14,7 @@ MAJ_VERSION = 2
 MIN_VERSION = 0
 REV_VERSION = 0
 
-TARGET      = libdxl_sbc_c.so
+TARGET      = libdxl_sbc_cpp.so
 TARGET1     = $(TARGET).$(MAJ_VERSION)
 TARGET2     = $(TARGET).$(MAJ_VERSION).$(MIN_VERSION)
 TARGET3     = $(TARGET).$(MAJ_VERSION).$(MIN_VERSION).$(REV_VERSION)
@@ -47,15 +47,15 @@ LIBRARIES  += -lrt
 #---------------------------------------------------------------------
 # SDK Files
 #---------------------------------------------------------------------
-SOURCES  = src/dynamixel_sdk/group_bulk_read.c \
-           src/dynamixel_sdk/group_bulk_write.c \
-           src/dynamixel_sdk/group_sync_read.c \
-           src/dynamixel_sdk/group_sync_write.c \
-           src/dynamixel_sdk/packet_handler.c \
-           src/dynamixel_sdk/port_handler.c \
-           src/dynamixel_sdk/protocol1_packet_handler.c \
-           src/dynamixel_sdk/protocol2_packet_handler.c \
-           src/dynamixel_sdk_linux/port_handler_linux.c \
+SOURCES  = src/dynamixel_sdk/group_bulk_read.cpp \
+           src/dynamixel_sdk/group_bulk_write.cpp \
+           src/dynamixel_sdk/group_sync_read.cpp \
+           src/dynamixel_sdk/group_sync_write.cpp \
+           src/dynamixel_sdk/packet_handler.cpp \
+           src/dynamixel_sdk/port_handler.cpp \
+           src/dynamixel_sdk/protocol1_packet_handler.cpp \
+           src/dynamixel_sdk/protocol2_packet_handler.cpp \
+           src/dynamixel_sdk_linux/port_handler_linux.cpp \
 
 
 OBJECTS=$(addsuffix .o,$(addprefix $(DIR_OBJS)/,$(basename $(notdir $(SOURCES)))))

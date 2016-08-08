@@ -30,12 +30,12 @@
 
 #####¹ C++ ver. Library is not optimized in binding other languages. Please use C ver. Library instead.  
 ---------------------------------------------------------------------------
-* ####Here we opened <kbd>[FAQ board](https://github.com/ROBOTIS-GIT/DynamixelSDK/wiki/FAQ)</kbd>. You may get your keys faster! 
+* ####Here we opened [FAQ board](https://github.com/ROBOTIS-GIT/DynamixelSDK/wiki/FAQ). You may get your keys faster! 
 
-* ####But any questions related with DynamixelSDK are always welcomed. Just let me know at: <kbd>[ISSUES](https://github.com/ROBOTIS-GIT/DynamixelSDK/issues)</kbd>
+* ####But any questions related with DynamixelSDK are always welcomed. Just let me know at: [ISSUES](https://github.com/ROBOTIS-GIT/DynamixelSDK/issues)
 
 * ####For the other questions, including Hardware-wise problems on your Dynamixels, please contact to support@robotis.com 
 
-* ####See 'How to use' in <kbd>[Dynamixel SDK Manual](https://github.com/ROBOTIS-GIT/DynamixelSDK/wiki)</kbd>
+* ####See 'How to use' in [Dynamixel SDK Manual](https://github.com/ROBOTIS-GIT/DynamixelSDK/wiki)
 
-* ####Visit <kbd>[ROBOTIS E-Manual](http://support.robotis.com/)</kbd> and have details of ROBOTIS products
+* ####Visit [ROBOTIS E-Manual](http://support.robotis.com/) and have details of ROBOTIS products

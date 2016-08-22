@@ -36,15 +36,15 @@ include_directories(
 )
 
 add_library(dynamixel_sdk
-  src/${PROJECT_NAME}/packet_handler.cpp
-  src/${PROJECT_NAME}/protocol1_packet_handler.cpp
-  src/${PROJECT_NAME}/protocol2_packet_handler.cpp
-  src/${PROJECT_NAME}/group_sync_read.cpp
-  src/${PROJECT_NAME}/group_sync_write.cpp
-  src/${PROJECT_NAME}/group_bulk_read.cpp
-  src/${PROJECT_NAME}/group_bulk_write.cpp
-  src/${PROJECT_NAME}/port_handler.cpp
-  src/${PROJECT_NAME}_linux/port_handler_linux.cpp
+  src/packet_handler.cpp
+  src/protocol1_packet_handler.cpp
+  src/protocol2_packet_handler.cpp
+  src/group_sync_read.cpp
+  src/group_sync_write.cpp
+  src/group_bulk_read.cpp
+  src/group_bulk_write.cpp
+  src/port_handler.cpp
+  src/port_handler_linux.cpp
 )
 add_dependencies(dynamixel_sdk ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 target_link_libraries(dynamixel_sdk ${catkin_LIBRARIES})

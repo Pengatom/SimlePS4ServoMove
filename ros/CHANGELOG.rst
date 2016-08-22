@@ -2,6 +2,11 @@
 Changelog for package dynamixel_sdk
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+3.4.1 (2016-08-22)
+-----------
+* added ROS package for ROS users
+* modified original header files for ROS package
+
 3.4.0 (2016-08-12)
 -----------
 * first public release for Kinetic

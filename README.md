@@ -32,7 +32,7 @@
 #####¹ C++ ver. Library is not optimized in binding other languages. Please use C ver. Library instead.  
 ---------------------------------------------------------------------------
 
-* ####[Quick Start](https://github.com/ROBOTIS-GIT/DynamixelSDK/wiki/Quick-Start) may make you run your Dynamixel in 20 minutes.
+* [Quick Start](https://github.com/ROBOTIS-GIT/DynamixelSDK/wiki/Quick-Start) may make you run your Dynamixel in 20 minutes.
 
 ![](https://github.com/ROBOTIS-GIT/ROBOTIS-Documents/blob/master/wiki-images/DynamixelSDK/Quick%20Start/Episode%201-Introduction%20to%20the%20Dynamixel%20SDK%2C%20the%20Dynamixel%20SDK%20Wiki%2C%20and%20the%20Issues%20Section.png)
 

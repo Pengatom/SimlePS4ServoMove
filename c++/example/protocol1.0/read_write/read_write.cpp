@@ -40,6 +40,7 @@
 //
 
 #ifdef __linux__
+#include "joystick.hh"
 #include <unistd.h>
 #include <fcntl.h>
 #include <termios.h>
@@ -61,7 +62,7 @@
 #define PROTOCOL_VERSION                1.0                 // See which protocol version is used in the Dynamixel
 
 // Default setting
-#define DXL_ID                          6                   // Dynamixel ID: 1
+#define DXL_ID                          25                   // Dynamixel ID: 1
 #define BAUDRATE                        1000000
 //#define DEVICENAME                      "/dev/ttyUSB0"      // Check which port is being used on your controller
 #define DEVICENAME                      "/dev/ttyACM0"      // Check which port is being used on your controller
@@ -72,6 +73,9 @@
 #define DXL_MINIMUM_POSITION_VALUE      100                 // Dynamixel will rotate between this value
 #define DXL_MAXIMUM_POSITION_VALUE      4000                // and this value (note that the Dynamixel would not move when the position value is out of movable range. Check e-manual about the range of the Dynamixel you use.)
 #define DXL_MOVING_STATUS_THRESHOLD     10                  // Dynamixel moving status threshold
+
+#define JOYSTICK_MINIMUM_POSITION_VALUE	-32767		    // Minimum value of joystick
+#define JOYSTICK_MAXIMUM_POSITION_VALUE	32767		    // Maximum value of joystick
 
 #define ESC_ASCII_VALUE                 0x1b
 
@@ -123,8 +127,22 @@ int kbhit(void)
 #endif
 }
 
-int main()
+int main(int argc, char** argv)
 {
+  // Create an instance of Joystick
+  Joystick *joystick = new Joystick();
+
+  // Ensure that it was found and that we can use it
+  if (!joystick->isFound())
+  {
+    printf("open failed.\n");
+    exit(1);
+  }
+  else
+  {
+    printf("Joystick connected!\n");
+  }
+
   // Initialize PortHandler instance
   // Set the port path
   // Get methods and members of PortHandlerLinux or PortHandlerWindows
@@ -135,13 +153,18 @@ int main()
   // Get methods and members of Protocol1PacketHandler or Protocol2PacketHandler
   dynamixel::PacketHandler *packetHandler = dynamixel::PacketHandler::getPacketHandler(PROTOCOL_VERSION);
 
+//  int servo_goal = 0;
   int index = 0;
   int dxl_comm_result = COMM_TX_FAIL;             // Communication result
-  int dxl_goal_position[2] = {DXL_MINIMUM_POSITION_VALUE, DXL_MAXIMUM_POSITION_VALUE};         // Goal position
+//  int dxl_goal_position[2] = {DXL_MINIMUM_POSITION_VALUE, DXL_MAXIMUM_POSITION_VALUE};         // Goal position
+  int dxl_goal_position = (DXL_MINIMUM_POSITION_VALUE + DXL_MAXIMUM_POSITION_VALUE)/2;         // Goal position
+  
 
   uint8_t dxl_error = 0;                          // Dynamixel error
   uint16_t dxl_present_position = 0;              // Present position
 
+  long double rescale = 0.0595110934781945249794000061037;	//(DXL_MAXIMUM_POSITION_VALUE - DXL_MINIMUM_POSITION_VALUE) / 									//(JOYSTICK_MAXIMUM_POSITION_VALUE - JOYSTICK_MINIMUM_POSITION_VALUE)
+  long double rescaled = 0.0;
   // Open port
   if (portHandler->openPort())
   {
@@ -183,14 +206,31 @@ int main()
     printf("Dynamixel has been successfully connected \n");
   }
 
+  printf("Move Joystick axis 1 to continue! (or press O to quit!)\n");
   while(1)
   {
-    printf("Press any key to continue! (or press ESC to quit!)\n");
-    if (getch() == ESC_ASCII_VALUE)
-      break;
+    // Restrict rate
+//    usleep(1000);
 
-    // Write goal position
-    dxl_comm_result = packetHandler->write2ByteTxRx(portHandler, DXL_ID, ADDR_MX_GOAL_POSITION, dxl_goal_position[index], &dxl_error);
+    // Attempt to sample an event from the joystick
+    JoystickEvent event;
+    if (joystick->sample(&event))
+    {
+//    if (getch() == ESC_ASCII_VALUE)
+      if(event.number == 2 && event.value == 1)
+        break;
+
+//      if(event.number == 1 && event.value == 1)
+      if(event.isAxis() && event.number == 1)
+      {
+        printf("Line224");
+	rescaled = rescale * (event.value - JOYSTICK_MINIMUM_POSITION_VALUE);
+	dxl_goal_position = int(rescaled) + DXL_MINIMUM_POSITION_VALUE;
+        printf("Axis %u is at position %d\n", event.number, event.value);
+	printf("Servo with ID %u has goal position at %d\n", DXL_ID, dxl_goal_position);
+
+        // Write goal position
+    dxl_comm_result = packetHandler->write2ByteTxRx(portHandler, DXL_ID, ADDR_MX_GOAL_POSITION, dxl_goal_position, &dxl_error);
     if (dxl_comm_result != COMM_SUCCESS)
     {
       packetHandler->printTxRxResult(dxl_comm_result);
@@ -213,18 +253,10 @@ int main()
         packetHandler->printRxPacketError(dxl_error);
       }
 
-      printf("[ID:%03d] GoalPos:%03d  PresPos:%03d\n", DXL_ID, dxl_goal_position[index], dxl_present_position);
+      printf("[ID:%03d] GoalPos:%03d  PresPos:%03d\n", DXL_ID, dxl_goal_position, dxl_present_position);
 
-    }while((abs(dxl_goal_position[index] - dxl_present_position) > DXL_MOVING_STATUS_THRESHOLD));
-
-    // Change goal position
-    if (index == 0)
-    {
-      index = 1;
-    }
-    else
-    {
-      index = 0;
+        }while((abs(dxl_goal_position - dxl_present_position) > DXL_MOVING_STATUS_THRESHOLD));
+      }
     }
   }
 
